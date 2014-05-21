@@ -88,7 +88,7 @@ public class CTMServer {
 							+ CTMConstants.CTMREADERPS);
 			System.out.println("\tPredicate Reader/Splitter(POS) - "
 							+ CTMConstants.CTMREADERPOS);
-			System.out.println("\tCompressor for PS files - "
+			System.out.println("\tCompressor for PS files(Needs PERL executable in PATH) - "
 					+ CTMConstants.CTMCOMPRESS);
 			System.out.println("\tComparator for PS files(Pre-distributor) - "
 					+ CTMConstants.CTMCOMPARE);
