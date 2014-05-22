@@ -217,8 +217,6 @@ public class DataManager {
     	String inFileName;
     	String outFileSPath;
     	String outFileOPath;
-    	BufferedWriter writerS = null;
-    	BufferedWriter writerO = null;
 	    for (File f : psSrc){
 	    	inFilePath = f.getAbsolutePath();
 	    	inFileName = f.getName();
@@ -227,22 +225,9 @@ public class DataManager {
 	    	SOReader reader = new SOReader(inFilePath);
 			IOUtils.logLog("Thread " + threadId + " Pre-compare : "	+ inFileName);
 			CTMDoubleStr so = null;
-			writerS = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(outFileSPath,true),"UTF-8"));
-			writerO = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(outFileOPath,true),"UTF-8"));
-			try {
-				while ((so = reader.nextStr()) != null) {
-					writerS.write(so.getSubject());
-					writerS.newLine();
-					writerO.write(so.getObject());
-					writerO.newLine();
-				}
-			} catch (IOException | ParseException e) {
-				throw e;
-			} finally {
-				writerS.close();
-				writerO.close();
+			while ((so = reader.nextStr()) != null) {
+				writeToBigFile(outFileSPath, so.getSubject());
+				writeToBigFile(outFileOPath, so.getObject());
 			}
 	    }
 		IOUtils.logLog("Thread " + threadId + " Pre-compare all done");

@@ -129,7 +129,7 @@ public class CTMThread implements Runnable {
 					dm.prepareComparePerl(inputFiles, outputFolder);
 					break;
 				case CTMConstants.CTMPRECOMPARE_JAVA:
-					dm.prepareComparePerl(inputFiles, outputFolder);
+					dm.prepareCompareJava(inputFiles, outputFolder);
 					break;
 				case CTMConstants.CTMDISTRIBUTE:
 					dm.distribute(inputFiles, connoption);

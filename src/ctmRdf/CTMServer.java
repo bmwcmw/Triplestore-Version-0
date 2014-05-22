@@ -64,7 +64,7 @@ public class CTMServer {
 		CTMServer._writeprecompare = false;
 		
 		// XXX SETUP : Comparator mode, perhaps needs PERL executable in PATH
-		CTMServer._precompareMode = CTMConstants.CTMPRECOMPARE_PERL;
+		CTMServer._precompareMode = CTMConstants.CTMPRECOMPARE_JAVA;
 		
 		// XXX SETUP : Global in/out paths
 		CTMServer._ctlParams = new HashMap<String, String>();
