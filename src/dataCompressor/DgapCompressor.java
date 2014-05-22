@@ -57,11 +57,12 @@ public class DgapCompressor {
 				outSarray = new BufferedWriter(new OutputStreamWriter(
 						new FileOutputStream(comparePath + File.separator + inFileName + ".S", true)));
 				for (SOIntegerPair pair : arr){
-					outSarray.write(pair.S);
+					outSarray.write(dbu.fetchNodeById(pair.S));
 					outSarray.newLine();
 				}
 			} finally {
-				outSarray.close();
+				if(outSarray!=null)
+					outSarray.close();
 			}
 		}
 		IOUtils.logLog("S array written to Comparison Path");
@@ -155,14 +156,15 @@ public class DgapCompressor {
 				outOarray = new BufferedWriter(new OutputStreamWriter(
 						new FileOutputStream(comparePath + File.separator + inFileName + ".O", true)));
 				for (SOIntegerPair pair : arr){
-					outOarray.write(pair.O);
+					outOarray.write(dbu.fetchNodeById(pair.O));
 					outOarray.newLine();
 				}
 			} finally {
-				outOarray.close();
+				if(outOarray!=null)
+					outOarray.close();
 			}
 		}
-		IOUtils.logLog("S array written to Comparison Path");
+		IOUtils.logLog("O array written to Comparison Path");
 		
 		BufferedWriter outArrOS = new BufferedWriter(new OutputStreamWriter(
 				new FileOutputStream(outputFilePath + ".matrixOS", true)));

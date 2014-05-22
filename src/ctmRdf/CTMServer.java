@@ -37,9 +37,9 @@ import localIOUtils.IOUtils;
 public class CTMServer {
 
 	private static int _nbThreads;
-	private static int _precompareMode;
 	private static int _compressMode;
 	private static boolean _writeprecompare;
+	private static int _precompareMode;
 	private static Map<String, String> _ctlParams;
 	private final static String _workingDir = System.getProperty("user.dir");
 	private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -438,9 +438,10 @@ public class CTMServer {
 		String compressedPath = _ctlParams.get("compressedPath");
 		IOUtils.checkOrCreateFolder(compressedPath);
 		String comparePath = null;
-		if(_writeprecompare)
+		if(_writeprecompare){
 			comparePath = _ctlParams.get("comparePath");
-		IOUtils.checkOrCreateFolder(compressedPath);
+			IOUtils.checkOrCreateFolder(comparePath);
+		}
 		IOUtils.logLog("\nCompressing PS files : ");
 		IOUtils.logLog("Input : " + psPath);
 		IOUtils.logLog("Output : " + compressedPath);
@@ -472,7 +473,6 @@ public class CTMServer {
 		String psPath = _ctlParams.get("psPath");
 		IOUtils.checkOrCreateFolder(psPath);
 		String comparePath = _ctlParams.get("comparePath");
-		IOUtils.deleteDirectory(new File(comparePath));
 		IOUtils.checkOrCreateFolder(comparePath);
 		IOUtils.logLog("\nProcessing PS files : ");
 		IOUtils.logLog("Input : " + psPath);
@@ -506,7 +506,6 @@ public class CTMServer {
 		String psPath = _ctlParams.get("psPath");
 		IOUtils.checkOrCreateFolder(psPath);
 		String comparePath = _ctlParams.get("comparePath");
-		IOUtils.deleteDirectory(new File(comparePath));
 		IOUtils.checkOrCreateFolder(comparePath);
 		IOUtils.logLog("\nComparing PS files : ");
 		IOUtils.logLog("Input : " + psPath);

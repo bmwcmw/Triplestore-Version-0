@@ -336,7 +336,8 @@ public class DataManager {
 	    while (it.hasNext()) {
 	        Entry<String,BufferedWriter> pairs = it.next();
 	        IOUtils.logLog("Close BufferedWriter : " + pairs.getKey());
-	        pairs.getValue().close();
+	        if(pairs.getValue()!=null)
+	        	pairs.getValue().close();
 	        it.remove(); // avoids a ConcurrentModificationException
 	    }
 	    if(_invalidLogWriter != null) _invalidLogWriter.close();
