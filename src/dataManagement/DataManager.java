@@ -13,14 +13,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
 
 import org.json.simple.JSONArray;
 
 import commandRunner.ComparisonPreparator;
-
 import localIOUtils.IOUtils;
+import dataCleaner.CTMDoubleStr;
 import dataCleaner.CTMTriple;
 import dataCleaner.CTMDouble;
+import dataComparator.Comparator;
 import dataCompressor.DgapCompressor;
 import dataCompressor.SOIntegerPair;
 import dataReader.N3Reader;
@@ -167,14 +169,12 @@ public class DataManager {
 	 * @throws SQLException
 	 */
 	public int indexedCompress(ArrayList<File> psSrc, String outputPath, 
-			DBUtils dbu) throws IOException, ParseException, SQLException {
+			DBUtils dbu, String comparePath) throws IOException, ParseException, SQLException {
 	    String inFilePath;
     	String inFileName;
-    	String outFilePath;
 	    for (File f : psSrc){
 	    	inFilePath = f.getAbsolutePath();
 	    	inFileName = f.getName();
-	    	outFilePath = outputPath + File.separator + inFileName;
 	    	SOReader reader = new SOReader(inFilePath);
 			IOUtils.logLog("Thread " + threadId + " Compression : "	+ inFileName);
 			CTMDouble so = null;
@@ -182,7 +182,7 @@ public class DataManager {
 				// Predicate's index and pairs list
 				insertOrIgnorePredicateNodes(dbu, so);
 			}
-			DgapCompressor.writeCompressedFormat(outFilePath, dbu);
+			DgapCompressor.writeCompressedFormat(inFileName, outputPath, dbu, comparePath);
 		    dbu.cleanAll();
 	    }
 		IOUtils.logLog("Thread " + threadId + " Compression all done");
@@ -190,19 +190,80 @@ public class DataManager {
 	}
 	
 	/**
-	 * Prepares files of predicates to facilitate comparison
+	 * Prepares predicate files(using Perl script) to facilitate comparison
 	 * @param compressedSrc
 	 * @param outputPath
 	 * @throws IOException 
 	 */
-	public void prepareCompare(ArrayList<File> compressedSrc, String outputPath) throws IOException{
+	public void prepareComparePerl(ArrayList<File> psSrc, String outputPath) throws IOException{
 	    String inFilePath;
 	    ComparisonPreparator cp = new ComparisonPreparator();
-	    for (File f : compressedSrc){
+	    for (File f : psSrc){
 	    	inFilePath = f.getAbsolutePath();
 	    	IOUtils.logLog(cp.execute(inFilePath, outputPath));
 	    }
 		IOUtils.logLog("Thread " + threadId + " Preparation all done");
+	}
+	
+	/**
+	 * Prepares predicate files(using java function) to facilitate comparison
+	 * @param compressedSrc
+	 * @param outputPath
+	 * @throws IOException, ParseException 
+	 */
+	public void prepareCompareJava(ArrayList<File> psSrc, String outputPath) 
+			throws IOException, ParseException{
+	    String inFilePath;
+    	String inFileName;
+    	String outFileSPath;
+    	String outFileOPath;
+    	BufferedWriter writerS = null;
+    	BufferedWriter writerO = null;
+	    for (File f : psSrc){
+	    	inFilePath = f.getAbsolutePath();
+	    	inFileName = f.getName();
+	    	outFileSPath = outputPath + File.separator + inFileName + ".S";
+	    	outFileOPath = outputPath + File.separator + inFileName + ".O";
+	    	SOReader reader = new SOReader(inFilePath);
+			IOUtils.logLog("Thread " + threadId + " Pre-compare : "	+ inFileName);
+			CTMDoubleStr so = null;
+			writerS = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(outFileSPath,true),"UTF-8"));
+			writerO = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(outFileOPath,true),"UTF-8"));
+			try {
+				while ((so = reader.nextStr()) != null) {
+					writerS.write(so.getSubject());
+					writerS.newLine();
+					writerO.write(so.getObject());
+					writerO.newLine();
+				}
+			} catch (IOException | ParseException e) {
+				throw e;
+			} finally {
+				writerS.close();
+				writerO.close();
+			}
+	    }
+		IOUtils.logLog("Thread " + threadId + " Pre-compare all done");
+	}
+	
+
+	
+	/**
+	 * Compares each two predicate S/O array, then output a similarity indicator
+	 * @param compressedSrc
+	 * @param outputPath
+	 * @throws ExecutionException 
+	 * @throws InterruptedException 
+	 * @throws ParseException 
+	 * @throws IOException 
+	 */
+	public void compare(ArrayList<File> compressedSrc, String outputPath) 
+			throws IOException, ParseException, InterruptedException, ExecutionException{
+		int s = Comparator.compareTwoPredicates(null, null);
+		int o = Comparator.compareTwoPredicates(null, null);
+		//TODO
 	}
 	
 	/**
@@ -211,7 +272,7 @@ public class DataManager {
 	 * @param outputList
 	 */
 	public void distribute(ArrayList<File> compressedSrc, JSONArray outputList){
-		
+		//TODO
 	}
 	
 	/**

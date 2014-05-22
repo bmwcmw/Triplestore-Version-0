@@ -22,11 +22,21 @@ public class CTMThread implements Runnable {
     private String outputFolder;
     private String invalidPath;
     private String nsPath;
-    private DBUtils indexNodes;
+    private String comparePath = null;
+    private DBUtils indexNodes = null;
     private JSONArray connoption;
 
+    /**
+     * For PS tasks
+     * @param tid
+     * @param task
+     * @param inputList
+     * @param outputPath
+     * @param invalid
+     * @param ns
+     */
     public CTMThread(String tid, int task, ArrayList<File> inputList, String outputPath,
-    		String invalid, String ns, DBUtils dbu){
+    		String invalid, String ns){
     	taskId = task;
 		threadId = tid;
 		dm = new DataManager(tid);
@@ -39,12 +49,51 @@ public class CTMThread implements Runnable {
 		nsPath = ns;
 		if(ns!=null)
 			IOUtils.checkOrCreateFolder(nsPath);
-		indexNodes = dbu;
 		System.out.println("Creating " + threadId);
     }
     
     /**
-     * Only for distributor tasks
+     * For POS and Pre-Compare tasks
+     * @param tid
+     * @param task
+     * @param inputList
+     * @param outputPath
+     * @param invalid
+     * @param ns
+     */
+    public CTMThread(String tid, int task, ArrayList<File> inputList, String outputPath){
+    	taskId = task;
+		threadId = tid;
+		dm = new DataManager(tid);
+		inputFiles = inputList;
+		outputFolder = outputPath;
+		IOUtils.checkOrCreateFolder(outputFolder);
+		System.out.println("Creating " + threadId);
+    }
+    
+    /**
+     * For compression tasks
+     * @param tid
+     * @param task
+     * @param inputList
+     * @param outputPath
+     * @param dbu
+     */
+    public CTMThread(String tid, int task, ArrayList<File> inputList, String outputPath,
+    		DBUtils dbu, String writecomparePath){
+    	taskId = task;
+		threadId = tid;
+		dm = new DataManager(tid);
+		inputFiles = inputList;
+		outputFolder = outputPath;
+		IOUtils.checkOrCreateFolder(outputFolder);
+		indexNodes = dbu;
+		comparePath = writecomparePath;
+		System.out.println("Creating " + threadId);
+    }
+    
+    /**
+     * For distribution tasks
      * @param tid
      * @param inputList
      * @param connopt
@@ -74,10 +123,13 @@ public class CTMThread implements Runnable {
 					dm.posSplit(inputFiles, outputFolder);
 					break;
 				case CTMConstants.CTMCOMPRESS:
-					dm.indexedCompress(inputFiles, outputFolder, indexNodes);
+					dm.indexedCompress(inputFiles, outputFolder, indexNodes, comparePath);
 					break;
-				case CTMConstants.CTMCOMPARE:
-					dm.prepareCompare(inputFiles, outputFolder);
+				case CTMConstants.CTMPRECOMPARE_PERL:
+					dm.prepareComparePerl(inputFiles, outputFolder);
+					break;
+				case CTMConstants.CTMPRECOMPARE_JAVA:
+					dm.prepareComparePerl(inputFiles, outputFolder);
 					break;
 				case CTMConstants.CTMDISTRIBUTE:
 					dm.distribute(inputFiles, connoption);

@@ -3,6 +3,7 @@ package dataCompressor;
 import indexNodesDBUtils.DBUtils;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -27,8 +28,8 @@ import localIOUtils.IOUtils;
  */
 public class DgapCompressor {
 	
-	public static void writeCompressedFormat(String outputFilePath, DBUtils dbu) 
-			throws IOException, SQLException{
+	public static void writeCompressedFormat(String inFileName, String outputPath, 
+			DBUtils dbu, String comparePath) throws IOException, SQLException{
 		Integer indexSize;
 		Integer soSize;
 		String line = "";
@@ -38,6 +39,7 @@ public class DgapCompressor {
 		IOUtils.logLog("All nodes : " + indexSize + " (S,O) pairs : "
 				+ soSize);
 		ArrayList<SOIntegerPair> arr = dbu.fetchSOList();
+    	String outputFilePath = outputPath + File.separator + inFileName;
 		
 		/* SO Matrix */
 		Collections.sort(arr, new Comparator<SOIntegerPair>() {
@@ -47,6 +49,23 @@ public class DgapCompressor {
 			}
         });
 		IOUtils.logLog("SO sorted");
+    	
+		/* Write sorted S array file if the parameter isn't null */
+		if(comparePath!=null){
+			BufferedWriter outSarray = null;
+			try{
+				outSarray = new BufferedWriter(new OutputStreamWriter(
+						new FileOutputStream(comparePath + File.separator + inFileName + ".S", true)));
+				for (SOIntegerPair pair : arr){
+					outSarray.write(pair.S);
+					outSarray.newLine();
+				}
+			} finally {
+				outSarray.close();
+			}
+		}
+		IOUtils.logLog("S array written to Comparison Path");
+		
 		BufferedWriter outArrSO = new BufferedWriter(new OutputStreamWriter(
 				new FileOutputStream(outputFilePath + ".matrixSO", true)));
 		if(arr.size()>0){
@@ -128,6 +147,23 @@ public class DgapCompressor {
 			}
         });
 		IOUtils.logLog("OS sorted");
+    	
+		/* Write sorted O array file if the parameter isn't null */
+		if(comparePath!=null){
+			BufferedWriter outOarray = null;
+			try{
+				outOarray = new BufferedWriter(new OutputStreamWriter(
+						new FileOutputStream(comparePath + File.separator + inFileName + ".O", true)));
+				for (SOIntegerPair pair : arr){
+					outOarray.write(pair.O);
+					outOarray.newLine();
+				}
+			} finally {
+				outOarray.close();
+			}
+		}
+		IOUtils.logLog("S array written to Comparison Path");
+		
 		BufferedWriter outArrOS = new BufferedWriter(new OutputStreamWriter(
 				new FileOutputStream(outputFilePath + ".matrixOS", true)));
 		if(arr.size()>0){

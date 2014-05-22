@@ -105,6 +105,23 @@ public class SOReader implements TripleReader {
 		}
 		return null;
 	}
+	
+	
+	/**
+	 * <p>
+	 * Reads line by line from a file, returns a String
+	 * </p>
+	 * 
+	 * @throws IOException
+	 * @throws ParseException
+	 */
+	public String nextLine() throws IOException {
+		String line;
+		while ((line = reader.readLine()) != null) {
+			return line;
+		}
+		return null;
+	}
 
 	/**
 	 * Closes the BufferedReader while finished

@@ -4,9 +4,24 @@ public class CTMConstants {
 	public final static int CTMCONVERTER = 101;
 	public final static int CTMREADERPS = 102;
 	public final static int CTMREADERPOS = 103;
+	
 	public final static int CTMCOMPRESS = 104;
-	public final static int CTMCOMPARE = 105;
-	public final static int CTMDISTRIBUTE = 106;
+	public final static int CTMCOMPRESS_INRAM = 1041;
+	public final static int CTMCOMPRESS_REDIS = 1042;
+	public final static int CTMCOMPRESS_MONET = 1043;
+	public final static int CTMCOMPRESS_POSTGRES = 1044;
+	public final static int CTMCOMPRESS_ORACLE = 1045;
+	public final static int CTMCOMPRESS_MYSQL = 1046;
+	public final static int CTMCOMPRESS_MONGO = 1047;
+	
+	public final static int CTMPRECOMPARE = 105;
+	public final static int CTMPRECOMPARE_PERL = 1051;
+	public final static int CTMPRECOMPARE_JAVA = 1052;
+	
+	public final static int CTMCOMPARE = 106;
+	
+	public final static int CTMDISTRIBUTE = 107;
+	
 	public final static int CTMEXIT = -1;
 	public final static int CTMEMPTY = 0;
 }
