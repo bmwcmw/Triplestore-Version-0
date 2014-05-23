@@ -64,8 +64,8 @@ public class DgapCompressor {
 				if(outSarray!=null)
 					outSarray.close();
 			}
+			IOUtils.logLog("S array written to Comparison Path");
 		}
-		IOUtils.logLog("S array written to Comparison Path");
 		
 		BufferedWriter outArrSO = new BufferedWriter(new OutputStreamWriter(
 				new FileOutputStream(outputFilePath + ".matrixSO", true)));
@@ -111,6 +111,11 @@ public class DgapCompressor {
 								line += blockSize + ",";
 								//initialize "1" block
 								blockSize = 1;
+								//Avoid too large lines
+								if(line.length()>65536){
+									outArrSO.write(line);
+									line = "";
+								}
 							}
 							last = i;
 						}
@@ -163,8 +168,8 @@ public class DgapCompressor {
 				if(outOarray!=null)
 					outOarray.close();
 			}
+			IOUtils.logLog("O array written to Comparison Path");
 		}
-		IOUtils.logLog("O array written to Comparison Path");
 		
 		BufferedWriter outArrOS = new BufferedWriter(new OutputStreamWriter(
 				new FileOutputStream(outputFilePath + ".matrixOS", true)));
@@ -210,6 +215,11 @@ public class DgapCompressor {
 								line += blockSize + ",";
 								//initialize "1" block
 								blockSize = 1;
+								//Avoid too large lines
+								if(line.length()>65536){
+									outArrOS.write(line);
+									line = "";
+								}
 							}
 							last = i;
 						}
