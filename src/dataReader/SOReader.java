@@ -1,6 +1,7 @@
 package dataReader;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -36,6 +37,20 @@ public class SOReader implements TripleReader {
 			throws IOException {
 		this.filePath = filePath;
 		reader = new BufferedReader(new FileReader(filePath));
+	}
+	
+	/**
+	 * @param dataManager : normally this reader is called by a dataManager, in this 
+	 * case, use <tt>this</tt>
+	 * @param file : specify the input File object of a NTriple file
+	 * extension <tt>.n3</tt>
+	 * @param invalidPath : specify invalid log's location
+	 * @throws FileNotFoundException
+	 */
+	public SOReader(File file)
+			throws IOException {
+		this.filePath = file.getAbsolutePath();
+		reader = new BufferedReader(new FileReader(file));
 	}
 	
 

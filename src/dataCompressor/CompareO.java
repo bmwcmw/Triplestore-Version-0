@@ -2,7 +2,7 @@ package dataCompressor;
 
 import java.util.Comparator;
 
-public class ComparatorO implements Comparator<SOIntegerPair>{
+public class CompareO implements Comparator<SOIntegerPair>{
 	
 	@Override
     public int compare(SOIntegerPair p1, SOIntegerPair p2){

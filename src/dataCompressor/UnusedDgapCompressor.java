@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import localIOUtils.IOUtils;
 
-public class Unused {
+public class UnusedDgapCompressor {
 	
 	/**
 	 * NOT USED
