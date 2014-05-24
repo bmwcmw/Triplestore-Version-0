@@ -28,6 +28,9 @@ import localIOUtils.IOUtils;
  */
 public class DgapCompressor {
 	
+	//Since JVM will be very inefficient while a String become large, we flush it periodically.
+	private static final int MAXSTRLENGTH = 40000;
+	
 	public static void writeCompressedFormat(String inFileName, String outputPath, 
 			DBUtils dbu, String comparePath) throws IOException, SQLException{
 		Integer indexSize;
@@ -112,7 +115,7 @@ public class DgapCompressor {
 								//initialize "1" block
 								blockSize = 1;
 								//Avoid too large lines
-								if(line.length()>65536){
+								if(line.length()>MAXSTRLENGTH){
 									outArrSO.write(line);
 									line = "";
 								}
@@ -216,7 +219,7 @@ public class DgapCompressor {
 								//initialize "1" block
 								blockSize = 1;
 								//Avoid too large lines
-								if(line.length()>65536){
+								if(line.length()>MAXSTRLENGTH){
 									outArrOS.write(line);
 									line = "";
 								}
