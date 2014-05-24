@@ -17,7 +17,7 @@ import localIOUtils.IOUtils;
  * Compares two 
  * @author Cedar
  */
-public class Comparator {
+public class JavaComparator {
 
 	public final static int S = 0;
 	public final static int O = 1;
@@ -31,11 +31,16 @@ public class Comparator {
 		String entry1 = null;
 		String entry2 = null;
 		while (true) {
-			if ( ((entry1 = reader1.nextLine()) == null) 
-					&& ((entry2 = reader2.nextLine()) == null)){
+			entry1 = reader1.nextLine();
+			entry2 = reader2.nextLine();
+			if(entry1.compareTo(entry2) <= 0){
+				entry1 = reader1.nextLine();
+			} else {
+				entry2 = reader2.nextLine();
+			}
+			if ((entry1 == null) && (entry2 == null)){
 				return commun;
 			}
-			
 		}
 	}
 }

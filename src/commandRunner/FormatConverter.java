@@ -12,7 +12,7 @@ import localIOUtils.IOUtils;
  * @author Cedar
  *
  */
-public class FormatConverter {
+public class FormatConverter extends BasicRunner{
 	private final static String RDF2RDF_JAR_FILENAME = "rdf2rdf-1.0.1-2.3.1.jar";
 	
 	private Process _proc;
@@ -28,7 +28,7 @@ public class FormatConverter {
 	 * 
 	 * @return -1 if IOException, 0 if it works
 	 */
-	public int execute(String inputFile, String outputFile){
+	public Integer execute(String inputFile, String outputFile){
 		try {
 			//_proc = Runtime.getRuntime().exec("java -jar rdf2rdf-1.0.1-2.3.1.jar");
 			_proc = Runtime.getRuntime().exec(
