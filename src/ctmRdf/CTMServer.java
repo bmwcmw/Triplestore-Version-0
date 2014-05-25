@@ -40,6 +40,7 @@ public class CTMServer {
 	private static int _compressMode;
 	private static boolean _writeprecompare;
 	private static int _precompareMode;
+	private static int _compareMode;
 	private static Map<String, String> _ctlParams;
 	private final static String _workingDir = System.getProperty("user.dir");
 	private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -63,8 +64,11 @@ public class CTMServer {
 		// XXX SETUP : Compressor writes sorted S/O files of each predicate or not
 		CTMServer._writeprecompare = false;
 		
-		// XXX SETUP : Comparator mode, perhaps needs PERL executable in PATH
+		// XXX SETUP : Pre-Comparator mode, perhaps needs PERL executable in PATH
 		CTMServer._precompareMode = CTMConstants.CTMPRECOMPARE_JAVA;
+		
+		// XXX SETUP : Comparator mode, perhaps needs PERL or GNU executable in PATH
+		CTMServer._compareMode = CTMConstants.CTMCOMPARE_JAVA;
 		
 		// XXX SETUP : Global in/out paths
 		CTMServer._ctlParams = new HashMap<String, String>();
@@ -518,7 +522,7 @@ public class CTMServer {
 		//Create and execute threads with assigned sub task
 		ExecutorService executor = Executors.newFixedThreadPool(CTMServer._nbThreads);
         for (int i = 0; i < CTMServer._nbThreads; i++) {
-            Runnable thread = new CTMThread(String.valueOf(i), _precompareMode, inputLists.get(i), 
+            Runnable thread = new CTMThread(String.valueOf(i), _compareMode, inputLists.get(i), 
             		comparePath);
             executor.execute(thread);
         }

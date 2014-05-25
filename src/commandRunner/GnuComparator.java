@@ -11,15 +11,14 @@ import localIOUtils.IOUtils;
 /**
  *
  * <p>Compares two SORTED, UNIQUE OR NOT string files, returns the number of common entries.</p>
- * <p>Using Perl Script.</p>
+ * <p>Using Gnu comm executable.</p>
  * 
  * @author Cedar
  *
  */
-public class PerlComparator extends BasicRunner {
+public class GnuComparator extends BasicRunner {
 	
-	public PerlComparator(){}
-	//TODO Out of memory error : >= 12000 occurrences
+	public GnuComparator(){}
 	/**
 	 * <p>Runs PERL script in a separate system process</>
 	 * <p>Specifies an input file and an output path</>
@@ -36,14 +35,14 @@ public class PerlComparator extends BasicRunner {
 					|| System.getProperty("os.name").contains("Win")){
 				command = new String[]{
 						System.getProperty("user.dir") + File.separator 
-						+ "script" + File.separator + "PerlComparison.bat "
+						+ "script" + File.separator + "GnuComparison.bat "
 						, inputFile1, inputFile2};
 			} else if(System.getProperty("os.name").contains("nux") 
 					|| System.getProperty("os.name").contains("nix")
 					|| System.getProperty("os.name").contains("aix") ){
 				command = new String[]{
 						System.getProperty("user.dir") + File.separator 
-						+ "script" + File.separator + "PerlComparison.sh"
+						+ "script" + File.separator + "GnuComparison.sh"
 						, inputFile1, inputFile2};
 			} else {
 				IOUtils.logLog("Unknown system : "+System.getProperty("os.name"));

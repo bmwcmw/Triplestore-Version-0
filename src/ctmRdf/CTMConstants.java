@@ -15,10 +15,13 @@ public class CTMConstants {
 	public final static int CTMCOMPRESS_MONGO = 1047;
 	
 	public final static int CTMPRECOMPARE = 105;
-	public final static int CTMPRECOMPARE_PERL = 1051;
-	public final static int CTMPRECOMPARE_JAVA = 1052;
+	public final static int CTMPRECOMPARE_JAVA = 1051;
+	public final static int CTMPRECOMPARE_PERL = 1052;
 	
 	public final static int CTMCOMPARE = 106;
+	public final static int CTMCOMPARE_JAVA = 1061;
+	public final static int CTMCOMPARE_GNU = 1062;
+	public final static int CTMCOMPARE_PERL = 1063;
 	
 	public final static int CTMDISTRIBUTE = 107;
 	

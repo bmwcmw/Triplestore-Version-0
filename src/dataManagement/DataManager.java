@@ -17,12 +17,12 @@ import java.util.concurrent.ExecutionException;
 
 import org.json.simple.JSONArray;
 
-import commandRunner.ComparisonPreparator;
+import commandRunner.PerlPreComparator;
 import localIOUtils.IOUtils;
 import dataCleaner.CTMDoubleStr;
 import dataCleaner.CTMTriple;
 import dataCleaner.CTMDouble;
-import dataComparator.Comparator;
+import dataComparator.JavaComparator;
 import dataCompressor.DgapCompressor;
 import dataCompressor.SOIntegerPair;
 import dataReader.N3Reader;
@@ -190,22 +190,6 @@ public class DataManager {
 	}
 	
 	/**
-	 * Prepares predicate files(using Perl script) to facilitate comparison
-	 * @param compressedSrc
-	 * @param outputPath
-	 * @throws IOException 
-	 */
-	public void prepareComparePerl(ArrayList<File> psSrc, String outputPath) throws IOException{
-	    String inFilePath;
-	    ComparisonPreparator cp = new ComparisonPreparator();
-	    for (File f : psSrc){
-	    	inFilePath = f.getAbsolutePath();
-	    	IOUtils.logLog(cp.execute(inFilePath, outputPath));
-	    }
-		IOUtils.logLog("Thread " + threadId + " Preparation all done");
-	}
-	
-	/**
 	 * Prepares predicate files(using java function) to facilitate comparison
 	 * @param compressedSrc
 	 * @param outputPath
@@ -233,21 +217,70 @@ public class DataManager {
 		IOUtils.logLog("Thread " + threadId + " Pre-compare all done");
 	}
 	
+	/**
+	 * Prepares predicate files(using Perl script) to facilitate comparison
+	 * @param compressedSrc
+	 * @param outputPath
+	 * @throws IOException 
+	 */
+	public void prepareComparePerl(ArrayList<File> psSrc, String outputPath) throws IOException{
+	    String inFilePath;
+	    PerlPreComparator ppc = new PerlPreComparator();
+	    for (File f : psSrc){
+	    	inFilePath = f.getAbsolutePath();
+	    	IOUtils.logLog(ppc.execute(inFilePath, outputPath));
+	    }
+		IOUtils.logLog("Thread " + threadId + " Preparation all done");
+	}
+	
 
+	/**
+	 * Compares each two predicate S/O array, then output a similarity indicator
+	 * using Java method
+	 * @param compareSrc source folder of compressed files
+	 * @param outputPath output path for indicator file
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
+	public void compareJava(ArrayList<File> compareSrc, String outputPath) {
+	    JavaComparator jc = new JavaComparator();
+	    for (File f : compareSrc){
+	    	inFilePath = f.getAbsolutePath();
+	    	IOUtils.logLog(ppc.execute(inFilePath, outputPath));
+	    }
+	}
 	
 	/**
 	 * Compares each two predicate S/O array, then output a similarity indicator
-	 * @param compressedSrc
-	 * @param outputPath
-	 * @throws ExecutionException 
-	 * @throws InterruptedException 
-	 * @throws ParseException 
-	 * @throws IOException 
+	 * using Gnu executable
+	 * @param compareSrc source folder of compressed files
+	 * @param outputPath output path for indicator file
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws InterruptedException
+	 * @throws ExecutionException
 	 */
-	public void compare(ArrayList<File> compressedSrc, String outputPath) 
-			throws IOException, ParseException, InterruptedException, ExecutionException{
-		int s = Comparator.compareTwoPredicates(null, null);
-		int o = Comparator.compareTwoPredicates(null, null);
+	public void compareGun(ArrayList<File> compareSrc, String outputPath) {
+		//int s = Comparator.compareTwoPredicates(null, null);
+		//int o = Comparator.compareTwoPredicates(null, null);
+		//TODO
+	}
+	
+	/**
+	 * Compares each two predicate S/O array, then output a similarity indicator
+	 * using Gnu executable
+	 * @param compareSrc source folder of compressed files
+	 * @param outputPath output path for indicator file
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
+	public void comparePerl(ArrayList<File> compareSrc, String outputPath) {
+		//int s = Comparator.compareTwoPredicates(null, null);
+		//int o = Comparator.compareTwoPredicates(null, null);
 		//TODO
 	}
 	

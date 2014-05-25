@@ -3,43 +3,59 @@ package dataComparator;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
-import dataCleaner.CTMDoubleStr;
 import dataReader.SOReader;
 import localIOUtils.IOUtils;
 
 /**
- * Compares two 
+ * <p>Compares two SORTED, UNIQUE OR NOT string files, returns the number of common entries.</p>
+ * <p>Using Java method.</p>
+ * 
  * @author Cedar
+ *
  */
 public class JavaComparator {
 
 	public final static int S = 0;
 	public final static int O = 1;
 	
-	public static long compareTwoPredicates(File f1, File f2)
+	public Long compareTwoPredicates(File f1, File f2)
 			throws IOException, ParseException, InterruptedException, ExecutionException {
-		IOUtils.logLog("Start loading");
+		IOUtils.logLog("Start comparison");
 		SOReader reader1 = new SOReader(f1);
 		SOReader reader2 = new SOReader(f2);
-		long commun = 0;
-		String entry1 = null;
-		String entry2 = null;
+		long common = 0;
+		String entry1 = reader1.nextLine();
+		String temp1;
+		String entry2 = reader2.nextLine();
+		String temp2;
 		while (true) {
-			entry1 = reader1.nextLine();
-			entry2 = reader2.nextLine();
-			if(entry1.compareTo(entry2) <= 0){
-				entry1 = reader1.nextLine();
-			} else {
-				entry2 = reader2.nextLine();
+			if ((entry1 == null) || (entry2 == null)) {
+				return common;
 			}
-			if ((entry1 == null) && (entry2 == null)){
-				return commun;
+			//System.out.println(entry1+" "+entry2);
+			if (entry1.compareTo(entry2) < 0){
+				while ((temp1 = reader1.nextLine()) != null) {
+					if(!temp1.equals(entry1)) break;
+				}
+				//System.out.println(temp1);
+				entry1 = temp1;
+			} else if (entry1.compareTo(entry2) == 0) {
+				while ((temp1 = reader1.nextLine()) != null) {
+					if(!temp1.equals(entry1)) break;
+				}
+				entry1 = temp1;
+				while ((temp2 = reader2.nextLine()) != null) {
+					if(!temp2.equals(entry2)) break;
+				}
+				entry2 = temp2;
+				common++;
+			} else {
+				while ((temp2 = reader2.nextLine()) != null) {
+					if(!temp2.equals(entry2)) break;
+				}
+				//System.out.println(temp2);
+				entry2 = temp2;
 			}
 		}
 	}

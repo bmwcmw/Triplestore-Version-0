@@ -1,5 +1,6 @@
 package commandRunner;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -12,14 +13,14 @@ import localIOUtils.IOUtils;
  * @author Cedar
  *
  */
-public class ComparisonPreparator extends BasicRunner {
-	private final static String PERL_FILENAME = "ComparisonPrepare.pl";
+public class PerlPreComparator extends BasicRunner {
+	private final static String PERL_FILENAME = "script"+File.separator+"ComparisonPrepare.pl";
 	
 	private Process _proc;
 	private InputStream _in;
 	private InputStream _err;
 	
-	public ComparisonPreparator(){}
+	public PerlPreComparator(){}
 	
 	/**
 	 * <p>Runs PERL script in a separate system process</>

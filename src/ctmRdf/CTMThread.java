@@ -125,11 +125,20 @@ public class CTMThread implements Runnable {
 				case CTMConstants.CTMCOMPRESS:
 					dm.indexedCompress(inputFiles, outputFolder, indexNodes, comparePath);
 					break;
+				case CTMConstants.CTMPRECOMPARE_JAVA:
+					dm.prepareCompareJava(inputFiles, outputFolder);
+					break;
 				case CTMConstants.CTMPRECOMPARE_PERL:
 					dm.prepareComparePerl(inputFiles, outputFolder);
 					break;
-				case CTMConstants.CTMPRECOMPARE_JAVA:
+				case CTMConstants.CTMCOMPARE_JAVA:
 					dm.prepareCompareJava(inputFiles, outputFolder);
+					break;
+				case CTMConstants.CTMCOMPARE_GNU:
+					dm.prepareComparePerl(inputFiles, outputFolder);
+					break;
+				case CTMConstants.CTMCOMPARE_PERL:
+					dm.prepareComparePerl(inputFiles, outputFolder);
 					break;
 				case CTMConstants.CTMDISTRIBUTE:
 					dm.distribute(inputFiles, connoption);
