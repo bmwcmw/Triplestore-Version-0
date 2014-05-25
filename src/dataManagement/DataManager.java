@@ -5,6 +5,7 @@ import indexNodesDBUtils.DBUtils;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.sql.SQLException;
@@ -12,7 +13,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
 import org.json.simple.JSONArray;
@@ -22,6 +25,7 @@ import localIOUtils.IOUtils;
 import dataCleaner.CTMDoubleStr;
 import dataCleaner.CTMTriple;
 import dataCleaner.CTMDouble;
+import dataComparator.FilePair;
 import dataComparator.JavaComparator;
 import dataCompressor.DgapCompressor;
 import dataCompressor.SOIntegerPair;
@@ -223,7 +227,8 @@ public class DataManager {
 	 * @param outputPath
 	 * @throws IOException 
 	 */
-	public void prepareComparePerl(ArrayList<File> psSrc, String outputPath) throws IOException{
+	public void prepareComparePerl(ArrayList<File> psSrc, String outputPath) 
+			throws IOException{
 	    String inFilePath;
 	    PerlPreComparator ppc = new PerlPreComparator();
 	    for (File f : psSrc){
@@ -244,12 +249,27 @@ public class DataManager {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	public void compareJava(ArrayList<File> compareSrc, String outputPath) {
+	public void compareJava(LinkedList<FilePair> pairs, String outputPath) 
+			throws IOException, ParseException, InterruptedException, ExecutionException {
 	    JavaComparator jc = new JavaComparator();
-	    for (File f : compareSrc){
-	    	inFilePath = f.getAbsolutePath();
-	    	IOUtils.logLog(ppc.execute(inFilePath, outputPath));
+	    FilePair fp = null;
+	    FileWriter fw = null;
+		int count = 0;
+	    while(true){
+	    	try{
+	    		fp = pairs.getFirst();
+	    	} catch (NoSuchElementException e) {
+	    		break;
+	    	}
+			count++;
+		    Long resultS = jc.compareTwoPredicates(fp.f1S, fp.f2S);
+		    Long resultO = jc.compareTwoPredicates(fp.f1O, fp.f2O);
+		    System.out.println(fp.f1S.getName()+" and "+fp.f2S.getName()+" have "+resultS+" common entries.");
+		    System.out.println(fp.f1O.getName()+" and "+fp.f2O.getName()+" have "+resultO+" common entries.");
+		    //TODO fw = new FileWriter(outputPath+File.separator+fp.f1.g);
+		    pairs.removeFirst();
 	    }
+	    IOUtils.logLog("Thread " + threadId + " executed " + count + " comparisons.");
 	}
 	
 	/**
@@ -262,7 +282,7 @@ public class DataManager {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	public void compareGun(ArrayList<File> compareSrc, String outputPath) {
+	public void compareGnu(LinkedList<FilePair> compareSrc, String outputPath) {
 		//int s = Comparator.compareTwoPredicates(null, null);
 		//int o = Comparator.compareTwoPredicates(null, null);
 		//TODO
@@ -278,7 +298,7 @@ public class DataManager {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	public void comparePerl(ArrayList<File> compareSrc, String outputPath) {
+	public void comparePerl(LinkedList<FilePair> compareSrc, String outputPath) {
 		//int s = Comparator.compareTwoPredicates(null, null);
 		//int o = Comparator.compareTwoPredicates(null, null);
 		//TODO

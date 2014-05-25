@@ -7,10 +7,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.concurrent.ExecutionException;
 
 import org.json.simple.JSONArray;
 
 import localIOUtils.IOUtils;
+import dataComparator.FilePair;
 import dataManagement.DataManager;
 
 public class CTMThread implements Runnable {
@@ -25,6 +28,7 @@ public class CTMThread implements Runnable {
     private String comparePath = null;
     private DBUtils indexNodes = null;
     private JSONArray connoption;
+    private LinkedList<FilePair> comparePairs;
 
     /**
      * For PS tasks
@@ -58,14 +62,29 @@ public class CTMThread implements Runnable {
      * @param task
      * @param inputList
      * @param outputPath
-     * @param invalid
-     * @param ns
      */
     public CTMThread(String tid, int task, ArrayList<File> inputList, String outputPath){
     	taskId = task;
 		threadId = tid;
 		dm = new DataManager(tid);
 		inputFiles = inputList;
+		outputFolder = outputPath;
+		IOUtils.checkOrCreateFolder(outputFolder);
+		System.out.println("Creating " + threadId);
+    }
+    
+    /**
+     * For comparison tasks
+     * @param tid
+     * @param task
+     * @param fp
+     * @param outputPath
+     */
+    public CTMThread(String tid, int task, LinkedList<FilePair> fp, String outputPath){
+    	taskId = task;
+		threadId = tid;
+		dm = new DataManager(tid);
+		comparePairs = fp;
 		outputFolder = outputPath;
 		IOUtils.checkOrCreateFolder(outputFolder);
 		System.out.println("Creating " + threadId);
@@ -132,13 +151,13 @@ public class CTMThread implements Runnable {
 					dm.prepareComparePerl(inputFiles, outputFolder);
 					break;
 				case CTMConstants.CTMCOMPARE_JAVA:
-					dm.prepareCompareJava(inputFiles, outputFolder);
+					dm.compareJava(comparePairs, outputFolder);
 					break;
 				case CTMConstants.CTMCOMPARE_GNU:
-					dm.prepareComparePerl(inputFiles, outputFolder);
+					dm.compareGnu(comparePairs, outputFolder);
 					break;
 				case CTMConstants.CTMCOMPARE_PERL:
-					dm.prepareComparePerl(inputFiles, outputFolder);
+					dm.comparePerl(comparePairs, outputFolder);
 					break;
 				case CTMConstants.CTMDISTRIBUTE:
 					dm.distribute(inputFiles, connoption);
@@ -152,6 +171,10 @@ public class CTMThread implements Runnable {
 		} catch (ParseException e) {
 			IOUtils.logLog("Error in thread " + threadId + " : " + e.getMessage());
 		} catch (SQLException e) {
+			IOUtils.logLog("Error in thread " + threadId + " : " + e.getMessage());
+		} catch (InterruptedException e) {
+			IOUtils.logLog("Error in thread " + threadId + " : " + e.getMessage());
+		} catch (ExecutionException e) {
 			IOUtils.logLog("Error in thread " + threadId + " : " + e.getMessage());
 		}
 		endTime = System.currentTimeMillis();

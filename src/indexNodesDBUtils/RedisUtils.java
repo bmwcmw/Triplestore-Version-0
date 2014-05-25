@@ -7,9 +7,9 @@ import java.sql.SQLException;
  * <p>Redis is an open source, BSD licensed, advanced key-value store. It is often referred 
  * to as a data structure server since keys can contain strings, hashes, lists, sets and sorted sets.</p>
 **/
-public class RedisDBUtils extends DBUtils{
+public class RedisUtils extends DBUtils{
 	
-	public RedisDBUtils() throws SQLException, ClassNotFoundException{
+	public RedisUtils() throws SQLException, ClassNotFoundException{
 		Class.forName("nl.cwi.monetdb.jdbc.MonetDriver");
 		_conn = DriverManager.getConnection(DBConstants.MonetDBurl, "monetdb", "monetdb");
 		_st = _conn.createStatement();

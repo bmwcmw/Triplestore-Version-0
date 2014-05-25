@@ -1,6 +1,13 @@
 package ctmRdf;
 
+import indexNodesDBUtils.DBUtils;
 import indexNodesDBUtils.InRamDBUtils;
+import indexNodesDBUtils.MonetDBUtils;
+import indexNodesDBUtils.MongoDBUtils;
+import indexNodesDBUtils.MySQLUtils;
+import indexNodesDBUtils.OracleUtils;
+import indexNodesDBUtils.PostgreSQLUtils;
+import indexNodesDBUtils.RedisUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,8 +21,11 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
@@ -27,6 +37,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import commandRunner.FormatConverter;
+import dataComparator.FilePair;
 import dataDistributor.DNConnection;
 import localIOUtils.IOUtils;
 
@@ -35,6 +46,8 @@ import localIOUtils.IOUtils;
  * @author Cedar
  */
 public class CTMServer {
+
+	// TODO possibility to add arguments while launching the program
 
 	private static int _nbThreads;
 	private static int _compressMode;
@@ -50,8 +63,6 @@ public class CTMServer {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-
-		// TODO possibility to add arguments while launching the program
 		System.out.println("---------------------------------------");
 		System.out.println("|--------         CTM         --------|");
 		System.out.println("---------------------------------------");
@@ -62,7 +73,7 @@ public class CTMServer {
 		// XXX SETUP : Compressor mode, perhaps needs external DB support
 		CTMServer._compressMode = CTMConstants.CTMCOMPRESS_INRAM;
 		// XXX SETUP : Compressor writes sorted S/O files of each predicate or not
-		CTMServer._writeprecompare = false;
+		CTMServer._writeprecompare = true;
 		
 		// XXX SETUP : Pre-Comparator mode, perhaps needs PERL executable in PATH
 		CTMServer._precompareMode = CTMConstants.CTMPRECOMPARE_JAVA;
@@ -82,6 +93,7 @@ public class CTMServer {
 		CTMServer._ctlParams.put("nsPath", _workingDir + File.separator + "_ns");
 		CTMServer._ctlParams.put("compressedPath", _workingDir + File.separator + "_compressed");
 		CTMServer._ctlParams.put("comparePath", _workingDir + File.separator + "_compare");
+		CTMServer._ctlParams.put("indicatorPath", _workingDir + File.separator + "_indicator");
 
 		for (String key : CTMServer._ctlParams.keySet())
 			IOUtils.logLog("Using parameter : " + key
@@ -154,6 +166,7 @@ public class CTMServer {
 		String posPath;
 		String comparePath;
 		String compressedPath;
+		String indicatorPath;
 		long startTime, endTime, duration;
 		switch (programInd) {
 			case CTMConstants.CTMEMPTY:
@@ -177,6 +190,9 @@ public class CTMServer {
 					compressedPath = _ctlParams.get("compressedPath");
 					IOUtils.deleteDirectory(new File(compressedPath));
 					IOUtils.checkOrCreateFolder(compressedPath);
+					indicatorPath = _ctlParams.get("indicatorPath");
+					IOUtils.deleteDirectory(new File(compressedPath));
+					IOUtils.checkOrCreateFolder(indicatorPath);
 				}
 				IOUtils.logLog("\nOK. ");
 				break;
@@ -457,15 +473,47 @@ public class CTMServer {
 		
 		//Create and execute threads with assigned sub task
 		ExecutorService executor = Executors.newFixedThreadPool(CTMServer._nbThreads);
-        for (int i = 0; i < CTMServer._nbThreads; i++) {
-            Runnable thread = new CTMThread(String.valueOf(i), programInd, inputLists.get(i), 
-            		compressedPath, new InRamDBUtils(), comparePath);
-            executor.execute(thread);
-        }
-        executor.shutdown();
-        while (!executor.isTerminated()) {
-        }
-        return 0;
+		try{
+			DBUtils dbu = null;
+			switch(_compressMode){
+				case CTMConstants.CTMCOMPRESS_INRAM : 
+					dbu = new InRamDBUtils();
+					break;
+				case CTMConstants.CTMCOMPRESS_MONET : 
+					dbu = new MonetDBUtils();
+					break;
+				case CTMConstants.CTMCOMPRESS_MONGO : 
+					dbu = new MongoDBUtils();
+					break;
+				case CTMConstants.CTMCOMPRESS_MYSQL : 
+					dbu = new MySQLUtils();
+					break;
+				case CTMConstants.CTMCOMPRESS_ORACLE : 
+					dbu = new OracleUtils();
+					break;
+				case CTMConstants.CTMCOMPRESS_POSTGRES : 
+					dbu = new PostgreSQLUtils();
+					break;
+				case CTMConstants.CTMCOMPRESS_REDIS : 
+					dbu = new RedisUtils();
+					break;
+				default : 
+					IOUtils.logLog("Compression mode error :"+_compressMode);
+			}
+	        for (int i = 0; i < CTMServer._nbThreads; i++) {
+	            Runnable thread = new CTMThread(String.valueOf(i), programInd, inputLists.get(i), 
+	            		compressedPath, dbu, comparePath);
+	            executor.execute(thread);
+	        }
+	        executor.shutdown();
+	        while (!executor.isTerminated()) {
+	        }
+	        return 0;
+		} catch (Exception e) {
+			IOUtils.logLog("Maybe DBU error");
+			IOUtils.logLog(e.getMessage());
+			return -1;
+		}
 	}
 	
 	/**
@@ -496,8 +544,6 @@ public class CTMServer {
         executor.shutdown();
         while (!executor.isTerminated()) {
         }
-		System.out.println("Now, please execute the external script...");
-		//TODO
 		return 0;
 	}
 	
@@ -507,29 +553,89 @@ public class CTMServer {
 	 * @return 0 if OK
 	 */
 	static int compare(){
-		String psPath = _ctlParams.get("psPath");
-		IOUtils.checkOrCreateFolder(psPath);
 		String comparePath = _ctlParams.get("comparePath");
 		IOUtils.checkOrCreateFolder(comparePath);
+		String indicatorPath = _ctlParams.get("indicatorPath");
+		IOUtils.checkOrCreateFolder(indicatorPath);
 		IOUtils.logLog("\nComparing PS files : ");
-		IOUtils.logLog("Input : " + psPath);
-		IOUtils.logLog("Output : " + comparePath);
+		IOUtils.logLog("Input : " + comparePath);
+		IOUtils.logLog("Output : " + indicatorPath);
 		
-		File folder = new File(psPath);
-		ArrayList<File> listOfFiles = new ArrayList<File>(Arrays.asList(folder.listFiles()));
-		ArrayList<ArrayList<File>> inputLists = assignJobs(listOfFiles, false);
+		File folder = new File(comparePath);
+		File[] listOfFiles = folder.listFiles();
 		
+		//Check number of files
+		HashMap<String,HashSet<String>> noRepNames = new HashMap<String,HashSet<String>>();
+		File temp;
+		String tempName;
+		//Each prepared predicate should have two components : .S, .O
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				temp = listOfFiles[i];
+				if(!temp.getName().contains(".S") && !temp.getName().contains(".O")){
+					IOUtils.logLog("Input folder contains error : "
+							+ temp.getName() + " neither .S nor .O");
+					return -1;
+				}
+				tempName = IOUtils.filenameWithoutExt(temp.getName());
+				if(noRepNames.containsKey(tempName)){
+					noRepNames.get(tempName).add(temp.getName());
+				} else {
+					HashSet<String> newhs = new HashSet<String>();
+					newhs.add(temp.getName());
+					noRepNames.put(tempName, newhs);
+				}
+			}
+		}
+		for(String key : noRepNames.keySet()){
+			if(noRepNames.get(key).size()!=2){
+				IOUtils.logLog("Input folder contains error : "
+						+ key + " has only " + noRepNames.get(key).size() + " component(s)");
+				return -1;
+			}
+		}
+		IOUtils.logLog("Local prepared file checked");
+		
+		ArrayList<String> uniqueName = new ArrayList<String>();
+		uniqueName.addAll(noRepNames.keySet());
+		//sort in alphabetically order
+		Collections.sort(uniqueName, new Comparator<String>() {
+	        @Override
+	        public int compare(String s1, String s2) {
+	            return s1.compareToIgnoreCase(s2);
+	        }
+	    });
+
+		Integer nbComparison = (uniqueName.size()) * (uniqueName.size()-1) / 2;
+		IOUtils.logLog("Assigning for "+nbComparison+" comparison(s)");
+		
+		IOUtils.logLog("Number of predicates "+uniqueName.size());
+		LinkedList<FilePair> toComparePairs = new LinkedList<FilePair>();
+		for(int i = 0; i<uniqueName.size(); i++) {
+			System.out.println(i+" ==> "+uniqueName.get(i));
+			for(int j = i+1; j<uniqueName.size(); j++) {
+				System.out.println("\t"+j+" : "+uniqueName.get(j));
+				toComparePairs.add(new FilePair(
+						new File(comparePath + File.separator + uniqueName.get(i) + ".S"),
+						new File(comparePath + File.separator + uniqueName.get(i) + ".O"),
+						new File(comparePath + File.separator + uniqueName.get(j) + ".S"),
+						new File(comparePath + File.separator + uniqueName.get(j) + ".O")
+					));
+			}
+		}
+		//TODO
+		LinkedList<LinkedList<FilePair>> inputLists = assignJobs(toComparePairs, false);
 		//Create and execute threads with assigned sub task
 		ExecutorService executor = Executors.newFixedThreadPool(CTMServer._nbThreads);
         for (int i = 0; i < CTMServer._nbThreads; i++) {
             Runnable thread = new CTMThread(String.valueOf(i), _compareMode, inputLists.get(i), 
-            		comparePath);
+            		indicatorPath);
             executor.execute(thread);
         }
         executor.shutdown();
         while (!executor.isTerminated()) {
         }
-		//TODO
+        
 		return 0;
 	}
 	
@@ -544,15 +650,23 @@ public class CTMServer {
 		/* Check compressed files */
 		String compressedPath = _ctlParams.get("compressedPath");
 		File folder = new File(compressedPath);
-		File[] listOfCompressedFiles = folder.listFiles();
+		File[] listOfFiles = folder.listFiles();
+		
+		//Check number of files
 		HashMap<String,HashSet<String>> noRepNames = new HashMap<String,HashSet<String>>();
 		File temp;
 		String tempName;
 		//Each compressed predicate should have three components : .index, .matrixSO, .matrixOS
-		for (int i = 0; i < listOfCompressedFiles.length; i++) {
-			if (listOfCompressedFiles[i].isFile()) {
-				temp = listOfCompressedFiles[i];
-				tempName = filenameWithoutExt(temp.getName());
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				temp = listOfFiles[i];
+				tempName = IOUtils.filenameWithoutExt(temp.getName());
+				if(!tempName.contains(".index") && !tempName.contains(".matrixSO")
+						&& !tempName.contains(".matrixOS")){
+					IOUtils.logLog("Input folder contains error : "
+							+ tempName + " neither .index nor .matrixSO nor .matrixOS");
+					return -1;
+				}
 				if(noRepNames.containsKey(tempName)){
 					noRepNames.get(tempName).add(temp.getName());
 				} else {
@@ -570,9 +684,10 @@ public class CTMServer {
 			}
 		}
 		IOUtils.logLog("Local compressed file checked");
+		
 		//Load if the indicator file exists(with check of file entries), otherwise, use a random plan 
 		int [][] simMat = loadPredicateSimilarities();
-		if(listOfCompressedFiles.length!=simMat.length){
+		if(listOfFiles.length!=simMat.length){
 			IOUtils.logLog("Indicator file contains error number of file : using random plan.");
 			simMat = null;
 		}
@@ -604,7 +719,7 @@ public class CTMServer {
 		    IOUtils.logLog(address+":"+port+"|"+free_space+"Mb|"+ratio);
 		}
 		
-		//TODO
+		//TODO Algorithm to distribute
         //System.out.println(directoryNode.receiveMessage());
 		return 0;
 	}
@@ -621,19 +736,10 @@ public class CTMServer {
 		File distIndFile = new File(distIndPath);
 		if(distIndFile.exists() && distIndFile.isFile() && distIndFile.canRead()){
 			int[][] similarArray = new int[IOUtils.countLines(distIndPath)][IOUtils.countLines(distIndPath)];
+			//TODO Load indicator files
 			return similarArray;
 		} else 
 			return null;
-	}
-	
-	/**
-	 * Returns a filename without extension
-	 * 
-	 * @param name
-	 * @return filename
-	 */
-	static String filenameWithoutExt(String name){
-		return name.replaceFirst("[.][^.]+$", "");
 	}
 
 	/**
@@ -677,11 +783,13 @@ public class CTMServer {
 	}
 	
 	/**
-	 * Split all source files into specified number of groups, then for example assign them to multiple threads
+	 * <p>Split all source files into specified number of groups, then for example 
+	 * assign them to multiple threads</p>
+	 * <p>For PS, POS, Compress, Pre-Compare</p>
 	 * @param allFiles all source files
-	 * @param nbThreads number of groups
 	 * @param averageSize false to assign tasks only according to number of files(faster),
-	 * true if you want to have more average size between each group of files(slower)//TODO
+	 * true if you want to have more average size between each group of files(slower)
+	 * //TODO assign to average size groups
 	 * @return
 	 */
 	static ArrayList<ArrayList<File>> assignJobs(ArrayList<File> allFiles, boolean averageSize){
@@ -717,7 +825,51 @@ public class CTMServer {
 		}
 		IOUtils.logLog("Sub tasks assigned");
 		return inputLists;
-		
+	}
+	
+	/**
+	 * <p>Split all source files into specified number of groups, then for example 
+	 * assign them to multiple threads</p>
+	 * <p>For Compare</p>
+	 * @param allFiles all source files
+	 * @param averageSize false to assign tasks only according to number of files(faster),
+	 * true if you want to have more average size between each group of files(slower)
+	 * //TODO assign to average size groups
+	 * @return
+	 */
+	static LinkedList<LinkedList<FilePair>> assignJobs(LinkedList<FilePair> allPairs, boolean averageSize){
+		LinkedList<LinkedList<FilePair>> inputLists = new LinkedList<LinkedList<FilePair>>();
+		//Distribute all input files to threads, as average as possible
+		int partitionSize = allPairs.size()/CTMServer._nbThreads;
+		int remainder = allPairs.size()%CTMServer._nbThreads;
+		int i = 0;
+		if(remainder > 0){
+			partitionSize++;
+			while (remainder > 0) {
+				System.out.println("Adding "+Math.min(partitionSize, allPairs.size() - i));
+				inputLists.addFirst(new LinkedList<FilePair>(allPairs.subList(i,
+						i + Math.min(partitionSize, allPairs.size() - i))));
+				i += partitionSize;
+				remainder--;
+			}
+			partitionSize--;
+		}
+		while (i < allPairs.size()) {
+			System.out.println("Adding "+Math.min(partitionSize, allPairs.size() - i));
+			inputLists.addFirst(new LinkedList<FilePair>(allPairs.subList(i,
+		            i + Math.min(partitionSize, allPairs.size() - i))));
+			i += partitionSize;
+		}
+		//Show result
+		for (i = 0; i < inputLists.size(); i++) {
+			IOUtils.logLog("Sub task " + i + " with " + 
+					inputLists.get(i).size() + "file(s)");
+//			for (int j = 0; j < inputLists.get(i).size(); j++) {
+//				IOUtils.logLog(inputLists.get(i).get(j).getName());
+//			}
+		}
+		IOUtils.logLog("Sub tasks assigned");
+		return inputLists;
 	}
 
 }

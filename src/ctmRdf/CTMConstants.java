@@ -26,5 +26,5 @@ public class CTMConstants {
 	public final static int CTMDISTRIBUTE = 107;
 	
 	public final static int CTMEXIT = -1;
-	public final static int CTMEMPTY = 0;
+	public final static int CTMEMPTY = 10000;
 }

@@ -200,4 +200,14 @@ public class IOUtils {
 		byte[] encoded = Files.readAllBytes(Paths.get(filePath));
 		return new String(encoded, encoding);
 	}
+	
+	/**
+	 * Returns a filename without extension
+	 * 
+	 * @param name
+	 * @return filename
+	 */
+	public static String filenameWithoutExt(String name){
+		return name.replaceFirst("[.][^.]+$", "");
+	}
 }
