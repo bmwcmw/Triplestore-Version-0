@@ -1,12 +1,5 @@
 package dataDistributor;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-
-import localIOUtils.IOUtils;
-
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -14,60 +7,65 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 
+/**
+ * Use FileSender instead.
+ * @author Cedar
+ *
+ */
 public class DataDistributor {
-	
-	/**
-	 * An alternative to send compressed files - via socket, to a C++ server(Boost)
-	 * @param host IP address
-	 * @param port Server's port number
-	 * @param srcFilePath Path of the source file to send
-	 * @param bufferSize in Mb
-	 * @throws IOException 
-	 */
-	public static void sendFileSocket(String host, int port, String srcFilePath, int bufferSize) 
-			throws IOException{
-		File file = new File(srcFilePath);
-		String inFileName = file.getName();
-		BufferedReader reader = null;
-		long lineNb = 0;
-		try{
-			DNConnection calculateNode = new DNConnection(host, port);
-			reader = new BufferedReader(new FileReader(srcFilePath));
-			String buffer = "DATA:<"+inFileName+">";
-			String respStr;
-			String line;
-			int freeBufferSize = bufferSize*1024*1024;
-			while ((line = reader.readLine()) != null) {
-				lineNb ++;
-				if(freeBufferSize - line.getBytes().length < bufferSize*1024*1024){
-					calculateNode.sendMessage("HELLO");
-					respStr = calculateNode.receiveMessage();
-					if(!respStr.equals("DATA;ACK")){
-						IOUtils.logLog("Error sending file via socket : " + srcFilePath + " line " + lineNb);
-						throw new IOException("ERROR : Server returns " + respStr);
-					}
-					buffer = "DATA:";
-					freeBufferSize = bufferSize*1024*1024;
-				}
-				freeBufferSize = freeBufferSize - line.getBytes().length;
-				buffer += line;
-			}
-			buffer += ";";
-			calculateNode.sendMessage(buffer);
-			respStr = calculateNode.receiveMessage();
-			if(!respStr.equals("DATA:ACK")){
-				IOUtils.logLog("Error sending file via socket : " + srcFilePath + " line " + lineNb);
-				throw new IOException("ERROR : Server returns " + respStr);
-			}
-			calculateNode.close();
-		} catch (IOException e) {
-			IOUtils.logLog("Error sending file via socket : " + srcFilePath + " line " + lineNb);
-			throw e;
-		} finally {
-			reader.close();
-		}
-		
-	}
+//	
+//	/**
+//	 * An alternative to send compressed files - via socket, to a C++ server(Boost)
+//	 * @param host IP address
+//	 * @param port Server's port number
+//	 * @param srcFilePath Path of the source file to send
+//	 * @param bufferSize in Mb
+//	 * @throws IOException 
+//	 */
+//	public static void sendFileSocket(String host, int port, String srcFilePath, int bufferSize) 
+//			throws IOException{
+//		File file = new File(srcFilePath);
+//		String inFileName = file.getName();
+//		BufferedReader reader = null;
+//		long lineNb = 0;
+//		try{
+//			DNConnection calculateNode = new DNConnection(host, port);
+//			reader = new BufferedReader(new FileReader(srcFilePath));
+//			String buffer = "DATA:<"+inFileName+">";
+//			String respStr;
+//			String line;
+//			int freeBufferSize = bufferSize*1024*1024;
+//			while ((line = reader.readLine()) != null) {
+//				lineNb ++;
+//				if(freeBufferSize - line.getBytes().length < bufferSize*1024*1024){
+//					calculateNode.sendMessage("HELLO");
+//					respStr = calculateNode.receiveMessage();
+//					if(!respStr.equals("DATA;ACK")){
+//						IOUtils.logLog("Error sending file via socket : " + srcFilePath + " line " + lineNb);
+//						throw new IOException("ERROR : Server returns " + respStr);
+//					}
+//					buffer = "DATA:";
+//					freeBufferSize = bufferSize*1024*1024;
+//				}
+//				freeBufferSize = freeBufferSize - line.getBytes().length;
+//				buffer += line;
+//			}
+//			buffer += ";";
+//			calculateNode.sendMessage(buffer);
+//			respStr = calculateNode.receiveMessage();
+//			if(!respStr.equals("DATA:ACK")){
+//				IOUtils.logLog("Error sending file via socket : " + srcFilePath + " line " + lineNb);
+//				throw new IOException("ERROR : Server returns " + respStr);
+//			}
+//			calculateNode.close();
+//		} catch (IOException e) {
+//			IOUtils.logLog("Error sending file via socket : " + srcFilePath + " line " + lineNb);
+//			throw e;
+//		} finally {
+//			reader.close();
+//		}
+//		
+//	}
 	
 	/**
 	 * An alternative to send compressed files - via SSH/SFTP

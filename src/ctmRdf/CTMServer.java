@@ -623,7 +623,6 @@ public class CTMServer {
 					));
 			}
 		}
-		//TODO
 		LinkedList<LinkedList<FilePair>> inputLists = assignJobs(toComparePairs, false);
 		//Create and execute threads with assigned sub task
 		ExecutorService executor = Executors.newFixedThreadPool(CTMServer._nbThreads);
@@ -703,6 +702,7 @@ public class CTMServer {
 		JSONParser parser = new JSONParser();
 		JSONArray jsonResp = (JSONArray) parser.parse(jsonRespStr);
 		int nbNodes = jsonResp.size();
+		IOUtils.logLog("Available compute nodes : " + nbNodes);
 		ArrayList<JSONObject> jsonRespArray = new ArrayList<JSONObject>();
 		IOUtils.logLog("Available compute nodes information : ");
 		for (Object o : jsonResp){
