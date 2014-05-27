@@ -8,6 +8,11 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
+/**
+ * Deprecated class
+ * @author Cedar
+ *
+ */
 public class CNConnection {
 
     private static final int header_length = 8;

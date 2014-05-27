@@ -6,20 +6,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
- *
- * @author Tanguy
+ * Sends files to compute nodes
+ * @author Cedar
  */
-public class FileSender {
+public class CNFileSender {
 
     CNConnection connexion;
 
-    public FileSender(String address, int port) throws IOException {
+    public CNFileSender(String address, int port) throws IOException {
         connexion = new CNConnection(address, port);
     }
 
@@ -27,7 +22,8 @@ public class FileSender {
         connexion.close();
     }
 
-    public void sendFile(File f, int partSize) throws FileNotFoundException, IOException {
+    public void sendFile(File f, int partSize) 
+    		throws FileNotFoundException, IOException {
 
         long start = System.currentTimeMillis();
         long fileSize = 0;
@@ -62,8 +58,10 @@ public class FileSender {
                 rv = bufr.read(cbuf, 0, partSize);
 
             }
-            System.out.println("'" + f.getName() + "' (" + Data_size_formatter(fileSize) + ") sent in " 
-            		+ nbPart + " Parts :: total time :" + time_formatter(System.currentTimeMillis() - start));
+            System.out.println("'" + f.getName() + "' (" 
+            		+ Data_size_formatter(fileSize) + ") sent in " 
+            		+ nbPart + " Parts :: total time :" 
+            		+ time_formatter(System.currentTimeMillis() - start));
         } finally {
         	if(bufr != null){
         		bufr.close();
@@ -71,7 +69,8 @@ public class FileSender {
         }
     }
 
-    public void sendFile(String filePath, int partSize) throws FileNotFoundException, IOException {
+    public void sendFile(String filePath, int partSize) 
+    		throws FileNotFoundException, IOException {
         File f = new File(filePath);
         sendFile(f, partSize);
     }
@@ -103,7 +102,9 @@ public class FileSender {
             minuts = (totalSeconds % 3600) / 60;
             seconds = totalSeconds % 60;
 
-            return (hours > 0 ? df.format(hours) + " h " + df.format(minuts) + " m " + df.format(seconds) + " s" : (minuts > 0 ? df.format(minuts) + "m " + df.format(seconds) + " s" : df.format(seconds) + " s"));
+            return (hours > 0 ? df.format(hours) + " h " + df.format(minuts) 
+            		+ " m " + df.format(seconds) + " s" : (minuts > 0 ? df.format(minuts) 
+            		+ "m " + df.format(seconds) + " s" : df.format(seconds) + " s"));
         }
     }
 

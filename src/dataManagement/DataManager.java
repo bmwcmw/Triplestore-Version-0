@@ -327,7 +327,8 @@ public class DataManager {
 	 * @return index of the given node
 	 * @throws SQLException 
 	 */
-	public void insertOrIgnorePredicateNodes(DBUtils dbu, CTMDouble so) throws SQLException {
+	public void insertOrIgnorePredicateNodes(DBUtils dbu, CTMDouble so) 
+			throws SQLException {
 		String S = so.getSubject().toString();
 		String O = so.getObject().toString();
 		Integer iS = dbu.fetchIdByNode(S);
@@ -351,7 +352,8 @@ public class DataManager {
 	 * @param line : line to write
 	 * @throws IOException 
 	 */
-	private void writeToBigFile(String filepath, String line) throws IOException{
+	private void writeToBigFile(String filepath, String line) 
+			throws IOException{
 		BufferedWriter writer;
 		if(!_predicateWriterList.containsKey(filepath)){
 			writer = new BufferedWriter(new OutputStreamWriter(
