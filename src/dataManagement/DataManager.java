@@ -253,8 +253,8 @@ public class DataManager {
 			throws IOException, ParseException, InterruptedException, ExecutionException {
 	    JavaComparator jc = new JavaComparator();
 	    FilePair fp = null;
-	    FileWriter fw = null;
 		int count = 0;
+		String outFileName = null;
 	    while(true){
 	    	try{
 	    		fp = pairs.getFirst();
@@ -262,11 +262,14 @@ public class DataManager {
 	    		break;
 	    	}
 			count++;
+			outFileName = outputPath + File.separator 
+					+ IOUtils.filenameWithoutExt(fp.f1S.getName()) + "_" 
+					+ IOUtils.filenameWithoutExt(fp.f2S.getName());
 		    Long resultS = jc.compareTwoPredicates(fp.f1S, fp.f2S);
 		    Long resultO = jc.compareTwoPredicates(fp.f1O, fp.f2O);
 		    System.out.println(fp.f1S.getName()+" and "+fp.f2S.getName()+" have "+resultS+" common entries.");
 		    System.out.println(fp.f1O.getName()+" and "+fp.f2O.getName()+" have "+resultO+" common entries.");
-		    //TODO fw = new FileWriter(outputPath+File.separator+fp.f1.g);
+		    writeToBigFile(outFileName, resultS + " " + resultO);
 		    pairs.removeFirst();
 	    }
 	    IOUtils.logLog("Thread " + threadId + " executed " + count + " comparisons.");

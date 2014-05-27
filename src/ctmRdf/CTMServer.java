@@ -191,7 +191,7 @@ public class CTMServer {
 					IOUtils.deleteDirectory(new File(compressedPath));
 					IOUtils.checkOrCreateFolder(compressedPath);
 					indicatorPath = _ctlParams.get("indicatorPath");
-					IOUtils.deleteDirectory(new File(compressedPath));
+					IOUtils.deleteDirectory(new File(indicatorPath));
 					IOUtils.checkOrCreateFolder(indicatorPath);
 				}
 				IOUtils.logLog("\nOK. ");

@@ -9,6 +9,7 @@ bin/
 tmp/
 _compare/
 _compressed/
+_indicator/
 _invalidTriple/
 _ns/
 _pos/
