@@ -26,7 +26,7 @@ public class JavaTest {
         String node_address = "127.0.0.1";
         int node_port = 7475;
 
-        CNFileSender fs = new CNFileSender(node_address, node_port);
+        FileSenderCN fs = new FileSenderCN(node_address, node_port);
         fs.sendFile("D:\\the_hunger_game.txt", 20 * 1024);
         fs.close();
     }

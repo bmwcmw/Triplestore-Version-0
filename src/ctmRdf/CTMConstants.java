@@ -24,6 +24,8 @@ public class CTMConstants {
 	public final static int CTMCOMPARE_PERL = 1063;
 	
 	public final static int CTMDISTRIBUTE = 107;
+	public final static int CTMDISTRIBUTE_CEDAR = 1071;
+	public final static int CTMDISTRIBUTE_HDFS = 1072;
 	
 	public final static int CTMEXIT = -1;
 	public final static int CTMEMPTY = 10000;

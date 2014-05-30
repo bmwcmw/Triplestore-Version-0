@@ -10,12 +10,12 @@ import java.text.DecimalFormat;
  * Sends files to compute nodes
  * @author Cedar
  */
-public class CNFileSender {
+public class FileSenderCN {
 
-    CNConnection connexion;
+    ConnectCN connexion;
 
-    public CNFileSender(String address, int port) throws IOException {
-        connexion = new CNConnection(address, port);
+    public FileSenderCN(String address, int port) throws IOException {
+        connexion = new ConnectCN(address, port);
     }
 
     public void close() {

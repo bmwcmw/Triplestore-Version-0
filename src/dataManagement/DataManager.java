@@ -5,7 +5,6 @@ import indexNodesDBUtils.DBUtils;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.sql.SQLException;
@@ -18,9 +17,8 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
-import org.json.simple.JSONArray;
-
 import commandRunner.PerlPreComparator;
+import ctmRdf.CTMConstants;
 import localIOUtils.IOUtils;
 import dataCleaner.CTMDoubleStr;
 import dataCleaner.CTMTriple;
@@ -29,6 +27,8 @@ import dataComparator.FilePair;
 import dataComparator.JavaComparator;
 import dataCompressor.DgapCompressor;
 import dataCompressor.SOIntegerPair;
+import dataDistributor.DestInfo;
+import dataDistributor.FileSenderCN;
 import dataReader.N3Reader;
 import dataReader.SOReader;
 
@@ -311,9 +311,30 @@ public class DataManager {
 	 * Distributes compressed SO/OS matrix of each predicate as well as their index
 	 * @param compressedSrc
 	 * @param outputList
+	 * @throws IOException 
 	 */
-	public void distribute(ArrayList<File> compressedSrc, JSONArray outputList){
-		//TODO
+	public void distribute(HashMap<File, DestInfo> toSendSrcDst, int mode) throws IOException{
+		Iterator<Entry<File, DestInfo>> it = toSendSrcDst.entrySet().iterator();
+		switch(mode){
+			case CTMConstants.CTMDISTRIBUTE_CEDAR:
+			    while (it.hasNext()) {
+			        Entry<File, DestInfo> pairs = it.next();
+			        IOUtils.logLog("Sending " + pairs.getKey() + " to " + pairs.getValue());
+
+			        FileSenderCN fs = new FileSenderCN(pairs.getValue().addr, pairs.getValue().port);
+			        fs.sendFile(pairs.getKey().getAbsolutePath(), pairs.getValue().size);//20 * 1024
+			        fs.close();
+					//TODO check
+			        it.remove();
+			    }
+				break;
+			case CTMConstants.CTMDISTRIBUTE_HDFS:
+				break;
+			default:
+				IOUtils.logLog("Thread " + threadId + " wrong distribute option " + mode);
+				break;
+		}
+		IOUtils.logLog("Thread " + threadId + " distributed " + toSendSrcDst.size() + " file(s).");
 	}
 	
 	/**

@@ -13,7 +13,7 @@ import java.net.Socket;
  * @author Cedar
  *
  */
-public class CNConnection {
+public class ConnectCN {
 
     private static final int header_length = 8;
     private static final int size_packet = 50 * 1024 * 1024;
@@ -23,7 +23,7 @@ public class CNConnection {
     private BufferedReader socket_reader;
     private PrintWriter socket_writer;
 
-    public CNConnection(String ipAddress, int port) throws IOException {
+    public ConnectCN(String ipAddress, int port) throws IOException {
         try {
             InetAddress addr = InetAddress.getByName(ipAddress);
             socket = new Socket(addr, port);

@@ -7,13 +7,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.ExecutionException;
 
-import org.json.simple.JSONArray;
-
 import localIOUtils.IOUtils;
 import dataComparator.FilePair;
+import dataDistributor.DestInfo;
 import dataManagement.DataManager;
 
 public class CTMThread implements Runnable {
@@ -27,8 +27,8 @@ public class CTMThread implements Runnable {
     private String nsPath;
     private String comparePath = null;
     private DBUtils indexNodes = null;
-    private JSONArray connoption;
     private LinkedList<FilePair> comparePairs;
+    private HashMap<File, DestInfo> toSend;
 
     /**
      * For PS tasks
@@ -117,11 +117,10 @@ public class CTMThread implements Runnable {
      * @param inputList
      * @param connopt
      */
-    public CTMThread(String tid, int task, ArrayList<File> inputList, JSONArray connopt){
+    public CTMThread(String tid, int task, HashMap<File,DestInfo> toSendList){
 		threadId = tid;
 		dm = new DataManager(tid);
-		inputFiles = inputList;
-    	connoption = connopt;
+		toSend = toSendList;
 		System.out.println("Creating " + threadId);
     }
 
@@ -133,7 +132,7 @@ public class CTMThread implements Runnable {
 		try {
 			switch (taskId) {
 				case CTMConstants.CTMCONVERTER:
-					//TODO
+					//TODO add multi-threading support
 					break;
 				case CTMConstants.CTMREADERPS:
 					dm.psSplit(inputFiles, outputFolder, nsPath, invalidPath);
@@ -159,8 +158,11 @@ public class CTMThread implements Runnable {
 				case CTMConstants.CTMCOMPARE_PERL:
 					dm.comparePerl(comparePairs, outputFolder);
 					break;
-				case CTMConstants.CTMDISTRIBUTE:
-					dm.distribute(inputFiles, connoption);
+				case CTMConstants.CTMDISTRIBUTE_CEDAR:
+					dm.distribute(toSend, taskId);
+					break;
+				case CTMConstants.CTMDISTRIBUTE_HDFS:
+					dm.distribute(toSend, taskId);
 					break;
 				default:
 					break;

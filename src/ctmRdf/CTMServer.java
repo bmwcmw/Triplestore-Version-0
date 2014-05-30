@@ -38,7 +38,8 @@ import org.json.simple.parser.ParseException;
 
 import commandRunner.FormatConverter;
 import dataComparator.FilePair;
-import dataDistributor.DNConnection;
+import dataDistributor.ConnectDN;
+import dataDistributor.DestInfo;
 import localIOUtils.IOUtils;
 
 /**
@@ -54,6 +55,7 @@ public class CTMServer {
 	private static boolean _writeprecompare;
 	private static int _precompareMode;
 	private static int _compareMode;
+	private static int _distributeMode;
 	private static Map<String, String> _ctlParams;
 	private final static String _workingDir = System.getProperty("user.dir");
 	private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -80,6 +82,9 @@ public class CTMServer {
 		
 		// XXX SETUP : Comparator mode, perhaps needs PERL or GNU executable in PATH
 		CTMServer._compareMode = CTMConstants.CTMCOMPARE_JAVA;
+		
+		// XXX SETUP : Distributor mode, to various distributed environments
+		CTMServer._distributeMode = CTMConstants.CTMDISTRIBUTE_HDFS;
 		
 		// XXX SETUP : Global in/out paths
 		CTMServer._ctlParams = new HashMap<String, String>();
@@ -694,7 +699,7 @@ public class CTMServer {
 		/* Contact DN and get the number of CNs with their available space */
 		String ipDN = "134.214.142.58";
 		int portDN = 7474;
-		DNConnection directoryNode = new DNConnection(ipDN, portDN);
+		ConnectDN directoryNode = new ConnectDN(ipDN, portDN);
 		directoryNode.sendMessage("HELLO");
 		String jsonRespStr = directoryNode.receiveMessage();
 //		String jsonRespStr = "[{\"address\":\"192.168.0.1\",\"port\":\"8888\",\"free_space\":\"20480\",\"ratio\":\"0.5\"},"
@@ -719,6 +724,16 @@ public class CTMServer {
 		    IOUtils.logLog(address+":"+port+"|"+free_space+"Mb|"+ratio);
 		}
 		
+		//Create and execute threads with assigned sub task
+		ExecutorService executor = Executors.newFixedThreadPool(CTMServer._nbThreads);
+	        for (int i = 0; i < CTMServer._nbThreads; i++) {
+	            Runnable thread = new CTMThread(String.valueOf(i), _compareMode, 
+	            		new HashMap<File,DestInfo>());
+	            executor.execute(thread);
+	        }
+	        executor.shutdown();
+	        while (!executor.isTerminated()) {
+        }
 		//TODO Algorithm to distribute
         //System.out.println(directoryNode.receiveMessage());
 		return 0;
