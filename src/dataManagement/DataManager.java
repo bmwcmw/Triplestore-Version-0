@@ -27,8 +27,10 @@ import dataComparator.FilePair;
 import dataComparator.JavaComparator;
 import dataCompressor.DgapCompressor;
 import dataCompressor.SOIntegerPair;
+import dataDistributor.DataDistributor;
 import dataDistributor.DestInfo;
 import dataDistributor.FileSenderCN;
+import dataDistributor.SSHExecutor;
 import dataReader.N3Reader;
 import dataReader.SOReader;
 
@@ -319,7 +321,7 @@ public class DataManager {
 			case CTMConstants.CTMDISTRIBUTE_CEDAR:
 			    while (it.hasNext()) {
 			        Entry<File, DestInfo> pairs = it.next();
-			        IOUtils.logLog("Sending " + pairs.getKey() + " to " + pairs.getValue());
+			        IOUtils.logLog("Sending via socket " + pairs.getKey() + " to " + pairs.getValue());
 
 			        FileSenderCN fs = new FileSenderCN(pairs.getValue().addr, pairs.getValue().port);
 			        fs.sendFile(pairs.getKey().getAbsolutePath(), pairs.getValue().size);//20 * 1024
@@ -329,6 +331,27 @@ public class DataManager {
 			    }
 				break;
 			case CTMConstants.CTMDISTRIBUTE_HDFS:
+			    while (it.hasNext()) {
+			        Entry<File, DestInfo> pairs = it.next();
+			        IOUtils.logLog("Sending via SSH " + pairs.getKey() + " to " + pairs.getValue());
+
+//			        FileSenderCN fs = new FileSenderCN(pairs.getValue().addr, pairs.getValue().port);
+//			        fs.sendFile(pairs.getKey().getAbsolutePath(), pairs.getValue().size);//20 * 1024
+//			        fs.close();
+			        
+			        SSHExecutor.execute(pairs.getValue().addr, "cmw", "123xsd", "pwd");
+					DataDistributor.sendFileSFTP(pairs.getValue().addr, pairs.getValue().port
+							, "cmw", "123xsd", pairs.getKey().getAbsolutePath(), pairs.getKey().getName());
+					SSHExecutor.execute(pairs.getValue().addr, "cmw", "123xsd", 
+							"/home/cmw/Bureau/hadoop-1.2.1/bin/hadoop dfs "
+							+ "-copyFromLocal " + pairs.getKey().getName()
+							+ " hdfs://localhost:9000/user/cmw/tmp");
+					SSHExecutor.execute(pairs.getValue().addr, "cmw", "123xsd", 
+							"/home/cmw/Bureau/hadoop-1.2.1/bin/hadoop dfs "
+							+ "-ls hdfs://localhost:9000/user/cmw/tmp");
+					//TODO check
+			        it.remove();
+			    }
 				break;
 			default:
 				IOUtils.logLog("Thread " + threadId + " wrong distribute option " + mode);

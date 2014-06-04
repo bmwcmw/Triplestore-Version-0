@@ -75,13 +75,13 @@ public class DataDistributor {
 	 * @param srcFilename Source file(path or only name - using default path) to send
 	 * @param destFilename Source file(path or only name - using default path) to send
 	 */
-	public static void sendFileSFTP(String host, String user, String pwd, 
+	public static void sendFileSFTP(String host, int port, String user, String pwd, 
 			String srcFilename, String destFilename){
 	    Session session = null;
 	    Channel channel = null;
 	    try {
 	        JSch ssh = new JSch();
-	        session = ssh.getSession(user, host, 22);
+	        session = ssh.getSession(user, host, port);
             session.setConfig("StrictHostKeyChecking", "no");
 	        session.setPassword(pwd);
 	        session.connect();

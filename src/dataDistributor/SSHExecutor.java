@@ -38,13 +38,13 @@ public class SSHExecutor {
 	        channelExec.disconnect();
 	        session.disconnect();
 	        if(exitStatus < 0){
-	            System.out.println("Done, but exit status not set!");
+	            System.out.println("Done without exit status.");
 	        }
 	        else if(exitStatus > 0){
-	            System.out.println("Done, but with error!");
+	            System.out.println("Done but with error.");
 	        }
 	        else{
-	            System.out.println("Done!");
+	            System.out.println("Done.");
 	        }
 	    }
 	    catch(Exception e)
