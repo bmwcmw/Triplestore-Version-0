@@ -724,18 +724,18 @@ public class CTMServer {
 			Float ratio = Float.valueOf( (String) newJO.get("ratio") );
 		    IOUtils.logLog(address+":"+port+"|"+free_space+"Mb|"+ratio);
 		}
+		//TODO Algorithm to distribute
 		
 		//Create and execute threads with assigned sub task
 		ExecutorService executor = Executors.newFixedThreadPool(CTMServer._nbThreads);
 	        for (int i = 0; i < CTMServer._nbThreads; i++) {
-	            Runnable thread = new CTMThread(String.valueOf(i), _compareMode, 
+	            Runnable thread = new CTMThread(String.valueOf(i), _distributeMode, 
 	            		new HashMap<File,DestInfo>());
 	            executor.execute(thread);
 	        }
 	        executor.shutdown();
 	        while (!executor.isTerminated()) {
         }
-		//TODO Algorithm to distribute
         //System.out.println(directoryNode.receiveMessage());
 		return 0;
 	}
