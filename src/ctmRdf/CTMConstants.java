@@ -19,9 +19,10 @@ public class CTMConstants {
 	public final static int CTMPRECOMPARE_PERL = 1052;
 	
 	public final static int CTMCOMPARE = 106;
-	public final static int CTMCOMPARE_JAVA = 1061;
-	public final static int CTMCOMPARE_GNU = 1062;
-	public final static int CTMCOMPARE_PERL = 1063;
+	public final static int CTMCOMPARE_JAVA_INRAM = 1061;
+	public final static int CTMCOMPARE_JAVA = 1062;
+	public final static int CTMCOMPARE_GNU = 1063;
+	public final static int CTMCOMPARE_PERL = 1064;
 	
 	public final static int CTMDISTRIBUTE = 107;
 	public final static int CTMDISTRIBUTE_CEDAR = 1071;

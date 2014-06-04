@@ -49,6 +49,7 @@ import localIOUtils.IOUtils;
 public class CTMServer {
 
 	// TODO possibility to add arguments while launching the program
+	// TODO possibility to use configuration file
 
 	private static int _nbThreads;
 	private static int _compressMode;

@@ -1,5 +1,6 @@
 package commandRunner;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -13,7 +14,8 @@ import localIOUtils.IOUtils;
  *
  */
 public class FormatConverter extends BasicRunner{
-	private final static String RDF2RDF_JAR_FILENAME = "rdf2rdf-1.0.1-2.3.1.jar";
+	private final static String RDF2RDF_JAR_FILENAME 
+		= "exec" + File.separator + "rdf2rdf-1.0.1-2.3.1.jar";
 	
 	private Process _proc;
 	private InputStream _in;
