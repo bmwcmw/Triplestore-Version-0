@@ -18,22 +18,22 @@ public class SimpleQueryExecutor {
 				
 			}
 		}
-		if((temp=g.get(QueryUtils.VarType.P, true)) != null){
+		if((listPattern=subqueries.get(QueryUtils.VarType.P, true)) != null){
 			
 		}
-		if((temp=g.get(QueryUtils.VarType.O, true)) != null){
+		if((listPattern=subqueries.get(QueryUtils.VarType.O, true)) != null){
 			
 		}
-		if((temp=g.get(QueryUtils.VarType.SP, true)) != null){
+		if((listPattern=subqueries.get(QueryUtils.VarType.SP, true)) != null){
 			
 		}
-		if((temp=g.get(QueryUtils.VarType.SO, true)) != null){
+		if((listPattern=subqueries.get(QueryUtils.VarType.SO, true)) != null){
 			
 		}
-		if((temp=g.get(QueryUtils.VarType.PO, true)) != null){
+		if((listPattern=subqueries.get(QueryUtils.VarType.PO, true)) != null){
 			
 		}
-		if((temp=g.get(QueryUtils.VarType.SPO, true)) != null){
+		if((listPattern=subqueries.get(QueryUtils.VarType.SPO, true)) != null){
 			
 		}
 	}
