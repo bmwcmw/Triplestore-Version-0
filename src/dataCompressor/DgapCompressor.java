@@ -103,7 +103,7 @@ public class DgapCompressor {
 //					String temp = current + " has " + last + ",";
 					for (Integer i : lineSet){
 //						temp += i + ",";
-						if(i - last != 0){ 
+						if(i - last != 0){
 							if(i - last == 1){
 								blockSize ++;
 							} else {
