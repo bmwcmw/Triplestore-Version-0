@@ -2,17 +2,22 @@ package queryPlanner;
 
 import java.util.LinkedList;
 
-import queryUtils.Graph;
+import queryUtils.SubQuerySet;
 import queryUtils.Pattern;
 import queryUtils.QueryUtils;
 import queryUtils.QueryUtils.VarType;
 
 public class SimpleQueryPlanner {
 	
-	public static Graph plan(LinkedList<Pattern> triplepatterns){
+	/**
+	 * Splits a list of patterns into chunks by type of variables
+	 * @param triplepatterns
+	 * @return a Graph
+	 */
+	public static SubQuerySet plan(LinkedList<Pattern> triplepatterns){
 		Pattern p;
 		String countVar = "";
-		Graph g = new Graph();
+		SubQuerySet set = new SubQuerySet();
 		while((p = triplepatterns.getFirst()) != null){
 			if (QueryUtils.isVariable(p.getS())) 
 				countVar += "S";
@@ -20,11 +25,11 @@ public class SimpleQueryPlanner {
 				countVar += "P";
 			if (QueryUtils.isVariable(p.getO())) 
 				countVar += "O";
-			g.addPattern(VarType.valueOf(countVar), p);
+			set.addPattern(VarType.valueOf(countVar), p);
 			countVar = "";
 			triplepatterns.removeFirst();
 		}
-		return null;
+		return set;
 	}
 	
 }

@@ -8,19 +8,19 @@ import java.util.HashMap;
 import queryUtils.QueryUtils.VarType;
 
 /**
- * This is used to store a graph of SPARQL queries with all sub-queries categorized
- * by their variable type.  
+ * This is used to store a result set of SPARQL queries, categorized
+ * by sub-queries and their variable type.  
  * @author Cedar
  */
-public class Graph {
-	 private HashMap<VarType, ArrayList<Pattern>> graph;
+public class ResultSet {
+	 private HashMap<VarType, ArrayList<String>> graph;
 	 
 	 /**
 	  * Inserts a pattern with its variable type into a Graph
 	  * @param type : the type of pattern
 	  * @param p : the pattern to insert
 	  */
-	 public void addPattern(VarType type, Pattern p){
+	 public void addResult(VarType type, Pattern p){
 		 ArrayList<Pattern> temp;
 		 if ((temp = graph.get(type)) == null) {
 			 ArrayList<Pattern> newArray = new ArrayList<Pattern>();
@@ -52,10 +52,40 @@ public class Graph {
 	 private void sort(VarType type, ArrayList<Pattern> arr){
 		 switch(type){
 		 	case S : 
+				Collections.sort(arr, new Comparator<Pattern>() {
+					@Override
+					public int compare(final Pattern p1, final Pattern p2) {
+						int res = p1.getP().compareTo(p2.getP());
+						if(res==0){
+							res = p1.getO().compareTo(p2.getO());
+						} 
+						return res;
+					}
+				});
 		 		break;
 		 	case P : 
+				Collections.sort(arr, new Comparator<Pattern>() {
+					@Override
+					public int compare(final Pattern p1, final Pattern p2) {
+						int res = p1.getS().compareTo(p2.getS());
+						if(res==0){
+							res = p1.getO().compareTo(p2.getO());
+						} 
+						return res;
+					}
+				});
 		 		break;
 		 	case O : 
+				Collections.sort(arr, new Comparator<Pattern>() {
+					@Override
+					public int compare(final Pattern p1, final Pattern p2) {
+						int res = p1.getS().compareTo(p2.getS());
+						if(res==0){
+							res = p1.getP().compareTo(p2.getP());
+						} 
+						return res;
+					}
+				});
 		 		break;
 		 	case SP : 
 				Collections.sort(arr, new Comparator<Pattern>() {
@@ -81,7 +111,7 @@ public class Graph {
 					}
 				});
 		 		break;
-		 	case SPO : 
+		 	default : //case SPO : 
 		 		break;
 		 }
 	 }

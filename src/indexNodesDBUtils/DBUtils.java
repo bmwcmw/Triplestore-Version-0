@@ -112,4 +112,12 @@ public class DBUtils {
 	public ArrayList<SOIntegerPair> fetchSOList(){
 		return null;
 	}
+	
+	/**
+	 * Loads the index from a compressed index file
+	 * @param path
+	 */
+	public void loadFromFile(String path){
+		
+	}
 }
