@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import queryObjects.StringPattern;
 import queryUtils.QueryUtils.VarType;
 
 /**
@@ -13,17 +14,17 @@ import queryUtils.QueryUtils.VarType;
  * @author Cedar
  */
 public class SubQuerySet {
-	 private HashMap<VarType, ArrayList<Pattern>> sets;
+	 private HashMap<VarType, ArrayList<StringPattern>> sets;
 	 
 	 /**
 	  * Inserts a pattern with its variable type into a Graph
 	  * @param type : the type of pattern
 	  * @param p : the pattern to insert
 	  */
-	 public void addPattern(VarType type, Pattern p){
-		 ArrayList<Pattern> temp;
+	 public void addStringPattern(VarType type, StringPattern p){
+		 ArrayList<StringPattern> temp;
 		 if ((temp = sets.get(type)) == null) {
-			 ArrayList<Pattern> newArray = new ArrayList<Pattern>();
+			 ArrayList<StringPattern> newArray = new ArrayList<StringPattern>();
 			 newArray.add(p);
 			 sets.put(type, newArray);
 		 } else {
@@ -38,8 +39,8 @@ public class SubQuerySet {
 	  * @param sorted
 	  * @return a list of sub-queries
 	  */
-	 public ArrayList<Pattern> get(VarType type, boolean sorted){
-		 ArrayList<Pattern> temp = sets.get(type);
+	 public ArrayList<StringPattern> get(VarType type, boolean sorted){
+		 ArrayList<StringPattern> temp = sets.get(type);
 		 if (sorted) sort(type, temp);
 		 return temp;
 	 }
@@ -49,12 +50,12 @@ public class SubQuerySet {
 	  * @param type
 	  * @param arr
 	  */
-	 private void sort(VarType type, ArrayList<Pattern> arr){
+	 private void sort(VarType type, ArrayList<StringPattern> arr){
 		 switch(type){
 		 	case S : 
-				Collections.sort(arr, new Comparator<Pattern>() {
+				Collections.sort(arr, new Comparator<StringPattern>() {
 					@Override
-					public int compare(final Pattern p1, final Pattern p2) {
+					public int compare(final StringPattern p1, final StringPattern p2) {
 						int res = p1.getP().compareTo(p2.getP());
 						if(res==0){
 							res = p1.getO().compareTo(p2.getO());
@@ -64,9 +65,9 @@ public class SubQuerySet {
 				});
 		 		break;
 		 	case P : 
-				Collections.sort(arr, new Comparator<Pattern>() {
+				Collections.sort(arr, new Comparator<StringPattern>() {
 					@Override
-					public int compare(final Pattern p1, final Pattern p2) {
+					public int compare(final StringPattern p1, final StringPattern p2) {
 						int res = p1.getS().compareTo(p2.getS());
 						if(res==0){
 							res = p1.getO().compareTo(p2.getO());
@@ -76,9 +77,9 @@ public class SubQuerySet {
 				});
 		 		break;
 		 	case O : 
-				Collections.sort(arr, new Comparator<Pattern>() {
+				Collections.sort(arr, new Comparator<StringPattern>() {
 					@Override
-					public int compare(final Pattern p1, final Pattern p2) {
+					public int compare(final StringPattern p1, final StringPattern p2) {
 						int res = p1.getS().compareTo(p2.getS());
 						if(res==0){
 							res = p1.getP().compareTo(p2.getP());
@@ -88,25 +89,25 @@ public class SubQuerySet {
 				});
 		 		break;
 		 	case SP : 
-				Collections.sort(arr, new Comparator<Pattern>() {
+				Collections.sort(arr, new Comparator<StringPattern>() {
 					@Override
-					public int compare(final Pattern p1, final Pattern p2) {
+					public int compare(final StringPattern p1, final StringPattern p2) {
 						return p1.getO().compareTo(p2.getO());
 					}
 				});
 		 		break;
 		 	case SO : 
-				Collections.sort(arr, new Comparator<Pattern>() {
+				Collections.sort(arr, new Comparator<StringPattern>() {
 					@Override
-					public int compare(final Pattern p1, final Pattern p2) {
+					public int compare(final StringPattern p1, final StringPattern p2) {
 						return p1.getP().compareTo(p2.getP());
 					}
 				});
 		 		break;
 		 	case PO : 
-				Collections.sort(arr, new Comparator<Pattern>() {
+				Collections.sort(arr, new Comparator<StringPattern>() {
 					@Override
-					public int compare(final Pattern p1, final Pattern p2) {
+					public int compare(final StringPattern p1, final StringPattern p2) {
 						return p1.getS().compareTo(p2.getS());
 					}
 				});

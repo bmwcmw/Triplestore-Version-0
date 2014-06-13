@@ -2,8 +2,8 @@ package queryPlanner;
 
 import java.util.LinkedList;
 
+import queryObjects.StringPattern;
 import queryUtils.SubQuerySet;
-import queryUtils.Pattern;
 import queryUtils.QueryUtils;
 import queryUtils.QueryUtils.VarType;
 
@@ -14,8 +14,8 @@ public class SimpleQueryPlanner {
 	 * @param triplepatterns
 	 * @return a Graph
 	 */
-	public static SubQuerySet plan(LinkedList<Pattern> triplepatterns){
-		Pattern p;
+	public static SubQuerySet plan(LinkedList<StringPattern> triplepatterns){
+		StringPattern p;
 		String countVar = "";
 		SubQuerySet set = new SubQuerySet();
 		while((p = triplepatterns.getFirst()) != null){
