@@ -1,3 +1,5 @@
+# http://swat.cse.lehigh.edu/projects/lubm/
+
 # Query1
 # This query bears large input and high selectivity. It queries about just one class and
 # one property and does not assume any hierarchy information or inference.

@@ -14,7 +14,8 @@ public class SimpleQueryPlanner {
 	 * @param triplepatterns
 	 * @return a Graph
 	 */
-	public static SubQuerySet plan(LinkedList<StringPattern> triplepatterns){
+	public static SubQuerySet plan(String sparql){
+		LinkedList<StringPattern> triplepatterns = new LinkedList<StringPattern>();
 		StringPattern p;
 		String countVar = "";
 		SubQuerySet set = new SubQuerySet();
