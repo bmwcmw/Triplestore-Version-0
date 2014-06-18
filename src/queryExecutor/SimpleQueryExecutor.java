@@ -3,7 +3,7 @@ package queryExecutor;
 import java.util.ArrayList;
 
 import queryObjects.StringPattern;
-import queryUtils.SubQuerySet;
+import queryObjects.SubQuerySet;
 import queryUtils.QueryUtils;
 
 public class SimpleQueryExecutor {

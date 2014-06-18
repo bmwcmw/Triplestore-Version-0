@@ -1,11 +1,10 @@
-package queryUtils;
+package queryObjects;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import queryObjects.StringPattern;
 import queryUtils.QueryUtils.VarType;
 
 /**

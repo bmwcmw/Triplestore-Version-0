@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import queryObjects.StringPattern;
-import queryUtils.SubQuerySet;
+import queryObjects.SubQuerySet;
 import queryUtils.QueryUtils;
 import queryUtils.QueryUtils.VarType;
 
@@ -16,7 +16,7 @@ public class SimpleQueryPlanner {
 	 * @return a Graph
 	 */
 	public static SubQuerySet plan(String sparql){
-		HashMap<Integer, StringPattern> hm = new HashMap<StringPattern>();
+		HashMap<Integer, SubQuerySet> hm = new HashMap<Integer, SubQuerySet>();
 		LinkedList<StringPattern> triplepatterns = new LinkedList<StringPattern>();
 		StringPattern p;
 		String countVar = "";
