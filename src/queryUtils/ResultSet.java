@@ -21,7 +21,7 @@ public class ResultSet {
 	  * @param type : the type of pattern
 	  * @param p : the pattern to insert
 	  */
-	 public void add0Pattern(VarType type, StringPattern p){
+	 public void addPattern(VarType type, StringPattern p){
 		 ArrayList<StringPattern> temp;
 		 if ((temp = graph.get(type)) == null) {
 			 ArrayList<StringPattern> newArray = new ArrayList<StringPattern>();

@@ -6,7 +6,7 @@ import queryObjects.IntegerPattern;
 import queryObjects.StringPattern;
 import indexNodesDBUtils.DBUtils;
 
-public class QueryTranslater {
+public class SimpleQueryTranslater {
 	
 	public static IntegerPattern toCompressed(DBUtils dbu, StringPattern input) throws SQLException{
 		return new IntegerPattern(
