@@ -15,8 +15,10 @@ public class SubQuerySet {
 	  * @param type : the type of pattern
 	  * @param p : the pattern to insert
 	  */
-	 public void putStringPattern(StringPattern p){
-		 sets.put(sets.size(), p);
+	 public Integer putStringPattern(StringPattern p){
+		 Integer i = sets.size();
+		 sets.put(i, p);
+		 return i;
 	 }
 	 
 	 /**
