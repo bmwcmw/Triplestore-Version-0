@@ -6,6 +6,11 @@ public class QueryVariable {
 	private VarType type;
 	private String var;
 	
+	public QueryVariable(VarType t, String v){
+		type = t;
+		var = v;
+	}
+	
 	public void setType(VarType toSet){
 		type = toSet;
 	}

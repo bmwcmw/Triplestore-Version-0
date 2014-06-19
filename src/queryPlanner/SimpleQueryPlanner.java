@@ -3,6 +3,7 @@ package queryPlanner;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import queryObjects.QueryVariable;
 import queryObjects.StringPattern;
 import queryObjects.SubQuerySet;
 import queryUtils.QueryUtils;
