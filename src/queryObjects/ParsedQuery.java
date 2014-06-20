@@ -1,5 +1,6 @@
 package queryObjects;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -18,7 +19,7 @@ public class ParsedQuery {
 	/**
 	 * All variables in the SELECT clause
 	 */
-	private HashSet<String> selectedvariables;
+	private ArrayList<String> selectedvariables;
 	
 	/**
 	 * Number of variables and sets of sub-queries with specified number of variables
@@ -30,10 +31,13 @@ public class ParsedQuery {
 	 */
 	private HashMap<QueryVariable, HashSet<Integer>> variables;
 	
+	private int idPattern;
+	
 	public ParsedQuery(){
+		selectedvariables = new ArrayList<String>();
+		idPattern = 0;
 		patterns = new HashMap<Integer, SubQuerySet>();
 		variables = new HashMap<QueryVariable, HashSet<Integer>>();
-		selectedvariables = new HashSet<String>();
 	}
 	
 	public void addVariable(String var){
@@ -91,7 +95,7 @@ public class ParsedQuery {
 			dest = new SubQuerySet();
 			patterns.put(varList.size(), dest);
 		}
-		Integer id = dest.putStringPattern(p);
+		dest.putStringPattern(idPattern, p);
 		
 		/*
 		 * For all variables
@@ -101,8 +105,10 @@ public class ParsedQuery {
 			QueryVariable tempKey = new QueryVariable((VarType)tempVar.elem1(), (String)tempVar.elem2());
 			if(!variables.containsKey(tempKey))
 				variables.put(tempKey, new HashSet<Integer>());
-			variables.get(tempKey).add(id);
+			variables.get(tempKey).add(idPattern);
 		}
+		
+		idPattern++;
 	}
 	
 	public String toString(){

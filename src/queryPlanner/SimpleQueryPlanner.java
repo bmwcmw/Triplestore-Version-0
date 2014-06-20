@@ -1,5 +1,6 @@
 package queryPlanner;
 
+import java.util.HashSet;
 import java.util.StringTokenizer;
 
 import queryObjects.ParsedQuery;
@@ -26,10 +27,15 @@ public class SimpleQueryPlanner {
 			parsed.addVariable(itrSelect.nextToken());
 		}
 		
+		//Reduce redundancy of sub-queries
+		HashSet<String> forWhere = new HashSet<String>();
 		String where = sparql.substring(sparql.indexOf("{") + 1, sparql.indexOf("}"));
 		StringTokenizer itrWhere = new StringTokenizer(where, ".");
 		while(itrWhere.hasMoreTokens()){
-			parsed.putPattern(new StringPattern(itrWhere.nextToken()));
+			forWhere.add(itrWhere.nextToken());
+		}
+		for(String str : forWhere){
+			parsed.putPattern(new StringPattern(str));
 		}
 		
 		return parsed;

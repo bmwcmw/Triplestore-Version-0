@@ -15,14 +15,12 @@ public class SubQuerySet {
 	 }
 	 
 	 /**
-	  * Inserts a pattern with its variable type into a Graph
-	  * @param type : the type of pattern
+	  * Inserts a pattern into a Graph
+	  * @param id : the unique id of pattern
 	  * @param p : the pattern to insert
 	  */
-	 public Integer putStringPattern(StringPattern p){
-		 Integer i = set.size();
-		 set.put(i, p);
-		 return i;
+	 public void putStringPattern(Integer id, StringPattern p){
+		 set.put(id, p);
 	 }
 	 
 	 /**
