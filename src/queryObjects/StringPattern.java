@@ -4,7 +4,7 @@ import java.util.StringTokenizer;
 
 import queryUtils.InvalidPatternException;
 
-public abstract class StringPattern {
+public class StringPattern {
 	private String s;
 	private String p;
 	private String o;

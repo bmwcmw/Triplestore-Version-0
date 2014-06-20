@@ -26,4 +26,8 @@ public class QueryVariable {
 	public String getVariable(){
 		return var;
 	}
+	
+	public String toString(){
+		return type + " " + var;
+	}
 }

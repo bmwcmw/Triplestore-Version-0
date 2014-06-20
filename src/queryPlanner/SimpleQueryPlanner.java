@@ -1,13 +1,10 @@
 package queryPlanner;
 
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.StringTokenizer;
 
-import queryObjects.QueryVariable;
+import queryObjects.ParsedQuery;
 import queryObjects.StringPattern;
-import queryObjects.SubQuerySet;
-import queryUtils.QueryUtils;
-import queryUtils.QueryUtils.VarType;
+import queryUtils.InvalidPatternException;
 
 public class SimpleQueryPlanner {
 	
@@ -15,25 +12,27 @@ public class SimpleQueryPlanner {
 	 * Splits a list of patterns into chunks by type of variables
 	 * @param triplepatterns
 	 * @return a Graph
+	 * @throws InvalidPatternException 
 	 */
-	public static SubQuerySet plan(String sparql){
-		HashMap<Integer, SubQuerySet> hm = new HashMap<Integer, SubQuerySet>();
-		LinkedList<StringPattern> triplepatterns = new LinkedList<StringPattern>();
-		StringPattern p;
-		String countVar = "";
-		SubQuerySet set = new SubQuerySet();
-		while((p = triplepatterns.getFirst()) != null){
-			if (QueryUtils.isVariable(p.getS())) 
-				countVar += "S";
-			if (QueryUtils.isVariable(p.getP())) 
-				countVar += "P";
-			if (QueryUtils.isVariable(p.getO())) 
-				countVar += "O";
-			set.addPattern(VarType.valueOf(countVar), p);
-			countVar = "";
-			triplepatterns.removeFirst();
+	public static ParsedQuery plan(String sparql) throws InvalidPatternException{
+		if (sparql.startsWith("\uFEFF"))
+			sparql = sparql.substring(1);
+		ParsedQuery parsed = new ParsedQuery();
+		
+		String select = sparql.substring(sparql.indexOf("SELECT") + 6, sparql.indexOf("WHERE"));
+		select = select.replace(" ", "");
+		StringTokenizer itrSelect = new StringTokenizer(select, ",");
+		while(itrSelect.hasMoreTokens()){
+			parsed.addVariable(itrSelect.nextToken());
 		}
-		return set;
+		
+		String where = sparql.substring(sparql.indexOf("{") + 1, sparql.indexOf("}"));
+		StringTokenizer itrWhere = new StringTokenizer(where, ".");
+		while(itrWhere.hasMoreTokens()){
+			parsed.putPattern(new StringPattern(itrWhere.nextToken()));
+		}
+		
+		return parsed;
 	}
 	
 }

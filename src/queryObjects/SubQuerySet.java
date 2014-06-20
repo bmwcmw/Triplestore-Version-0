@@ -8,7 +8,11 @@ import java.util.HashMap;
  * @author Cedar
  */
 public class SubQuerySet {
-	 private HashMap<Integer, StringPattern> sets;
+	 private HashMap<Integer, StringPattern> set;
+	 
+	 public SubQuerySet(){
+		 set = new HashMap<Integer, StringPattern>();
+	 }
 	 
 	 /**
 	  * Inserts a pattern with its variable type into a Graph
@@ -16,8 +20,8 @@ public class SubQuerySet {
 	  * @param p : the pattern to insert
 	  */
 	 public Integer putStringPattern(StringPattern p){
-		 Integer i = sets.size();
-		 sets.put(i, p);
+		 Integer i = set.size();
+		 set.put(i, p);
 		 return i;
 	 }
 	 
@@ -27,15 +31,23 @@ public class SubQuerySet {
 	  * @return the subset 
 	  */
 	 public HashMap<Integer, StringPattern> getAll(){
-		 return sets;
+		 return set;
+	 }
+	 
+	 /**
+	  * Returns the size of the set
+	  * @return the size
+	  */
+	 public int size(){
+		 return set.size();
 	 }
 	 
 	 /**
 	  * Returns the sub-query having the unique identifier
-	  * @return a sub-query 
+	  * @return a sub-query
 	  */
 	 public StringPattern get(Integer i){
-		 return sets.get(i);
+		 return set.get(i);
 	 }
 	 
 //	 /**
