@@ -2,6 +2,9 @@ package queryExecutor;
 
 import java.util.ArrayList;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import queryObjects.ParsedQuery;
 import queryObjects.StringPattern;
 import queryObjects.SubQuerySet;
@@ -9,7 +12,11 @@ import queryUtils.QueryUtils;
 
 public class SimpleQueryExecutor {
 	
-	public static void execute(ParsedQuery parsed, JSONObject dstInfo){
+	public static void execute(ParsedQuery parsed, JSONArray dstInfo){
+		for (Object o : dstInfo){
+			JSONObject newJO = (JSONObject) o;
+		}
+		
 		ArrayList<StringPattern> listPattern;
 		ArrayList<String> listObject;
 		if((listPattern=subqueries.get(QueryUtils.VarType.S, true)) != null){
