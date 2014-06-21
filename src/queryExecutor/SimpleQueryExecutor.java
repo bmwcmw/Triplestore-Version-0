@@ -2,13 +2,14 @@ package queryExecutor;
 
 import java.util.ArrayList;
 
+import queryObjects.ParsedQuery;
 import queryObjects.StringPattern;
 import queryObjects.SubQuerySet;
 import queryUtils.QueryUtils;
 
 public class SimpleQueryExecutor {
 	
-	public static void execute(SubQuerySet subqueries, String dst){
+	public static void execute(ParsedQuery parsed, JSONObject dstInfo){
 		ArrayList<StringPattern> listPattern;
 		ArrayList<String> listObject;
 		if((listPattern=subqueries.get(QueryUtils.VarType.S, true)) != null){
