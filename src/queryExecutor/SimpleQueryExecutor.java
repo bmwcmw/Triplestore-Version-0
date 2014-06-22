@@ -1,6 +1,7 @@
 package queryExecutor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -15,6 +16,15 @@ public class SimpleQueryExecutor {
 	public static void execute(ParsedQuery parsed, JSONArray dstInfo){
 		for (Object o : dstInfo){
 			JSONObject newJO = (JSONObject) o;
+		}
+		
+		HashMap<Integer, SubQuerySet> patterns = parsed.getPatterns();
+		SubQuerySet subset;
+		for(int i=0; i<=3; i++){
+			if( (subset = patterns.get(i)) != null){
+				HashMap<Integer, StringPattern> subpatterns = subset.getAll();
+				//TODO
+			}
 		}
 		
 		ArrayList<StringPattern> listPattern;

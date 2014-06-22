@@ -40,6 +40,10 @@ public class ParsedQuery {
 		variables = new HashMap<QueryVariable, HashSet<Integer>>();
 	}
 	
+	public HashMap<Integer, SubQuerySet> getPatterns(){
+		return patterns;
+	}
+	
 	public void addVariable(String var){
 		selectedvariables.add(var);
 	}
