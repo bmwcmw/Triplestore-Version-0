@@ -1,11 +1,13 @@
 package ctmSPARQL;
 
+import indexNodesDBUtils.InRamDBUtils;
 import queryExecutor.SimpleQueryExecutor;
 
 public class CTMLauncher {
 
 	public static void main(String[] args) {
 		SimpleQueryExecutor.setMode(SimpleQueryExecutor.MODE.LOCALFS);
+		SimpleQueryExecutor.setDBU(new InRamDBUtils());
 		
 		String query = 
 				"SELECT ?X, ?Y, ?Z"

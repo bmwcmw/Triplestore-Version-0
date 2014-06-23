@@ -1,5 +1,14 @@
 package queryExecutor;
 
+import indexNodesDBUtils.DBUtils;
+import indexNodesDBUtils.InRamDBUtils;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -10,6 +19,7 @@ import org.json.simple.JSONObject;
 
 import com.google.common.collect.Sets;
 
+import queryObjects.IntegerPattern;
 import queryObjects.ParsedQuery;
 import queryObjects.StringPattern;
 import queryObjects.SubQuerySet;
@@ -32,30 +42,49 @@ public class SimpleQueryExecutor {
 		return mode;
 	}
 	
-	public static Set<String> fetchFromDest(String dest,  VarType type){
+	private static DBUtils dbu;
+	
+	public static void setDBU(DBUtils toSet){
+		dbu = toSet;
+	}
+	
+	public static DBUtils getDBU(){
+		return dbu;
+	}
+	
+	public static Set<String> fetchFromDest(String dest,  VarType type, StringPattern pat){
 		switch(mode){
 			case LOCALFS:
-				return fetchFromLocalFS(dest, type);
+				return fetchFromLocalFS(dest, type, pat);
 			case HDFS:
-				return fetchFromHDFS(dest, type);
+				return fetchFromHDFS(dest, type, pat);
 			case CEDAR:
-				return fetchFromCEDAR(dest, type);
+				return fetchFromCEDAR(dest, type, pat);
 			default:
 				return null;
 		}
 	}
 	
-	private static Set<String> fetchFromLocalFS(String dest, VarType type){
+	private static Set<String> fetchFromLocalFS(String dest, VarType type, StringPattern pat) 
+			throws SQLException, IOException{
+		Set<String> result = new HashSet<String>();
+		IntegerPattern intPat = SimpleQueryTranslator.toCompressed(dbu, pat);
+		FileInputStream fs= new FileInputStream(dest);//TODO file location
+		BufferedReader br = new BufferedReader(new InputStreamReader(fs));
+		//TODO functions to convert file names
+		for(int i = 0; i < 30; i++)
+			br.readLine();
+		String lineIWant = br.readLine();
+		//TODO
+		return result;
+	}
+	
+	private static Set<String> fetchFromHDFS(String dest, VarType type, StringPattern pat){
 		Set<String> result = new HashSet<String>();
 		return result;
 	}
 	
-	private static Set<String> fetchFromHDFS(String dest, VarType type){
-		Set<String> result = new HashSet<String>();
-		return result;
-	}
-	
-	private static Set<String> fetchFromCEDAR(String dest, VarType type){
+	private static Set<String> fetchFromCEDAR(String dest, VarType type, StringPattern pat){
 		Set<String> result = new HashSet<String>();
 		return result;
 	}
@@ -78,11 +107,11 @@ public class SimpleQueryExecutor {
 					} else {
 						String destPred = pat.getP().replace(":", "-");
 						if(pat.getType().toString().contains("S")){
-							result = SimpleQueryExecutor.fetchFromDest(destPred, VarType.S);
+							result = SimpleQueryExecutor.fetchFromDest(destPred, VarType.S, pat);
 
 							if(pat.getType().toString().contains("O")){
 								Set<String> resultO = 
-										SimpleQueryExecutor.fetchFromDest(destPred, VarType.O);
+										SimpleQueryExecutor.fetchFromDest(destPred, VarType.O, pat);
 								/* Guava : If you have reason to believe one of your sets will generally
 								 * smaller than the other, pass it first. */
 								result = (Set<String>) Sets.intersection(
