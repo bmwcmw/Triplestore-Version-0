@@ -1,8 +1,12 @@
 package ctmSPARQL;
 
+import queryRewriter.SimpleQueryTranslator;
+
 public class CTMLauncher {
 
 	public static void main(String[] args) {
+		SimpleQueryTranslator.setMode(SimpleQueryTranslator.MODE.LOCALFS);
+		
 		String query = 
 				"SELECT ?X, ?Y, ?Z"
 				+ "WHERE"

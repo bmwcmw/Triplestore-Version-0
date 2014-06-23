@@ -3,11 +3,14 @@ package queryObjects;
 import java.util.StringTokenizer;
 
 import queryUtils.InvalidPatternException;
+import queryUtils.QueryUtils;
+import queryUtils.QueryUtils.VarType;
 
 public class StringPattern {
 	private String s;
 	private String p;
 	private String o;
+	private VarType type;
 	
 	
 	/**
@@ -16,10 +19,11 @@ public class StringPattern {
 	 * @param P literal expression
 	 * @param O literal expression
 	 */
-	public StringPattern(String S, String P, String O){
+	public StringPattern(String S, String P, String O, VarType type){
 		this.s = S;
 		this.p = P;
 		this.o = O;
+		this.type = type;
 	}
 	
 	/**
@@ -29,24 +33,61 @@ public class StringPattern {
 	 */
 	public StringPattern(String something) throws InvalidPatternException{
 		StringTokenizer tokens = new StringTokenizer(something);
+		int varType = 0;
 		if (!tokens.hasMoreTokens()) {
 			throw new InvalidPatternException("Only " + tokens.countTokens() 
 					+ " token(s), must have 3.");
 		} else {
 			s = tokens.nextToken();
+			if (QueryUtils.isVariable(s))
+				varType = varType + 1;
 		}
 		if (!tokens.hasMoreTokens()) {
 			throw new InvalidPatternException("Only " + tokens.countTokens() 
 					+ " token(s), must have 3.");
 		} else {
 			p = tokens.nextToken();
+			if (QueryUtils.isVariable(p))
+				varType = varType + 2;
 		}
 		if (!tokens.hasMoreTokens()) {
 			throw new InvalidPatternException("Only " + tokens.countTokens() 
 					+ " token(s), must have 3.");
 		} else {
 			o = tokens.nextToken();
+			if (QueryUtils.isVariable(o))
+				varType = varType + 4;
 		}
+		switch(varType){
+			case 0:
+				type = VarType.NON;
+				break;
+			case 1:
+				type = VarType.S;
+				break;
+			case 2:
+				type = VarType.P;
+				break;
+			case 3:
+				type = VarType.SP;
+				break;
+			case 4:
+				type = VarType.O;
+				break;
+			case 5:
+				type = VarType.SO;
+				break;
+			case 6:
+				type = VarType.PO;
+				break;
+			case 7:
+				type = VarType.SPO;
+				break;
+		}
+	}
+	
+	public VarType getType(){
+		return type;
 	}
 
 	public String getS(){

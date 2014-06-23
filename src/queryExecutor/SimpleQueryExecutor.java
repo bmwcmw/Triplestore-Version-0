@@ -1,15 +1,19 @@
 package queryExecutor;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.google.common.collect.Sets;
+
 import queryObjects.ParsedQuery;
 import queryObjects.StringPattern;
 import queryObjects.SubQuerySet;
-import queryUtils.QueryUtils;
+import queryRewriter.SimpleQueryTranslator;
+import queryUtils.QueryUtils.VarType;
 
 public class SimpleQueryExecutor {
 	
@@ -20,39 +24,32 @@ public class SimpleQueryExecutor {
 		
 		HashMap<Integer, SubQuerySet> patterns = parsed.getPatterns();
 		SubQuerySet subset;
+		Set<String> result;
 		for(int i=0; i<=3; i++){
 			if( (subset = patterns.get(i)) != null){
 				HashMap<Integer, StringPattern> subpatterns = subset.getAll();
-				//TODO
+				for(Entry<Integer, StringPattern> ent : subpatterns.entrySet()){
+					StringPattern pat = ent.getValue();
+					if(pat.getType().toString().contains("P")){
+						//TODO broadcast
+					} else {
+						String destPred = pat.getP().replace(":", "-");
+						if(pat.getType().toString().contains("S")){
+							result = SimpleQueryTranslator.fetchFromDest(destPred, VarType.S);
+
+							if(pat.getType().toString().contains("O")){
+								Set<String> resultO = 
+										SimpleQueryTranslator.fetchFromDest(destPred, VarType.O);
+								/* Guava : If you have reason to believe one of your sets will generally
+								 * smaller than the other, pass it first. */
+								result = (Set<String>) Sets.intersection(
+										result, resultO);
+							}
+						}
+						//TODO directly using hdfs?
+					}
+				}
 			}
-		}
-		
-		ArrayList<StringPattern> listPattern;
-		ArrayList<String> listObject;
-		if((listPattern=subqueries.get(QueryUtils.VarType.S, true)) != null){
-			for(StringPattern p : listPattern){
-				String s = fetchOS(p.getP(), p.getO());//only 1,4,5,100,2...
-				listObject = fetchNumberString(s);
-				
-			}
-		}
-		if((listPattern=subqueries.get(QueryUtils.VarType.P, true)) != null){
-			
-		}
-		if((listPattern=subqueries.get(QueryUtils.VarType.O, true)) != null){
-			
-		}
-		if((listPattern=subqueries.get(QueryUtils.VarType.SP, true)) != null){
-			
-		}
-		if((listPattern=subqueries.get(QueryUtils.VarType.SO, true)) != null){
-			
-		}
-		if((listPattern=subqueries.get(QueryUtils.VarType.PO, true)) != null){
-			
-		}
-		if((listPattern=subqueries.get(QueryUtils.VarType.SPO, true)) != null){
-			
 		}
 	}
 

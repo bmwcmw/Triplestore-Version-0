@@ -10,7 +10,7 @@ import queryUtils.InvalidPatternException;
 public class SimpleQueryPlanner {
 	
 	/**
-	 * Splits a list of patterns into chunks by type of variables
+	 * Splits an string into chunks by type of variables
 	 * @param triplepatterns
 	 * @return a Graph
 	 * @throws InvalidPatternException 

@@ -49,50 +49,20 @@ public class ParsedQuery {
 	}
 	
 	public void putPattern(StringPattern p){
-//		int varType = 0;
 		/*
 		 * Size = number of variables, Content = variables in current pattern
 		 */
 		BiList varList = new BiList();
-//		VarType type;
+
 		if (QueryUtils.isVariable(p.getS())){
-//			varType = varType + 1;
 			varList.add(VarType.S, p.getS());
 		}
 		if (QueryUtils.isVariable(p.getP())){
-//			varType = varType + 2;
 			varList.add(VarType.P, p.getP());
 		}
 		if (QueryUtils.isVariable(p.getO())){
-//			varType = varType + 4;
 			varList.add(VarType.O, p.getO());
 		}
-//		switch(varType){
-//			case 0:
-//				type = VarType.NON;
-//				break;
-//			case 1:
-//				type = VarType.S;
-//				break;
-//			case 2:
-//				type = VarType.P;
-//				break;
-//			case 3:
-//				type = VarType.SP;
-//				break;
-//			case 4:
-//				type = VarType.O;
-//				break;
-//			case 5:
-//				type = VarType.SO;
-//				break;
-//			case 6:
-//				type = VarType.PO;
-//				break;
-//			case 7:
-//				type = VarType.SPO;
-//				break;
-//		}
 		
 		SubQuerySet dest = patterns.get(varList.size());
 		if(dest==null){
