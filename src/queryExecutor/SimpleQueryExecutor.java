@@ -52,7 +52,8 @@ public class SimpleQueryExecutor {
 		return dbu;
 	}
 	
-	public static Set<String> fetchFromDest(String dest,  VarType type, StringPattern pat){
+	public static Set<String> fetchFromDest(String dest,  VarType type, StringPattern pat)
+			throws SQLException, IOException{
 		switch(mode){
 			case LOCALFS:
 				return fetchFromLocalFS(dest, type, pat);
@@ -89,14 +90,15 @@ public class SimpleQueryExecutor {
 		return result;
 	}
 	
-	public static void execute(ParsedQuery parsed, JSONArray dstInfo){
+	public static Set<String> execute(ParsedQuery parsed, JSONArray dstInfo) 
+			throws SQLException, IOException{
 		for (Object o : dstInfo){
 			JSONObject newJO = (JSONObject) o;
 		}
 		
 		HashMap<Integer, SubQuerySet> patterns = parsed.getPatterns();
 		SubQuerySet subset;
-		Set<String> result;
+		Set<String> result = null;
 		for(int i=0; i<=3; i++){
 			if( (subset = patterns.get(i)) != null){
 				HashMap<Integer, StringPattern> subpatterns = subset.getAll();
@@ -123,6 +125,7 @@ public class SimpleQueryExecutor {
 				}
 			}
 		}
+		return result;
 	}
 
 }
