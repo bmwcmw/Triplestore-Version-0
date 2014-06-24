@@ -1,6 +1,6 @@
 package dataCompressor;
 
-import indexNodesDBUtils.DBUtils;
+import indexNodesDBUtils.DBImpl;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -32,7 +32,7 @@ public class DgapCompressor {
 	private static final int MAXSTRLENGTH = 40000;
 	
 	public static void writeCompressedFormat(String inFileName, String outputPath, 
-			DBUtils dbu, String comparePath) throws IOException, SQLException{
+			DBImpl dbu, String comparePath) throws IOException, SQLException{
 		Integer indexSize;
 		Integer soSize;
 		String line = "";
@@ -256,7 +256,7 @@ public class DgapCompressor {
 		writeIndex(outputFilePath + ".index", dbu);
 	}
 	
-	public static void writeIndex(String outputFilePath, DBUtils dbu) 
+	public static void writeIndex(String outputFilePath, DBImpl dbu) 
 			throws IOException, SQLException{
 		@SuppressWarnings("unchecked")
 		BiMap<Integer, String> indexNodes = (BiMap<Integer, String>) dbu.fetchIndex();

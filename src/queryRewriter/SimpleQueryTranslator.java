@@ -7,15 +7,15 @@ import java.util.Set;
 import queryObjects.IntegerPattern;
 import queryObjects.StringPattern;
 import queryUtils.QueryUtils.VarType;
-import indexNodesDBUtils.DBUtils;
+import indexNodesDBUtils.DBImpl;
 
 public class SimpleQueryTranslator {
 	
-	public static IntegerPattern toCompressed(DBUtils dbu, StringPattern input) throws SQLException{
+	public static IntegerPattern toCompressed(DBImpl dbu, StringPattern input) throws SQLException{
 		return new IntegerPattern(
 				dbu.fetchIdByNode(input.getS()),
 				dbu.fetchIdByNode(input.getP()),
-				dbu.fetchIdByNode(input.getO()) );
+				dbu.fetchIdByNode(input.getO()));
 	}
 
 }

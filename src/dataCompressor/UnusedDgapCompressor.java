@@ -1,7 +1,6 @@
 package dataCompressor;
 
-import indexNodesDBUtils.DBUtils;
-
+import indexNodesDBUtils.DBImpl;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,7 +18,7 @@ public class UnusedDgapCompressor {
 	 * Initializes an matrix and fills in it
 	 */
 	public static int[][] matrix(ArrayList<Integer> subj, ArrayList<Integer> obj, 
-			DBUtils dbu, String opt) throws SQLException{
+			DBImpl dbu, String opt) throws SQLException{
 		// initialized all 0
 		int[][] matrix = new int[dbu.fetchIndexSize()][dbu.fetchIndexSize()];
 		if(opt.equals("SO")){
@@ -39,7 +38,7 @@ public class UnusedDgapCompressor {
 	/**
 	 * NOT USED : int[][] too large
 	 */
-	public static void writeCompressedMatrixIndex(File f, int[][]mat, DBUtils dbu) 
+	public static void writeCompressedMatrixIndex(File f, int[][]mat, DBImpl dbu) 
 			throws IOException, SQLException{
 		Integer indexSize = dbu.fetchIndexSize();
 		String outLine;

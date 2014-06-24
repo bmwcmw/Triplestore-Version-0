@@ -1,6 +1,6 @@
 package queryExecutor;
 
-import indexNodesDBUtils.DBUtils;
+import indexNodesDBUtils.DBImpl;
 import indexNodesDBUtils.InRamDBUtils;
 
 import java.io.BufferedReader;
@@ -42,13 +42,13 @@ public class SimpleQueryExecutor {
 		return mode;
 	}
 	
-	private static DBUtils dbu;
+	private static DBImpl dbu;
 	
-	public static void setDBU(DBUtils toSet){
+	public static void setDBU(DBImpl toSet){
 		dbu = toSet;
 	}
 	
-	public static DBUtils getDBU(){
+	public static DBImpl getDBU(){
 		return dbu;
 	}
 	

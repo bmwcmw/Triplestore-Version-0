@@ -1,6 +1,6 @@
 package ctmRdf;
 
-import indexNodesDBUtils.DBUtils;
+import indexNodesDBUtils.DBImpl;
 import indexNodesDBUtils.InRamDBUtils;
 import indexNodesDBUtils.MonetDBUtils;
 import indexNodesDBUtils.MongoDBUtils;
@@ -480,7 +480,7 @@ public class CTMServer {
 		//Create and execute threads with assigned sub task
 		ExecutorService executor = Executors.newFixedThreadPool(CTMServer._nbThreads);
 		try{
-			DBUtils dbu = null;
+			DBImpl dbu = null;
 			switch(_compressMode){
 				case CTMConstants.CTMCOMPRESS_INRAM : 
 					dbu = new InRamDBUtils();

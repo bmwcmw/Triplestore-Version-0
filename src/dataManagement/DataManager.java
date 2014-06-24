@@ -1,6 +1,6 @@
 package dataManagement;
 
-import indexNodesDBUtils.DBUtils;
+import indexNodesDBUtils.DBImpl;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -175,7 +175,7 @@ public class DataManager {
 	 * @throws SQLException
 	 */
 	public int indexedCompress(ArrayList<File> psSrc, String outputPath, 
-			DBUtils dbu, String comparePath) throws IOException, ParseException, SQLException {
+			DBImpl dbu, String comparePath) throws IOException, ParseException, SQLException {
 	    String inFilePath;
     	String inFileName;
 	    for (File f : psSrc){
@@ -374,7 +374,7 @@ public class DataManager {
 	 * @return index of the given node
 	 * @throws SQLException 
 	 */
-	public void insertOrIgnorePredicateNodes(DBUtils dbu, CTMDouble so) 
+	public void insertOrIgnorePredicateNodes(DBImpl dbu, CTMDouble so) 
 			throws SQLException {
 		String S = so.getSubject().toString();
 		String O = so.getObject().toString();

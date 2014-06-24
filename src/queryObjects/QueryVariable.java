@@ -31,7 +31,7 @@ public class QueryVariable {
 		return type + " " + var;
 	}
 
-	//hashCode and equals work together!!
+	//hashCode() and equals() should work together!!
 	@Override
 	public int hashCode() {
 		int hash = 17;

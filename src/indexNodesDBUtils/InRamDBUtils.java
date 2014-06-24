@@ -1,14 +1,20 @@
 package indexNodesDBUtils;
 
 import java.util.ArrayList;
+
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import dataCompressor.SOIntegerPair;
 
-public class InRamDBUtils extends DBUtils{
+public class InRamDBUtils implements COMMImpl{
 	private BiMap<Integer, String> nodes;
 	private ArrayList<SOIntegerPair> soList = new ArrayList<SOIntegerPair>();
+
+	
+	public InRamDBUtils(){
+		nodes = HashBiMap.create();
+	}
 	
 	@Override
 	public void addSO(SOIntegerPair so){
@@ -18,15 +24,6 @@ public class InRamDBUtils extends DBUtils{
 	@Override
 	public Integer fetchSOSize(){
 		return new Integer(soList.size());
-	}
-
-	@Override
-	public void setTableName(String name){
-		_tablename = name;
-	}
-	
-	public InRamDBUtils(){
-		nodes = HashBiMap.create();
 	}
 	
 	@Override
@@ -65,5 +62,14 @@ public class InRamDBUtils extends DBUtils{
 	@Override
 	public ArrayList<SOIntegerPair> fetchSOList(){
 		return soList;
+	}
+
+	@Override
+	public void closeAll() {}
+
+	@Override
+	public void loadFromFile(String path) {
+		// TODO Auto-generated method stub
+		
 	}
 }

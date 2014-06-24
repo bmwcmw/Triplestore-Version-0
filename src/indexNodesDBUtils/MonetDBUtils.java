@@ -1,7 +1,14 @@
 package indexNodesDBUtils;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import com.google.common.collect.BiMap;
+
+import dataCompressor.SOIntegerPair;
 
 /**
  * <p>MonetDB aims to use as much of the main memory available, as many cores as can be 
@@ -16,7 +23,12 @@ CREATE TABLE indexnodes (
 DELETE FROM indexnodes;
 DROP TABLE indexnodes;
 */
-public class MonetDBUtils extends DBUtils{
+public class MonetDBUtils implements JDBCImpl{
+
+	protected String _tablename;
+	protected Statement _st;
+	protected ResultSet _rs;
+	protected Connection _conn = null;
 	
 	public MonetDBUtils() throws SQLException, ClassNotFoundException{
 		Class.forName("nl.cwi.monetdb.jdbc.MonetDriver");
@@ -52,5 +64,53 @@ public class MonetDBUtils extends DBUtils{
     			+ "WHERE id = " + index);
 		if ( _rs.next() ) return _rs.getString("data");
     	else return null;
+	}
+
+	@Override
+	public void addSO(SOIntegerPair so) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Integer fetchSOSize() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void cleanAll() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeAll() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public BiMap<Integer, String> fetchIndex() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<SOIntegerPair> fetchSOList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void loadFromFile(String path) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setTableName(String name) {
+		// TODO Auto-generated method stub
+		
 	}
 }

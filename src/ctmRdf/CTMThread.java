@@ -1,6 +1,6 @@
 package ctmRdf;
 
-import indexNodesDBUtils.DBUtils;
+import indexNodesDBUtils.DBImpl;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class CTMThread implements Runnable {
     private String invalidPath;
     private String nsPath;
     private String comparePath = null;
-    private DBUtils indexNodes = null;
+    private DBImpl indexNodes = null;
     private LinkedList<FilePair> comparePairs;
     private HashMap<File, DestInfo> toSend;
 
@@ -99,7 +99,7 @@ public class CTMThread implements Runnable {
      * @param dbu
      */
     public CTMThread(String tid, int task, ArrayList<File> inputList, String outputPath,
-    		DBUtils dbu, String writecomparePath){
+    		DBImpl dbu, String writecomparePath){
     	taskId = task;
 		threadId = tid;
 		dm = new DataManager(tid);
