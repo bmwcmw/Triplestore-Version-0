@@ -14,6 +14,7 @@ _invalidTriple/
 _ns/
 _pos/
 _ps/
+CtmDataSet/
 *.n3
 *.tmp
 *.bak

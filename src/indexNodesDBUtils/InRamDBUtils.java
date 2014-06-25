@@ -1,11 +1,17 @@
 package indexNodesDBUtils;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
+
+import localIOUtils.IOUtils;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+import dataCleaner.CTMPairStr;
 import dataCompressor.SOIntegerPair;
+import dataReader.PairReader;
 
 public class InRamDBUtils implements COMMImpl{
 	private BiMap<Integer, String> nodes;
@@ -23,7 +29,7 @@ public class InRamDBUtils implements COMMImpl{
 	
 	@Override
 	public Integer fetchSOSize(){
-		return new Integer(soList.size());
+		return soList.size();
 	}
 	
 	@Override
@@ -69,13 +75,28 @@ public class InRamDBUtils implements COMMImpl{
 
 	@Override
 	public void loadFromFile(String path) {
-		// TODO Auto-generated method stub
-		
+		try {
+			PairReader reader = new PairReader(path);
+			CTMPairStr pair = null;
+			while ((pair = reader.nextStr()) != null) {
+				nodes.put(Integer.valueOf(pair.getSubject()), pair.getObject());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			cleanAll();
+		} catch (ParseException e) {
+			e.printStackTrace();
+			cleanAll();
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			cleanAll();
+		} finally {
+		}
+		IOUtils.logLog("File charged. Current size of key-value pair(s) : " + fetchLoadedSize());
 	}
 
 	@Override
 	public Long fetchLoadedSize() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Long(fetchIndexSize());
 	}
 }
