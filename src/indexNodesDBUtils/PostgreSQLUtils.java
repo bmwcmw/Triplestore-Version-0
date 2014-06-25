@@ -29,7 +29,11 @@ public class PostgreSQLUtils implements JDBCImpl{
 	protected Connection _conn = null;
     
 	public PostgreSQLUtils() throws SQLException, ClassNotFoundException{
-		_conn = DriverManager.getConnection(DBConstants.PostgreSQLurl, "postgres", "postgres");
+		this(DBConstants.PostgreSQLurl, "postgres", "postgres");
+	}
+    
+	public PostgreSQLUtils(String url, String user, String pwd) throws SQLException, ClassNotFoundException{
+		_conn = DriverManager.getConnection(url, user, pwd);
 		_st = _conn.createStatement();
 	}
 	

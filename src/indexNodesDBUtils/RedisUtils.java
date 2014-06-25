@@ -11,6 +11,8 @@ import dataCompressor.SOIntegerPair;
  * to as a data structure server since keys can contain strings, hashes, lists, sets and sorted sets.</p>
 **/
 public class RedisUtils implements COMMImpl{
+	
+	
 
 	@Override
 	public void addSO(SOIntegerPair so) {
