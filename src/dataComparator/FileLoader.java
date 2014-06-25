@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.concurrent.Callable;
 
 import localIOUtils.IOUtils;
-import dataReader.SOReader;
+import dataReader.PairReader;
 
 public class FileLoader implements Callable<HashSet<String>> {
 	
@@ -17,7 +17,7 @@ public class FileLoader implements Callable<HashSet<String>> {
 	@Override
 	public HashSet<String> call() throws Exception {
 		IOUtils.logLog("Loading " + filename);
-		SOReader reader = new SOReader(filename);
+		PairReader reader = new PairReader(filename);
 		String line = null;
 		HashSet<String> hset = new HashSet<String>(220000,0.80F);
 		while ((line = reader.nextLine()) != null) {

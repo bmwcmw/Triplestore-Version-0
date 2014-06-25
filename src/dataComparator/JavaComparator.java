@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
-import dataReader.SOReader;
+import dataReader.PairReader;
 import localIOUtils.IOUtils;
 
 /**
@@ -22,8 +22,8 @@ public class JavaComparator {
 	public Long compareTwoPredicates(File f1, File f2)
 			throws IOException, ParseException, InterruptedException, ExecutionException {
 		IOUtils.logLog("Start comparison");
-		SOReader reader1 = new SOReader(f1);
-		SOReader reader2 = new SOReader(f2);
+		PairReader reader1 = new PairReader(f1);
+		PairReader reader2 = new PairReader(f2);
 		long common = 0;
 		String entry1 = reader1.nextLine();
 		String temp1;

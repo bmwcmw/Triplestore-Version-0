@@ -79,4 +79,10 @@ public interface COMMImpl extends DBImpl{
 	 */
 	public void loadFromFile(String path);
 	
+	/**
+	 * Loads the size of loaded database
+	 * @param path
+	 */
+	public Long fetchLoadedSize();
+	
 }

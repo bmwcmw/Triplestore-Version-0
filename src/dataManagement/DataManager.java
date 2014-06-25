@@ -20,9 +20,9 @@ import java.util.concurrent.ExecutionException;
 import commandRunner.PerlPreComparator;
 import ctmRdf.CTMConstants;
 import localIOUtils.IOUtils;
-import dataCleaner.CTMDoubleStr;
+import dataCleaner.CTMPairStr;
 import dataCleaner.CTMTriple;
-import dataCleaner.CTMDouble;
+import dataCleaner.CTMPair;
 import dataComparator.FilePair;
 import dataComparator.JavaComparator;
 import dataCompressor.DgapCompressor;
@@ -32,7 +32,7 @@ import dataDistributor.DestInfo;
 import dataDistributor.FileSenderCN;
 import dataDistributor.SSHExecutor;
 import dataReader.N3Reader;
-import dataReader.SOReader;
+import dataReader.PairReader;
 
 /**
  * <p>
@@ -127,9 +127,9 @@ public class DataManager {
 	    for (File f : psSrc){	    	
 	    	inFilePath = f.getAbsolutePath();
 	    	inFileName = f.getName();
-	    	SOReader reader = new SOReader(inFilePath);
+	    	PairReader reader = new PairReader(inFilePath);
 			IOUtils.logLog("Thread " + threadId + " Pos : "	+ inFileName);
-			CTMDouble so = null;
+			CTMPair so = null;
 			while ((so = reader.next()) != null) {
 				// POST : line = (Subject)
 				if ((inFileName.compareTo("a") == 0)
@@ -181,9 +181,9 @@ public class DataManager {
 	    for (File f : psSrc){
 	    	inFilePath = f.getAbsolutePath();
 	    	inFileName = f.getName();
-	    	SOReader reader = new SOReader(inFilePath);
+	    	PairReader reader = new PairReader(inFilePath);
 			IOUtils.logLog("Thread " + threadId + " Compression : "	+ inFileName);
-			CTMDouble so = null;
+			CTMPair so = null;
 			while ((so = reader.next()) != null) {
 				// Predicate's index and pairs list
 				insertOrIgnorePredicateNodes(dbu, so);
@@ -212,9 +212,9 @@ public class DataManager {
 	    	inFileName = f.getName();
 	    	outFileSPath = outputPath + File.separator + inFileName + ".S";
 	    	outFileOPath = outputPath + File.separator + inFileName + ".O";
-	    	SOReader reader = new SOReader(inFilePath);
+	    	PairReader reader = new PairReader(inFilePath);
 			IOUtils.logLog("Thread " + threadId + " Pre-compare : "	+ inFileName);
-			CTMDoubleStr so = null;
+			CTMPairStr so = null;
 			while ((so = reader.nextStr()) != null) {
 				writeToBigFile(outFileSPath, so.getSubject());
 				writeToBigFile(outFileOPath, so.getObject());
@@ -374,7 +374,7 @@ public class DataManager {
 	 * @return index of the given node
 	 * @throws SQLException 
 	 */
-	public void insertOrIgnorePredicateNodes(DBImpl dbu, CTMDouble so) 
+	public void insertOrIgnorePredicateNodes(DBImpl dbu, CTMPair so) 
 			throws SQLException {
 		String S = so.getSubject().toString();
 		String O = so.getObject().toString();

@@ -72,4 +72,10 @@ public class InRamDBUtils implements COMMImpl{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public Long fetchLoadedSize() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

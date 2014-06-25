@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
 import com.google.common.collect.BiMap;
 
 import dataCompressor.SOIntegerPair;
@@ -25,8 +26,11 @@ public class OracleUtils implements JDBCImpl{
 	protected Connection _conn = null;
     
 	public OracleUtils() throws SQLException, ClassNotFoundException{
-		//TODO
-		_conn = DriverManager.getConnection(DBConstants.Oracleurl, "root", "");
+		this(DBConstants.Oracleurl, "root", "");
+	}
+    
+	public OracleUtils(String url, String user, String pwd) throws SQLException, ClassNotFoundException{
+		_conn = DriverManager.getConnection(url, user, pwd);
 		_st = _conn.createStatement();
 	}
 	

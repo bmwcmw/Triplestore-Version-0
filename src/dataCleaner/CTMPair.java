@@ -6,12 +6,12 @@ package dataCleaner;
  * @author Cedar
  *
  */
-public class CTMDouble implements SPOObject{
+public class CTMPair implements SPOObject{
 	
 	private CTMSubject _subject;
 	private CTMObject _object;
 	
-	public CTMDouble(String subject, String object){
+	public CTMPair(String subject, String object){
 		_subject = new CTMSubject(subject);
 		_object = new CTMObject(object);
 	}

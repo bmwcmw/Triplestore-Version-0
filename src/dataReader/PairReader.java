@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.StringTokenizer;
 
-import dataCleaner.CTMDoubleStr;
-import dataCleaner.CTMDouble;
+import dataCleaner.CTMPairStr;
+import dataCleaner.CTMPair;
 
 /**
  * <p>
@@ -19,7 +19,7 @@ import dataCleaner.CTMDouble;
  * @author Cedar
  * 
  */
-public class SOReader implements TripleReader {
+public class PairReader implements TripleReader {
 
 	private String filePath = null;
 	private BufferedReader reader = null;
@@ -33,7 +33,7 @@ public class SOReader implements TripleReader {
 	 * @param invalidPath : specify invalid log's location
 	 * @throws FileNotFoundException
 	 */
-	public SOReader(String filePath)
+	public PairReader(String filePath)
 			throws IOException {
 		this.filePath = filePath;
 		reader = new BufferedReader(new FileReader(filePath));
@@ -47,7 +47,7 @@ public class SOReader implements TripleReader {
 	 * @param invalidPath : specify invalid log's location
 	 * @throws FileNotFoundException
 	 */
-	public SOReader(File file)
+	public PairReader(File file)
 			throws IOException {
 		this.filePath = file.getAbsolutePath();
 		reader = new BufferedReader(new FileReader(file));
@@ -65,7 +65,7 @@ public class SOReader implements TripleReader {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public CTMDouble next() throws IOException, ParseException {
+	public CTMPair next() throws IOException, ParseException {
 		String line;
 		while ((line = reader.readLine()) != null) {
 			++lineNumber;
@@ -80,7 +80,7 @@ public class SOReader implements TripleReader {
 						throw new ParseException(filePath, lineNumber);
 					}
 					String object = itr.nextToken();
-					return new CTMDouble(subj, object);
+					return new CTMPair(subj, object);
 				}
 			}
 		}
@@ -99,7 +99,7 @@ public class SOReader implements TripleReader {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public CTMDoubleStr nextStr() throws IOException, ParseException {
+	public CTMPairStr nextStr() throws IOException, ParseException {
 		String line;
 		while ((line = reader.readLine()) != null) {
 			++lineNumber;
@@ -114,7 +114,7 @@ public class SOReader implements TripleReader {
 						throw new ParseException(filePath, lineNumber);
 					}
 					String object = itr.nextToken();
-					return new CTMDoubleStr(subj, object);
+					return new CTMPairStr(subj, object);
 				}
 			}
 		}

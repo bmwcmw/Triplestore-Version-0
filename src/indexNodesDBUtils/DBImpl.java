@@ -1,5 +1,6 @@
 package indexNodesDBUtils;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -83,5 +84,5 @@ public interface DBImpl {
 	 * Loads the index from a compressed index file
 	 * @param path
 	 */
-	public void loadFromFile(String path);
+	public void loadFromFile(String path) throws IOException;
 }

@@ -78,4 +78,10 @@ public class MongoDBUtils implements COMMImpl{
 		
 	}
 
+	@Override
+	public Long fetchLoadedSize() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -8,7 +8,7 @@ package dataCleaner;
  * @author Cedar
  *
  */
-public class CTMDoubleStr implements SPOObject{
+public class CTMPairStr implements SPOObject{
 
 	private String _subject;
 	private String _object;
@@ -16,7 +16,7 @@ public class CTMDoubleStr implements SPOObject{
 	/**
 	 * <p>Create a CTMTriple directly using three strings.</p>
 	 */
-	public CTMDoubleStr(String subject, String object){
+	public CTMPairStr(String subject, String object){
 		_subject = subject;
 		_object = object;
 	}

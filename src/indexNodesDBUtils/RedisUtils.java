@@ -1,10 +1,18 @@
 package indexNodesDBUtils;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+
+import localIOUtils.IOUtils;
+import redis.clients.jedis.Jedis;
 
 import com.google.common.collect.BiMap;
 
+import dataCleaner.CTMPairStr;
 import dataCompressor.SOIntegerPair;
+import dataReader.PairReader;
 
 /**
  * <p>Redis is an open source, BSD licensed, advanced key-value store. It is often referred 
@@ -12,7 +20,15 @@ import dataCompressor.SOIntegerPair;
 **/
 public class RedisUtils implements COMMImpl{
 	
-	
+	protected Jedis jedis = null;
+    
+	public RedisUtils() throws SQLException, ClassNotFoundException{
+		this(DBConstants.Redisurl);
+	}
+    
+	public RedisUtils(String url) throws SQLException, ClassNotFoundException{
+		jedis = new Jedis(url);
+	}
 
 	@Override
 	public void addSO(SOIntegerPair so) {
@@ -52,14 +68,13 @@ public class RedisUtils implements COMMImpl{
 
 	@Override
 	public void cleanAll() {
-		// TODO Auto-generated method stub
-		
+		jedis.connect();
+		jedis.dbSize();
 	}
 
 	@Override
 	public void closeAll() {
-		// TODO Auto-generated method stub
-		
+		jedis.close();
 	}
 
 	@Override
@@ -77,7 +92,31 @@ public class RedisUtils implements COMMImpl{
 	@Override
 	public void loadFromFile(String path) {
 		// TODO https://github.com/ldodds/redis-load
-		
+		try {
+			jedis.connect();
+			PairReader reader = new PairReader(path);
+			CTMPairStr pair = null;
+			while ((pair = reader.nextStr()) != null) {
+				jedis.set(pair.getSubject(), pair.getObject());
+			}
+		} catch (IOException e) {
+			cleanAll();
+			e.printStackTrace();
+		} catch (ParseException e) {
+			cleanAll();
+			e.printStackTrace();
+		} finally {
+			jedis.close();
+		}
+		IOUtils.logLog("File charged. Current size of key-value pair(s) : " + fetchLoadedSize());
+	}
+
+	@Override
+	public Long fetchLoadedSize() {
+		jedis.connect();
+		long size = jedis.dbSize();
+		jedis.close();
+		return size;
 	}
 	
 }
