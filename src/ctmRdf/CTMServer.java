@@ -74,7 +74,7 @@ public class CTMServer {
 		IOUtils.setLogging(true, false);
 		
 		// XXX SETUP : Compressor mode, perhaps needs external DB support
-		CTMServer._compressMode = CTMConstants.CTMCOMPRESS_INRAM;
+		CTMServer._compressMode = CTMConstants.CTMCOMPRESS_REDIS;
 		// XXX SETUP : Compressor writes sorted S/O files of each predicate or not
 		CTMServer._writeprecompare = true;
 		

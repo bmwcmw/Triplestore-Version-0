@@ -21,8 +21,9 @@ import dataReader.PairReader;
 **/
 public class RedisUtils implements COMMImpl{
 	private final int DBLOAD = 0;
-	private final int DBINDEX = 1;
-	private final int DBSO = 2;
+	private final int DBINDEX1 = 1; //Index to Node
+	private final int DBINDEX2 = 2; //Node to Index
+	private final int DBSO = 3;
 	
 	private Jedis jedis = null;
 	private Pipeline pipeline = null;
@@ -65,7 +66,7 @@ public class RedisUtils implements COMMImpl{
 	@Override
 	public Long fetchIndexSize() {
 		jedis.connect();
-		jedis.select(DBINDEX);
+		jedis.select(DBINDEX1);
 		Long size = jedis.dbSize();
 		jedis.close();
 		return size;
@@ -75,15 +76,24 @@ public class RedisUtils implements COMMImpl{
 	public Long insertNode(String node) {
 		try {
 			jedis.connect();
-			jedis.select(DBINDEX);
+			jedis.select(DBINDEX1);
 			jedis.set(String.valueOf(fetchIndexSize()), node);
+			jedis.select(DBINDEX2);
+			jedis.set(node, String.valueOf(fetchIndexSize()));
+//			pipeline = jedis.pipelined();
+//			pipeline.select(DBINDEX1);
+//			pipeline.set(String.valueOf(fetchIndexSize()), node);
+//			pipeline.select(DBINDEX2);
+//			pipeline.set(node, String.valueOf(fetchIndexSize()));
 		} catch (Exception e) {
 			IOUtils.logLog("Aborted while adding SO pair");
+			cleanDB();
+			jedis.select(DBINDEX1);
 			cleanDB();
 			IOUtils.logLog("DB cleaned");
 			e.printStackTrace();
 		} finally {
-			pipeline.syncAndReturnAll();
+			//pipeline.syncAndReturnAll();
 			jedis.close();
 		}
 		return null;
@@ -91,14 +101,20 @@ public class RedisUtils implements COMMImpl{
 
 	@Override
 	public Long fetchIdByNode(String node) {
-		// TODO Auto-generated method stub
-		return null;
+		jedis.connect();
+		jedis.select(DBINDEX2);
+		String index = jedis.get(node);
+		jedis.close();
+		return Long.valueOf(index);
 	}
 
 	@Override
 	public String fetchNodeById(Long index) {
-		// TODO Auto-generated method stub
-		return null;
+		jedis.connect();
+		jedis.select(DBINDEX1);
+		String node = jedis.get(index.toString());
+		jedis.close();
+		return node;
 	}
 
 	@Override
