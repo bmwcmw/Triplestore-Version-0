@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.google.common.collect.BiMap;
 
-import dataCompressor.SOIntegerPair;
+import dataCompressor.SOLongPair;
 
 public class MongoDBUtils implements COMMImpl{
     
@@ -13,37 +13,37 @@ public class MongoDBUtils implements COMMImpl{
 	}
 
 	@Override
-	public void addSO(SOIntegerPair so) {
+	public void addSO(SOLongPair so) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public Integer fetchSOSize() {
+	public Long fetchSOSize() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Integer fetchIndexSize() {
+	public Long fetchIndexSize() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Integer insertNode(String node) {
+	public Long insertNode(String node) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Integer fetchIdByNode(String node) {
+	public Long fetchIdByNode(String node) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String fetchNodeById(Integer index) {
+	public String fetchNodeById(Long index) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -67,7 +67,7 @@ public class MongoDBUtils implements COMMImpl{
 	}
 
 	@Override
-	public ArrayList<SOIntegerPair> fetchSOList() {
+	public ArrayList<SOLongPair> fetchSOList() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -10,12 +10,12 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import dataCleaner.CTMPairStr;
-import dataCompressor.SOIntegerPair;
+import dataCompressor.SOLongPair;
 import dataReader.PairReader;
 
 public class InRamDBUtils implements COMMImpl{
-	private BiMap<Integer, String> nodes;
-	private ArrayList<SOIntegerPair> soList = new ArrayList<SOIntegerPair>();
+	private BiMap<Long, String> nodes;
+	private ArrayList<SOLongPair> soList = new ArrayList<SOLongPair>();
 
 	
 	public InRamDBUtils(){
@@ -23,50 +23,50 @@ public class InRamDBUtils implements COMMImpl{
 	}
 	
 	@Override
-	public void addSO(SOIntegerPair so){
+	public void addSO(SOLongPair so){
 		soList.add(so);
 	}
 	
 	@Override
-	public Integer fetchSOSize(){
-		return soList.size();
+	public Long fetchSOSize(){
+		return new Long(soList.size());
 	}
 	
 	@Override
-    public Integer fetchIndexSize(){
-    	return nodes.size();
+    public Long fetchIndexSize(){
+    	return new Long(nodes.size());
     }
 
 	@Override
-    public Integer insertNode(String node){
-		int newid = nodes.size();
+    public Long insertNode(String node){
+		long newid = nodes.size();
     	nodes.put(newid, node);
 		return newid;
     }
 
 	@Override
-	public Integer fetchIdByNode(String node){
+	public Long fetchIdByNode(String node){
 		return nodes.inverse().get(node);
 	}
 
 	@Override
-	public String fetchNodeById(Integer index){
+	public String fetchNodeById(Long index){
 		return nodes.get(index);
 	}
 	
 	@Override
 	public void cleanAll(){
 		nodes = HashBiMap.create();
-		soList = new ArrayList<SOIntegerPair>();
+		soList = new ArrayList<SOLongPair>();
 	}
 	
 	@Override
-	public BiMap<Integer, String> fetchIndex(){
+	public BiMap<Long, String> fetchIndex(){
 		return nodes;
 	}
 	
 	@Override
-	public ArrayList<SOIntegerPair> fetchSOList(){
+	public ArrayList<SOLongPair> fetchSOList(){
 		return soList;
 	}
 
@@ -79,7 +79,7 @@ public class InRamDBUtils implements COMMImpl{
 			PairReader reader = new PairReader(path);
 			CTMPairStr pair = null;
 			while ((pair = reader.nextStr()) != null) {
-				nodes.put(Integer.valueOf(pair.getSubject()), pair.getObject());
+				nodes.put(Long.valueOf(pair.getSubject()), pair.getObject());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

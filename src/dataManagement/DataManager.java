@@ -26,7 +26,7 @@ import dataCleaner.CTMPair;
 import dataComparator.FilePair;
 import dataComparator.JavaComparator;
 import dataCompressor.DgapCompressor;
-import dataCompressor.SOIntegerPair;
+import dataCompressor.SOLongPair;
 import dataDistributor.DataDistributor;
 import dataDistributor.DestInfo;
 import dataDistributor.FileSenderCN;
@@ -39,7 +39,7 @@ import dataReader.PairReader;
  * RDF(N3) data manager :
  * </p>
  * <p>
- * Reader / Cleaner / Partitioner / ... of N3 data files
+ * Reader / Cleaner / Partitioner / ... for N3 data files
  * </p>
  * 
  * @author Cedar
@@ -56,16 +56,22 @@ public class DataManager {
 	private BufferedWriter _invalidLogWriter;
 
 	/**
-	 * Constructor - needs id of caller thread
+	 * Constructor - needs id of the caller thread
 	 */
 	public DataManager(String thread) {
 		threadId = thread;
 	}
 
+	/**
+	 * Prints the prefix mapping table - not used in current version
+	 */
 	public void printPrefix() {
 		_prefixManager.print();
 	}
 
+	/**
+	 * Adds a prefix-URI pair into the mapping table - not used in current version
+	 */
 	public synchronized void addPrefix(String prefix, String uri) {
 		_prefixManager.addPrefix(prefix, uri);
 	}
@@ -74,10 +80,10 @@ public class DataManager {
 	 * <p>Gets data from a specified file list of N3 files, eliminates 
 	 * invalid tokens, then splits and stores data into files named with each 
 	 * predicate</p>
-	 * @param n3Src
-	 * @param outputPath
-	 * @param nsPath
-	 * @param invalidPath
+	 * @param n3Src : List of source files
+	 * @param outputPath : Destination folder to output results
+	 * @param nsPath : Folder to store namespace information
+	 * @param invalidPath : Folder to store invalid lines
 	 * @throws IOException
 	 * @throws ParseException
 	 */
@@ -110,10 +116,8 @@ public class DataManager {
 	/**
 	 * <p>Gets data from a specified file list of PS files then splits and 
 	 * stores them into files named by each predicate</p>
-	 * @param psSrc
-	 * @param outputPath
-	 * @param nsPath
-	 * @param invalidPath
+	 * @param psSrc : List of source files
+	 * @param outputPath : Destination folder to output results
 	 * @throws IOException
 	 * @throws ParseException
 	 * @throws SQLException
@@ -164,11 +168,11 @@ public class DataManager {
 	 * predicate using Dgap with an index</p>
 	 * <p>Writes a BitMat-like matrix to a text file, with the index of all nodes
 	 * which appeared in current predicate's file</p>
-	 * @param psSrc
-	 * @param outputPath
-	 * @param nsPath
-	 * @param invalidPath
-	 * @param dbu
+	 * @param psSrc : List of source files
+	 * @param outputPath : Destination folder to output results
+	 * @param dbu : Chosen database tools unit
+	 * @param comparePath : Folder to store pre-comparison data. 
+	 * 			Set it to null if we don't need to do that in this step.
 	 * @return 0 if OK, -1 if error.
 	 * @throws IOException
 	 * @throws ParseException
@@ -196,9 +200,9 @@ public class DataManager {
 	}
 	
 	/**
-	 * Prepares predicate files(using java function) to facilitate comparison
-	 * @param compressedSrc
-	 * @param outputPath
+	 * Pre-comparison : Prepares predicate files(using java function) to facilitate comparison
+	 * @param psSrc : List of source files
+	 * @param outputPath : Destination folder to output results
 	 * @throws IOException, ParseException 
 	 */
 	public void prepareCompareJava(ArrayList<File> psSrc, String outputPath) 
@@ -222,12 +226,12 @@ public class DataManager {
 	    }
 		IOUtils.logLog("Thread " + threadId + " Pre-compare all done");
 	}
-	
+
 	/**
-	 * Prepares predicate files(using Perl script) to facilitate comparison
-	 * @param compressedSrc
-	 * @param outputPath
-	 * @throws IOException 
+	 * Pre-comparison : Prepares predicate files(using Perl script) to facilitate comparison
+	 * @param psSrc : List of source files
+	 * @param outputPath : Destination folder to output results
+	 * @throws IOException, ParseException 
 	 */
 	public void prepareComparePerl(ArrayList<File> psSrc, String outputPath) 
 			throws IOException{
@@ -244,8 +248,8 @@ public class DataManager {
 	/**
 	 * Compares each two predicate S/O array, then output a similarity indicator
 	 * using Java method
-	 * @param compareSrc source folder of compressed files
-	 * @param outputPath output path for indicator file
+	 * @param pairs : pairs of files to compare by this worker thread
+	 * @param outputPath : output path for indicator information
 	 * @throws IOException
 	 * @throws ParseException
 	 * @throws InterruptedException
@@ -279,15 +283,15 @@ public class DataManager {
 	
 	/**
 	 * Compares each two predicate S/O array, then output a similarity indicator
-	 * using Gnu executable
-	 * @param compareSrc source folder of compressed files
-	 * @param outputPath output path for indicator file
+	 * using GNU executable
+	 * @param pairs : pairs of files to compare by this worker thread
+	 * @param outputPath : output path for indicator information
 	 * @throws IOException
 	 * @throws ParseException
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	public void compareGnu(LinkedList<FilePair> compareSrc, String outputPath) {
+	public void compareGnu(LinkedList<FilePair> pairs, String outputPath) {
 		//int s = Comparator.compareTwoPredicates(null, null);
 		//int o = Comparator.compareTwoPredicates(null, null);
 		//TODO
@@ -295,15 +299,15 @@ public class DataManager {
 	
 	/**
 	 * Compares each two predicate S/O array, then output a similarity indicator
-	 * using Gnu executable
-	 * @param compareSrc source folder of compressed files
-	 * @param outputPath output path for indicator file
+	 * using Perl script
+	 * @param pairs : pairs of files to compare by this worker thread
+	 * @param outputPath : output path for indicator information
 	 * @throws IOException
 	 * @throws ParseException
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	public void comparePerl(LinkedList<FilePair> compareSrc, String outputPath) {
+	public void comparePerl(LinkedList<FilePair> pairs, String outputPath) {
 		//int s = Comparator.compareTwoPredicates(null, null);
 		//int o = Comparator.compareTwoPredicates(null, null);
 		//TODO
@@ -311,13 +315,13 @@ public class DataManager {
 	
 	/**
 	 * Distributes compressed SO/OS matrix of each predicate as well as their index
-	 * @param compressedSrc
-	 * @param outputList
+	 * @param toSendSrcDst : relations between waiting files and destination nodes
+	 * @param type : type of destination distributed system
 	 * @throws IOException 
 	 */
-	public void distribute(HashMap<File, DestInfo> toSendSrcDst, int mode) throws IOException{
+	public void distribute(HashMap<File, DestInfo> toSendSrcDst, int type) throws IOException{
 		Iterator<Entry<File, DestInfo>> it = toSendSrcDst.entrySet().iterator();
-		switch(mode){
+		switch(type){
 			case CTMConstants.CTMDISTRIBUTE_CEDAR:
 			    while (it.hasNext()) {
 			        Entry<File, DestInfo> pairs = it.next();
@@ -354,7 +358,7 @@ public class DataManager {
 			    }
 				break;
 			default:
-				IOUtils.logLog("Thread " + threadId + " wrong distribute option " + mode);
+				IOUtils.logLog("Thread " + threadId + " wrong distribution type " + type);
 				break;
 		}
 		IOUtils.logLog("Thread " + threadId + " distributed " + toSendSrcDst.size() + " file(s).");
@@ -378,8 +382,8 @@ public class DataManager {
 			throws SQLException {
 		String S = so.getSubject().toString();
 		String O = so.getObject().toString();
-		Integer iS = dbu.fetchIdByNode(S);
-		Integer iO = dbu.fetchIdByNode(O);
+		Long iS = dbu.fetchIdByNode(S);
+		Long iO = dbu.fetchIdByNode(O);
 		if(iS == null){
 		    iS = dbu.insertNode(S);
 		} else {
@@ -390,7 +394,7 @@ public class DataManager {
 		} else {
 			iO = dbu.fetchIdByNode(O);
 		}
-		dbu.addSO(new SOIntegerPair(iS,iO));
+		dbu.addSO(new SOLongPair(iS,iO));
 	}	
 	
 	/**

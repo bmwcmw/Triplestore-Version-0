@@ -2,10 +2,10 @@ package dataCompressor;
 
 import java.util.Comparator;
 
-public class CompareS implements Comparator<SOIntegerPair>{
+public class CompareS implements Comparator<SOLongPair>{
 	
 	@Override
-    public int compare(SOIntegerPair p1, SOIntegerPair p2){
+    public int compare(SOLongPair p1, SOLongPair p2){
         return p1.S.compareTo(p2.S);
     }
 	

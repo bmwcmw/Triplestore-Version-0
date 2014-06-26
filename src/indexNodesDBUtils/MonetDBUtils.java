@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import com.google.common.collect.BiMap;
 
-import dataCompressor.SOIntegerPair;
+import dataCompressor.SOLongPair;
 
 /**
  * <p>MonetDB aims to use as much of the main memory available, as many cores as can be 
@@ -37,29 +37,29 @@ public class MonetDBUtils implements JDBCImpl{
 	}
 	
 	@Override
-    public Integer fetchIndexSize() throws SQLException{
+    public Long fetchIndexSize() throws SQLException{
     	_rs = _st.executeQuery("SELECT count(id) as nb FROM indexnodes");
-    	if ( _rs.next() ) return _rs.getInt("nb");
+    	if ( _rs.next() ) return _rs.getLong("nb");
     	else return null;
     }
 
 	@Override
-    public Integer insertNode(String node) throws SQLException{
+    public Long insertNode(String node) throws SQLException{
     	_st.executeUpdate("INSERT INTO indexnodes(data) "
     			+ "values ('" + node + "');");
     	return fetchIdByNode(node);
     }
 
 	@Override
-	public Integer fetchIdByNode(String node) throws SQLException {
+	public Long fetchIdByNode(String node) throws SQLException {
 		_rs = _st.executeQuery("SELECT id FROM indexnodes "
     			+ "WHERE data = '" + node + "'");
-		if ( _rs.next() ) return _rs.getInt("id");
+		if ( _rs.next() ) return _rs.getLong("id");
     	else return null;
 	}
 
 	@Override
-	public String fetchNodeById(Integer index) throws SQLException {
+	public String fetchNodeById(Long index) throws SQLException {
 		_rs = _st.executeQuery("SELECT data FROM indexnodes "
     			+ "WHERE id = " + index);
 		if ( _rs.next() ) return _rs.getString("data");
@@ -67,13 +67,13 @@ public class MonetDBUtils implements JDBCImpl{
 	}
 
 	@Override
-	public void addSO(SOIntegerPair so) {
+	public void addSO(SOLongPair so) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public Integer fetchSOSize() {
+	public Long fetchSOSize() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -97,7 +97,7 @@ public class MonetDBUtils implements JDBCImpl{
 	}
 
 	@Override
-	public ArrayList<SOIntegerPair> fetchSOList() {
+	public ArrayList<SOLongPair> fetchSOList() {
 		// TODO Auto-generated method stub
 		return null;
 	}

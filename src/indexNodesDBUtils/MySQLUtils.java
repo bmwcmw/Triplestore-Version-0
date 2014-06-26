@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import com.google.common.collect.BiMap;
 
-import dataCompressor.SOIntegerPair;
+import dataCompressor.SOLongPair;
 
 public class MySQLUtils implements JDBCImpl{
 
@@ -24,13 +24,13 @@ public class MySQLUtils implements JDBCImpl{
 	}
 
 	@Override
-	public void addSO(SOIntegerPair so) {
+	public void addSO(SOLongPair so) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public Integer fetchSOSize() {
+	public Long fetchSOSize() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -41,25 +41,25 @@ public class MySQLUtils implements JDBCImpl{
 	}
 
 	@Override
-	public Integer fetchIndexSize() throws SQLException {
+	public Long fetchIndexSize() throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Integer insertNode(String node) throws SQLException {
+	public Long insertNode(String node) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Integer fetchIdByNode(String node) throws SQLException {
+	public Long fetchIdByNode(String node) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String fetchNodeById(Integer index) throws SQLException {
+	public String fetchNodeById(Long index) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -84,7 +84,7 @@ public class MySQLUtils implements JDBCImpl{
 	}
 
 	@Override
-	public ArrayList<SOIntegerPair> fetchSOList() {
+	public ArrayList<SOLongPair> fetchSOList() {
 		// TODO Auto-generated method stub
 		return null;
 	}

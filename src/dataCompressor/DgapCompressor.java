@@ -33,21 +33,21 @@ public class DgapCompressor {
 	
 	public static void writeCompressedFormat(String inFileName, String outputPath, 
 			DBImpl dbu, String comparePath) throws IOException, SQLException{
-		Integer indexSize;
-		Integer soSize;
+		Long indexSize;
+		Long soSize;
 		String line = "";
 		indexSize = dbu.fetchIndexSize();
 		soSize = dbu.fetchSOSize();
 		IOUtils.logLog("Start Compressing into matrix");
 		IOUtils.logLog("All nodes : " + indexSize + " (S,O) pairs : "
 				+ soSize);
-		ArrayList<SOIntegerPair> arr = dbu.fetchSOList();
+		ArrayList<SOLongPair> arr = dbu.fetchSOList();
     	String outputFilePath = outputPath + File.separator + inFileName;
 		
 		/* SO Matrix */
-		Collections.sort(arr, new Comparator<SOIntegerPair>() {
+		Collections.sort(arr, new Comparator<SOLongPair>() {
 			@Override
-			public int compare(final SOIntegerPair p1, final SOIntegerPair p2) {
+			public int compare(final SOLongPair p1, final SOLongPair p2) {
 				return p1.S.compareTo(p2.S);
 			}
         });
@@ -59,7 +59,7 @@ public class DgapCompressor {
 			try{
 				outSarray = new BufferedWriter(new OutputStreamWriter(
 						new FileOutputStream(comparePath + File.separator + inFileName + ".S", true)));
-				for (SOIntegerPair pair : arr){
+				for (SOLongPair pair : arr){
 					outSarray.write(dbu.fetchNodeById(pair.S));
 					outSarray.newLine();
 				}
@@ -74,15 +74,15 @@ public class DgapCompressor {
 				new FileOutputStream(outputFilePath + ".matrixSO", true)));
 		if(arr.size()>0){
 			//Row
-			Integer current = arr.get(0).S;
-			List<Integer> lineSet = new ArrayList<Integer>();
+			Long current = arr.get(0).S;
+			List<Long> lineSet = new ArrayList<Long>();
 			line = "";
-			Integer count = 0;
+			long count = 0;
 			//Col
-			Integer zero = new Integer(0);
-			Integer last;
-			int blockSize = 1;
-			for (SOIntegerPair p : arr){
+			Long zero = new Long(0);
+			Long last;
+			long blockSize = 1;
+			for (SOLongPair p : arr){
 				while(count < current){
 					outArrSO.newLine();
 					count++;
@@ -101,7 +101,7 @@ public class DgapCompressor {
 					}
 					lineSet.remove(0);
 //					String temp = current + " has " + last + ",";
-					for (Integer i : lineSet){
+					for (Long i : lineSet){
 //						temp += i + ",";
 						if(i - last != 0){
 							if(i - last == 1){
@@ -133,7 +133,7 @@ public class DgapCompressor {
 //					System.out.println(line);
 					outArrSO.write(line);
 					outArrSO.newLine();
-					lineSet = new ArrayList<Integer>();
+					lineSet = new ArrayList<Long>();
 					current = p.S;
 					lineSet.add(p.O);
 					line = "";
@@ -149,9 +149,9 @@ public class DgapCompressor {
 		IOUtils.logLog("SO written to file");
 		
 		/* OS Matrix */
-		Collections.sort(arr, new Comparator<SOIntegerPair>() {
+		Collections.sort(arr, new Comparator<SOLongPair>() {
 			@Override
-			public int compare(final SOIntegerPair p1, final SOIntegerPair p2) {
+			public int compare(final SOLongPair p1, final SOLongPair p2) {
 				return p1.O.compareTo(p2.O);
 			}
         });
@@ -163,7 +163,7 @@ public class DgapCompressor {
 			try{
 				outOarray = new BufferedWriter(new OutputStreamWriter(
 						new FileOutputStream(comparePath + File.separator + inFileName + ".O", true)));
-				for (SOIntegerPair pair : arr){
+				for (SOLongPair pair : arr){
 					outOarray.write(dbu.fetchNodeById(pair.O));
 					outOarray.newLine();
 				}
@@ -178,15 +178,15 @@ public class DgapCompressor {
 				new FileOutputStream(outputFilePath + ".matrixOS", true)));
 		if(arr.size()>0){
 			//Row
-			Integer current = arr.get(0).O;
-			List<Integer> lineSet = new ArrayList<Integer>();
+			Long current = arr.get(0).O;
+			List<Long> lineSet = new ArrayList<Long>();
 			line = "";
-			Integer count = 0;
+			long count = 0;
 			//Col
-			Integer zero = new Integer(0);
-			Integer last;
-			int blockSize = 1;
-			for (SOIntegerPair p : arr){
+			Long zero = new Long(0);
+			Long last;
+			long blockSize = 1;
+			for (SOLongPair p : arr){
 				while(count < current){
 					outArrOS.newLine();
 					count++;
@@ -205,7 +205,7 @@ public class DgapCompressor {
 					}
 					lineSet.remove(0);
 //					String temp = current + " has " + last + ",";
-					for (Integer i : lineSet){
+					for (Long i : lineSet){
 //						temp += i + ",";
 						if(i - last != 0){ 
 							if(i - last == 1){
@@ -237,7 +237,7 @@ public class DgapCompressor {
 //					System.out.println(line);
 					outArrOS.write(line);
 					outArrOS.newLine();
-					lineSet = new ArrayList<Integer>();
+					lineSet = new ArrayList<Long>();
 					current = p.O;
 					lineSet.add(p.S);
 					line = "";
@@ -259,10 +259,10 @@ public class DgapCompressor {
 	public static void writeIndex(String outputFilePath, DBImpl dbu) 
 			throws IOException, SQLException{
 		@SuppressWarnings("unchecked")
-		BiMap<Integer, String> indexNodes = (BiMap<Integer, String>) dbu.fetchIndex();
+		BiMap<Long, String> indexNodes = (BiMap<Long, String>) dbu.fetchIndex();
 		BufferedWriter fInd = new BufferedWriter(new OutputStreamWriter(
 				new FileOutputStream(outputFilePath,true),"UTF-8"));
-		for(Entry<Integer, String> pairs : indexNodes.entrySet()){
+		for(Entry<Long, String> pairs : indexNodes.entrySet()){
 			fInd.write(pairs.getKey() + " " + pairs.getValue());
 			fInd.newLine();
 		}

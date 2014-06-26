@@ -19,7 +19,7 @@ import org.json.simple.JSONObject;
 
 import com.google.common.collect.Sets;
 
-import queryObjects.IntegerPattern;
+import queryObjects.LongPattern;
 import queryObjects.ParsedQuery;
 import queryObjects.StringPattern;
 import queryObjects.SubQuerySet;
@@ -69,7 +69,7 @@ public class SimpleQueryExecutor {
 	private static Set<String> fetchFromLocalFS(String dest, VarType type, StringPattern pat) 
 			throws SQLException, IOException{
 		Set<String> result = new HashSet<String>();
-		IntegerPattern intPat = SimpleQueryTranslator.toCompressed(dbu, pat);
+		LongPattern intPat = SimpleQueryTranslator.toCompressed(dbu, pat);
 		FileInputStream fs= new FileInputStream(dest);//TODO file location
 		BufferedReader br = new BufferedReader(new InputStreamReader(fs));
 		//TODO functions to convert file names

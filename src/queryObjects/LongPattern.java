@@ -1,9 +1,9 @@
 package queryObjects;
 
-public class IntegerPattern {
-	private Integer s;
-	private Integer p;
-	private Integer o;
+public class LongPattern {
+	private Long s;
+	private Long p;
+	private Long o;
 	
 	/**
 	 * Creates a pattern with numerical expressions(compressed) and variable informations
@@ -11,21 +11,21 @@ public class IntegerPattern {
 	 * @param P numerical expression
 	 * @param O numerical expression
 	 */
-	public IntegerPattern(Integer S, Integer P, Integer O){
+	public LongPattern(Long S, Long P, Long O){
 		this.s = S;
 		this.p = P;
 		this.o = O;
 	}
 	
-	public Integer getS(){
+	public Long getS(){
 		return s;
 	}
 
-	public Integer getP(){
+	public Long getP(){
 		return p;
 	}
 
-	public Integer getO(){
+	public Long getO(){
 		return o;
 	}
 	
