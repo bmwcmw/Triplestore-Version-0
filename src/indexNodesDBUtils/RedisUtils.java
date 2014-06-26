@@ -105,6 +105,7 @@ public class RedisUtils implements COMMImpl{
 		jedis.select(DBINDEX2);
 		String index = jedis.get(node);
 		jedis.close();
+		System.out.println(index);
 		return Long.valueOf(index);
 	}
 
