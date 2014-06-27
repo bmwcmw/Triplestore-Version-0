@@ -3,14 +3,9 @@ package ctmRdf;
 import indexNodesDBUtils.DBImpl;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.concurrent.ExecutionException;
-
 import localIOUtils.IOUtils;
 import dataComparator.FilePair;
 import dataDistributor.DestInfo;
@@ -168,16 +163,10 @@ public class CTMThread implements Runnable {
 					break;
 			}
 			dm.closeAllWriters();
-		} catch (IOException e) {
+			if(indexNodes != null) indexNodes.closeAll();
+		} catch (Exception e) {
 			IOUtils.logLog("Error in thread " + threadId + " : " + e.getMessage());
-		} catch (ParseException e) {
-			IOUtils.logLog("Error in thread " + threadId + " : " + e.getMessage());
-		} catch (SQLException e) {
-			IOUtils.logLog("Error in thread " + threadId + " : " + e.getMessage());
-		} catch (InterruptedException e) {
-			IOUtils.logLog("Error in thread " + threadId + " : " + e.getMessage());
-		} catch (ExecutionException e) {
-			IOUtils.logLog("Error in thread " + threadId + " : " + e.getMessage());
+			e.printStackTrace();
 		}
 		endTime = System.currentTimeMillis();
 		duration = endTime - startTime;

@@ -1,9 +1,5 @@
 package indexNodesDBUtils;
 
-import java.util.ArrayList;
-
-import com.google.common.collect.BiMap;
-
 import dataCompressor.SOLongPair;
 
 public class MongoDBUtils implements COMMImpl{
@@ -60,18 +56,6 @@ public class MongoDBUtils implements COMMImpl{
 	}
 
 	@Override
-	public BiMap<Integer, String> fetchIndex() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<SOLongPair> fetchSOList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void loadFromFile(String path) {
 		// TODO Auto-generated method stub
 		
@@ -81,6 +65,24 @@ public class MongoDBUtils implements COMMImpl{
 	public Long fetchLoadedSize() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void writeMatS(String outputFilePath, String comparePath, String inFileName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void writeMatO(String outputFilePath, String comparePath, String inFileName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void writeIndex(String outputFilePath) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -3,14 +3,10 @@ package indexNodesDBUtils;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
 
 import localIOUtils.IOUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
-
-import com.google.common.collect.BiMap;
-
 import dataCleaner.CTMPairStr;
 import dataCompressor.SOLongPair;
 import dataReader.PairReader;
@@ -133,19 +129,7 @@ public class RedisUtils implements COMMImpl{
 	@Override
 	public void closeAll() {
 		if(jedis != null)
-			jedis.close();
-	}
-
-	@Override
-	public BiMap<Integer, String> fetchIndex() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<SOLongPair> fetchSOList() {
-		// TODO Auto-generated method stub
-		return null;
+			jedis.quit();
 	}
 
 	@Override
@@ -183,6 +167,24 @@ public class RedisUtils implements COMMImpl{
 		long size = jedis.dbSize();
 		jedis.close();
 		return size;
+	}
+
+	@Override
+	public void writeMatS(String outputFilePath, String comparePath, String inFileName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void writeMatO(String outputFilePath, String comparePath, String inFileName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void writeIndex(String outputFilePath) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

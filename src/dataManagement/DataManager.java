@@ -174,12 +174,10 @@ public class DataManager {
 	 * @param comparePath : Folder to store pre-comparison data. 
 	 * 			Set it to null if we don't need to do that in this step.
 	 * @return 0 if OK, -1 if error.
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws SQLException
+	 * @throws Exception 
 	 */
 	public int indexedCompress(ArrayList<File> psSrc, String outputPath, 
-			DBImpl dbu, String comparePath) throws IOException, ParseException, SQLException {
+			DBImpl dbu, String comparePath) throws Exception {
 	    String inFilePath;
     	String inFileName;
 	    for (File f : psSrc){
@@ -376,18 +374,18 @@ public class DataManager {
 	 * 
 	 * @param _node : CTMSubject or CTMObject
 	 * @return index of the given node
-	 * @throws SQLException 
+	 * @throws Exception 
 	 */
 	public void insertOrIgnorePredicateNodes(DBImpl dbu, CTMPair so) 
-			throws SQLException {
-		System.out.println("Inserting : "+so.getSubject().toString()+" "+so.getObject().toString());
+			throws Exception {
+		//System.out.println("Inserting : "+so.getSubject().toString()+" "+so.getObject().toString());
 		String S = so.getSubject().toString();
 		String O = so.getObject().toString();
 		dbu.insertNode(S);
 		dbu.insertNode(O);
 		Long iS = dbu.fetchIdByNode(S);
 		Long iO = dbu.fetchIdByNode(O);
-		System.out.println("Inserting : "+iS+" "+iO);
+		//System.out.println("Inserting : "+iS+" "+iO);
 		dbu.addSO(new SOLongPair(iS,iO));
 	}
 	

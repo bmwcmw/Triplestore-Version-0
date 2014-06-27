@@ -2,36 +2,103 @@ package indexNodesDBUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Map;
 
 import dataCompressor.SOLongPair;
 
 public interface DBImpl {
-	
-	public void addSO(SOLongPair so);
-	
-	public Long fetchSOSize();
-    
-    public Long fetchIndexSize() throws SQLException;
-	
-    public void insertNode(String node) throws SQLException;
-    
-	public Long fetchIdByNode(String node) throws SQLException;
 
-	public String fetchNodeById(Long index) throws SQLException;
+	/** 
+	 * Since JVM will be very inefficient while a String become large, we flush it periodically.
+	 */
+	public static final int MAXSTRLENGTH = 40000;
 	
+	/**
+	 * Adds an SO String pair for the compression
+	 * @param so
+	 */
+	public void addSO(SOLongPair so);
+
+	/**
+	 * Returns the number of SO pairs
+	 * @return
+	 */
+	public Long fetchSOSize();
+
+	/**
+	 * Fetches current number of nodes
+	 * @return Current index-node table's size
+	 * @throws SQLException
+	 */
+    public Long fetchIndexSize() throws Exception;
+
+    /**
+     * Inserts a note into the table after checking the existence
+     * @param node
+     * @throws SQLException
+     */
+    public void insertNode(String node) throws Exception;
+
+	/**
+     * Index ==> Node
+	 * @param index
+	 * @return node
+	 * @throws SQLException
+	 */
+	public Long fetchIdByNode(String node) throws Exception;
+
+    /**
+     * Node ==> Index
+     * @param node
+     * @return index
+     * @throws SQLException
+     */
+	public String fetchNodeById(Long index) throws Exception;
+
+	/**
+	 * Cleans all the things
+	 */
 	public void cleanAll();
-	
+
+	/**
+	 * Closes the connection
+	 * @throws SQLException
+	 */
 	public void closeAll() throws Exception;
+
+	/**
+	 * Writes the Subject-Object matrix, and optional sorted S array file
+	 */
+	public void writeMatS(String outputFilePath, String comparePath, String inFileName) throws Exception;
+
+	/**
+	 * Writes the Object-Subject matrix, and optional sorted O array file
+	 */
+	public void writeMatO(String outputFilePath, String comparePath, String inFileName) throws Exception;
+
+	/**
+	 * Writes the index file
+	 */
+	public void writeIndex(String outputFilePath) throws Exception;
 	
-	@SuppressWarnings("rawtypes")
-	public Map fetchIndex();
-	
-	public ArrayList<SOLongPair> fetchSOList();
+//	@SuppressWarnings("rawtypes")
+//	public Map fetchIndex();
+//	
+//	public ArrayList<SOLongPair> fetchSOList();
 	
 	/*
 	 * For data nodes
 	 */
+
+	/**
+	 * Loads the index from a compressed index file
+	 * @param path
+	 */
 	public void loadFromFile(String path) throws IOException;
+	
+
+	/**
+	 * Loads the size of loaded database
+	 * @param path
+	 */
+	public Long fetchLoadedSize();
 }

@@ -5,8 +5,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import com.google.common.collect.BiMap;
 
 import dataCompressor.SOLongPair;
 
@@ -90,15 +88,9 @@ public class MonetDBUtils implements JDBCImpl{
 	}
 
 	@Override
-	public BiMap<Integer, String> fetchIndex() {
+	public void setTableName(String name) {
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<SOLongPair> fetchSOList() {
-		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 	@Override
@@ -108,8 +100,26 @@ public class MonetDBUtils implements JDBCImpl{
 	}
 
 	@Override
-	public void setTableName(String name) {
+	public void writeMatS(String outputFilePath, String comparePath, String inFileName) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void writeMatO(String outputFilePath, String comparePath, String inFileName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void writeIndex(String outputFilePath) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Long fetchLoadedSize() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

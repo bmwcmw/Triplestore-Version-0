@@ -2,20 +2,7 @@ package dataCompressor;
 
 import indexNodesDBUtils.DBImpl;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map.Entry;
-
-import com.google.common.collect.BiMap;
-
 import localIOUtils.IOUtils;
 
 
@@ -28,249 +15,21 @@ import localIOUtils.IOUtils;
  */
 public class DgapCompressor {
 	
-	//Since JVM will be very inefficient while a String become large, we flush it periodically.
-	private static final int MAXSTRLENGTH = 40000;
-	
 	public static void writeCompressedFormat(String inFileName, String outputPath, 
-			DBImpl dbu, String comparePath) throws IOException, SQLException{
-		Long indexSize;
-		Long soSize;
-		String line = "";
-		indexSize = dbu.fetchIndexSize();
-		soSize = dbu.fetchSOSize();
+			DBImpl dbu, String comparePath) throws Exception{
+		Long indexSize = dbu.fetchIndexSize();
+		Long soSize = dbu.fetchSOSize();
 		IOUtils.logLog("Start Compressing into matrix");
 		IOUtils.logLog("All nodes : " + indexSize + " (S,O) pairs : "
 				+ soSize);
-		ArrayList<SOLongPair> arr = dbu.fetchSOList();
+		//ArrayList<SOLongPair> arr = dbu.fetchSOList();
     	String outputFilePath = outputPath + File.separator + inFileName;
 		
-		/* SO Matrix */
-		Collections.sort(arr, new Comparator<SOLongPair>() {
-			@Override
-			public int compare(final SOLongPair p1, final SOLongPair p2) {
-				return p1.S.compareTo(p2.S);
-			}
-        });
-		IOUtils.logLog("SO sorted");
-    	
-		/* Write sorted S array file if the parameter isn't null */
-		if(comparePath!=null){
-			BufferedWriter outSarray = null;
-			try{
-				outSarray = new BufferedWriter(new OutputStreamWriter(
-						new FileOutputStream(comparePath + File.separator + inFileName + ".S", true)));
-				for (SOLongPair pair : arr){
-					outSarray.write(dbu.fetchNodeById(pair.S));
-					outSarray.newLine();
-				}
-			} finally {
-				if(outSarray!=null)
-					outSarray.close();
-			}
-			IOUtils.logLog("S array written to Comparison Path");
-		}
-		
-		BufferedWriter outArrSO = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream(outputFilePath + ".matrixSO", true)));
-		if(arr.size()>0){
-			//Row
-			Long current = arr.get(0).S;
-			List<Long> lineSet = new ArrayList<Long>();
-			line = "";
-			long count = 0;
-			//Col
-			Long zero = new Long(0);
-			Long last;
-			long blockSize = 1;
-			for (SOLongPair p : arr){
-				while(count < current){
-					outArrSO.newLine();
-					count++;
-				}
-				if(p.S.equals(current)){//lineSet has at least one entry
-					lineSet.add(p.O);
-				} else {//Output current lineSet(from 2nd entry if exists)
-					Collections.sort(lineSet);
-					blockSize = 1;
-					last = lineSet.get(0);
-					if(last.equals(zero)){
-						line += lineSet.size() + ":[1]";
-					} else {
-						line += lineSet.size() + ":[0]";
-						line += last + ",";
-					}
-					lineSet.remove(0);
-//					String temp = current + " has " + last + ",";
-					for (Long i : lineSet){
-//						temp += i + ",";
-						if(i - last != 0){
-							if(i - last == 1){
-								blockSize ++;
-							} else {
-								//add "1" block
-								line += blockSize + ",";
-								blockSize = i - last - 1;
-								//add "0" block
-								line += blockSize + ",";
-								//initialize "1" block
-								blockSize = 1;
-								//Avoid too large lines
-								if(line.length()>MAXSTRLENGTH){
-									outArrSO.write(line);
-									line = "";
-								}
-							}
-							last = i;
-						}
-					}
-					//last entry
-					line = line + blockSize;
-					if(last < indexSize-1){
-						blockSize = indexSize-1 - last;
-						line = line + "," + blockSize;
-					}
-//					System.out.println(temp);
-//					System.out.println(line);
-					outArrSO.write(line);
-					outArrSO.newLine();
-					lineSet = new ArrayList<Long>();
-					current = p.S;
-					lineSet.add(p.O);
-					line = "";
-					count++;
-				}
-			}
-			while(count < indexSize-1){
-				outArrSO.newLine();
-				count++;
-			}
-		}
-		if(outArrSO!=null) outArrSO.close();
-		IOUtils.logLog("SO written to file");
-		
-		/* OS Matrix */
-		Collections.sort(arr, new Comparator<SOLongPair>() {
-			@Override
-			public int compare(final SOLongPair p1, final SOLongPair p2) {
-				return p1.O.compareTo(p2.O);
-			}
-        });
-		IOUtils.logLog("OS sorted");
-    	
-		/* Write sorted O array file if the parameter isn't null */
-		if(comparePath!=null){
-			BufferedWriter outOarray = null;
-			try{
-				outOarray = new BufferedWriter(new OutputStreamWriter(
-						new FileOutputStream(comparePath + File.separator + inFileName + ".O", true)));
-				for (SOLongPair pair : arr){
-					outOarray.write(dbu.fetchNodeById(pair.O));
-					outOarray.newLine();
-				}
-			} finally {
-				if(outOarray!=null)
-					outOarray.close();
-			}
-			IOUtils.logLog("O array written to Comparison Path");
-		}
-		
-		BufferedWriter outArrOS = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream(outputFilePath + ".matrixOS", true)));
-		if(arr.size()>0){
-			//Row
-			Long current = arr.get(0).O;
-			List<Long> lineSet = new ArrayList<Long>();
-			line = "";
-			long count = 0;
-			//Col
-			Long zero = new Long(0);
-			Long last;
-			long blockSize = 1;
-			for (SOLongPair p : arr){
-				while(count < current){
-					outArrOS.newLine();
-					count++;
-				}
-				if(p.O.equals(current)){//lineSet has at least one entry
-					lineSet.add(p.S);
-				} else {//Output current lineSet(from 2nd entry if exists)
-					Collections.sort(lineSet);
-					blockSize = 1;
-					last = lineSet.get(0);
-					if(last.equals(zero)){
-						line += lineSet.size() + ":[1]";
-					} else {
-						line += lineSet.size() + ":[0]";
-						line += last + ",";
-					}
-					lineSet.remove(0);
-//					String temp = current + " has " + last + ",";
-					for (Long i : lineSet){
-//						temp += i + ",";
-						if(i - last != 0){ 
-							if(i - last == 1){
-								blockSize ++;
-							} else {
-								//add "1" block
-								line += blockSize + ",";
-								blockSize = i - last - 1;
-								//add "0" block
-								line += blockSize + ",";
-								//initialize "1" block
-								blockSize = 1;
-								//Avoid too large lines
-								if(line.length()>MAXSTRLENGTH){
-									outArrOS.write(line);
-									line = "";
-								}
-							}
-							last = i;
-						}
-					}
-					//last entry
-					line = line + blockSize;
-					if(last < indexSize-1){
-						blockSize = indexSize-1 - last;
-						line = line + "," + blockSize;
-					}
-//					System.out.println(temp);
-//					System.out.println(line);
-					outArrOS.write(line);
-					outArrOS.newLine();
-					lineSet = new ArrayList<Long>();
-					current = p.O;
-					lineSet.add(p.S);
-					line = "";
-					count++;
-				}
-			}
-			while(count < indexSize-1){
-				outArrOS.newLine();
-				count++;
-			}
-		}
-		if(outArrOS!=null) outArrOS.close();
-		IOUtils.logLog("OS written to file");
+		dbu.writeMatS(outputFilePath, comparePath, inFileName);
+		dbu.writeMatO(outputFilePath, comparePath, inFileName);
 		
 		/* Index of nodes */
-		writeIndex(outputFilePath + ".index", dbu);
-	}
-	
-	public static void writeIndex(String outputFilePath, DBImpl dbu) 
-			throws IOException, SQLException{
-		@SuppressWarnings("unchecked")
-		BiMap<Long, String> indexNodes = (BiMap<Long, String>) dbu.fetchIndex();
-		BufferedWriter fInd = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream(outputFilePath,true),"UTF-8"));
-		for(Entry<Long, String> pairs : indexNodes.entrySet()){
-			fInd.write(pairs.getKey() + " " + pairs.getValue());
-			fInd.newLine();
-		}
-		if (fInd != null) {
-			fInd.flush();
-			fInd.close();
-		}
-		IOUtils.logLog("Index written to file");
+		dbu.writeIndex(outputFilePath + ".index");
 	}
 	
 //	unsigned int dgap_compress(unsigned char *in, unsigned int size, unsigned char *out)
