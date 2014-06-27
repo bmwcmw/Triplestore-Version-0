@@ -53,7 +53,7 @@ public class SimpleQueryExecutor {
 	}
 	
 	public static Set<String> fetchFromDest(String dest,  VarType type, StringPattern pat)
-			throws SQLException, IOException{
+			throws Exception{
 		switch(mode){
 			case LOCALFS:
 				return fetchFromLocalFS(dest, type, pat);
@@ -67,7 +67,7 @@ public class SimpleQueryExecutor {
 	}
 	
 	private static Set<String> fetchFromLocalFS(String dest, VarType type, StringPattern pat) 
-			throws SQLException, IOException{
+			throws Exception{
 		Set<String> result = new HashSet<String>();
 		LongPattern intPat = SimpleQueryTranslator.toCompressed(dbu, pat);
 		//TODO file location
@@ -92,7 +92,7 @@ public class SimpleQueryExecutor {
 	}
 	
 	public static Set<String> execute(ParsedQuery parsed, JSONArray dstInfo) 
-			throws SQLException, IOException{
+			throws Exception{
 		for (Object o : dstInfo){
 			JSONObject newJO = (JSONObject) o;
 		}
