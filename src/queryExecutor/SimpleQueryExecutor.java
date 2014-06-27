@@ -70,7 +70,8 @@ public class SimpleQueryExecutor {
 			throws SQLException, IOException{
 		Set<String> result = new HashSet<String>();
 		LongPattern intPat = SimpleQueryTranslator.toCompressed(dbu, pat);
-		FileInputStream fs= new FileInputStream(dest);//TODO file location
+		//TODO file location
+		FileInputStream fs= new FileInputStream(dest);
 		BufferedReader br = new BufferedReader(new InputStreamReader(fs));
 		//TODO functions to convert file names
 		for(int i = 0; i < 30; i++)
