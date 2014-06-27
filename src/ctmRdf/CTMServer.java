@@ -75,7 +75,7 @@ public class CTMServer {
 		
 		// XXX SETUP : Compressor mode, perhaps needs external DB support
 		CTMServer._compressMode = CTMConstants.CTMCOMPRESS_REDIS;
-		// XXX SETUP : Compressor writes sorted S/O files of each predicate or not
+		// XXX SETUP : Compressor writes sorted S/O files of each predicate or not (InRam only)
 		CTMServer._writeprecompare = true;
 		
 		// XXX SETUP : Pre-Comparator mode, perhaps needs PERL executable in PATH
@@ -516,7 +516,7 @@ public class CTMServer {
 	        }
 	        return 0;
 		} catch (Exception e) {
-			IOUtils.logLog("Maybe DBU error");
+			IOUtils.logLog("Error : ");
 			IOUtils.logLog(e.getMessage());
 			return -1;
 		}

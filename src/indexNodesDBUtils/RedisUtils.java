@@ -34,12 +34,16 @@ public class RedisUtils implements COMMImpl{
     
 	public RedisUtils(String url) throws SQLException, ClassNotFoundException{
 		jedis = new Jedis(url);
+		jedis.connect();
+	}
+	
+	public void connect(){
 	}
 
 	@Override
 	public void addSO(SOLongPair so) {
 		try {
-			jedis.connect();
+			//jedis.connect();
 			jedis.select(DBSO);
 			jedis.set(so.S.toString(), so.O.toString());
 		} catch (Exception e) {
@@ -48,74 +52,69 @@ public class RedisUtils implements COMMImpl{
 			IOUtils.logLog("DB cleaned");
 			e.printStackTrace();
 		} finally {
-			pipeline.syncAndReturnAll();
-			jedis.close();
+			//jedis.close();
 		}
-		IOUtils.logLog("Successfully loaded. Current size of key-value pair(s) : " + fetchLoadedSize());
 	}
 
 	@Override
 	public Long fetchSOSize() {
-		jedis.connect();
+		//jedis.connect();
 		jedis.select(DBSO);
 		Long size = jedis.dbSize();
-		jedis.close();
+		//jedis.close();
 		return size;
 	}
 
 	@Override
 	public Long fetchIndexSize() {
-		jedis.connect();
+		//jedis.connect();
 		jedis.select(DBINDEX1);
 		Long size = jedis.dbSize();
-		jedis.close();
+		//jedis.close();
 		return size;
 	}
 
 	@Override
-	public Long insertNode(String node) {
-		try {
-			jedis.connect();
-			jedis.select(DBINDEX1);
-			jedis.set(String.valueOf(fetchIndexSize()), node);
-			jedis.select(DBINDEX2);
-			jedis.set(node, String.valueOf(fetchIndexSize()));
-//			pipeline = jedis.pipelined();
-//			pipeline.select(DBINDEX1);
-//			pipeline.set(String.valueOf(fetchIndexSize()), node);
-//			pipeline.select(DBINDEX2);
-//			pipeline.set(node, String.valueOf(fetchIndexSize()));
-		} catch (Exception e) {
-			IOUtils.logLog("Aborted while adding SO pair");
-			cleanDB();
-			jedis.select(DBINDEX1);
-			cleanDB();
-			IOUtils.logLog("DB cleaned");
-			e.printStackTrace();
-		} finally {
-			//pipeline.syncAndReturnAll();
-			jedis.close();
+	public void insertNode(String node) {
+		if(fetchIdByNode(node)==null){
+			try {
+				//jedis.connect();
+				jedis.select(DBINDEX1);
+				String index = String.valueOf(fetchIndexSize());
+				jedis.set(index, node);
+				jedis.select(DBINDEX2);
+				jedis.set(node, index);
+	//			pipeline = jedis.pipelined();
+	//			pipeline.select(DBINDEX1);
+	//			pipeline.set(String.valueOf(fetchIndexSize()), node);
+	//			pipeline.select(DBINDEX2);
+	//			pipeline.set(node, String.valueOf(fetchIndexSize()));
+			} catch (Exception e) {
+				IOUtils.logLog("Aborted while adding node");
+				cleanDB();
+				jedis.select(DBINDEX1);
+				cleanDB();
+				IOUtils.logLog("DB cleaned");
+				e.printStackTrace();
+			} finally {
+				//pipeline.syncAndReturnAll();
+				//jedis.close();
+			}
 		}
-		return null;
 	}
 
 	@Override
 	public Long fetchIdByNode(String node) {
-		jedis.connect();
 		jedis.select(DBINDEX2);
 		String index = jedis.get(node);
-		jedis.close();
-		System.out.println(index);
-		return Long.valueOf(index);
+		return (index==null)?null:Long.valueOf(index);
 	}
 
 	@Override
 	public String fetchNodeById(Long index) {
-		jedis.connect();
 		jedis.select(DBINDEX1);
 		String node = jedis.get(index.toString());
-		jedis.close();
-		return node;
+		return (node==null)?null:node;
 	}
 
 	@Override

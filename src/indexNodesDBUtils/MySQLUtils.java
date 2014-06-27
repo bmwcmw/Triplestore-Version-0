@@ -47,9 +47,8 @@ public class MySQLUtils implements JDBCImpl{
 	}
 
 	@Override
-	public Long insertNode(String node) throws SQLException {
+	public void insertNode(String node) throws SQLException {
 		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

@@ -31,9 +31,8 @@ public class MongoDBUtils implements COMMImpl{
 	}
 
 	@Override
-	public Long insertNode(String node) {
+	public void insertNode(String node) {
 		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

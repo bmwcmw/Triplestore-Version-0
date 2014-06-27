@@ -34,12 +34,11 @@ public interface JDBCImpl extends DBImpl{
     public Long fetchIndexSize() throws SQLException;
 	
     /**
-     * Inserts a note into the table then return the id of newly inserted node
+     * Inserts a note into the table after checking the existence
      * @param node
-     * @return index
      * @throws SQLException
      */
-    public Long insertNode(String node) throws SQLException;
+    public void insertNode(String node) throws SQLException;
     
     /**
      * Node ==> Index

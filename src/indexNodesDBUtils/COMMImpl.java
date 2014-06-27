@@ -26,11 +26,11 @@ public interface COMMImpl extends DBImpl{
     public Long fetchIndexSize();
 	
     /**
-     * Inserts a note into the table then return the id of newly inserted node
+     * Inserts a note into the table after checking the existence
      * @param node data string
      * @return index value
      */
-    public Long insertNode(String node);
+    public void insertNode(String node);
     
     /**
      * Node ==> Index

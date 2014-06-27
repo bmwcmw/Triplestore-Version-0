@@ -42,11 +42,9 @@ public class OracleUtils implements JDBCImpl{
     }
 
 	@Override
-    public Long insertNode(String node) throws SQLException{
+    public void insertNode(String node) throws SQLException{
     	_rs = _st.executeQuery("INSERT INTO indexnodes(data) "
     			+ "values ('" + node + "') RETURNING id;");
-    	if ( _rs.next() ) return _rs.getLong("id");
-    	else return null;
     }
 
 	@Override

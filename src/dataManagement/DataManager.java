@@ -380,22 +380,16 @@ public class DataManager {
 	 */
 	public void insertOrIgnorePredicateNodes(DBImpl dbu, CTMPair so) 
 			throws SQLException {
+		System.out.println("Inserting : "+so.getSubject().toString()+" "+so.getObject().toString());
 		String S = so.getSubject().toString();
 		String O = so.getObject().toString();
+		dbu.insertNode(S);
+		dbu.insertNode(O);
 		Long iS = dbu.fetchIdByNode(S);
 		Long iO = dbu.fetchIdByNode(O);
-		if(iS == null){
-		    iS = dbu.insertNode(S);
-		} else {
-		    iS = dbu.fetchIdByNode(S);
-		}
-		if(iO == null){
-			iO = dbu.insertNode(O);
-		} else {
-			iO = dbu.fetchIdByNode(O);
-		}
+		System.out.println("Inserting : "+iS+" "+iO);
 		dbu.addSO(new SOLongPair(iS,iO));
-	}	
+	}
 	
 	/**
 	 * Writes a line to the specified predicate file, during the PS phase.

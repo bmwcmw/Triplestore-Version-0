@@ -38,10 +38,11 @@ public class InRamDBUtils implements COMMImpl{
     }
 
 	@Override
-    public Long insertNode(String node){
-		long newid = nodes.size();
-    	nodes.put(newid, node);
-		return newid;
+    public void insertNode(String node){
+		if(fetchIdByNode(node)==null){
+			long newid = nodes.size();
+	    	nodes.put(newid, node);
+		}
     }
 
 	@Override

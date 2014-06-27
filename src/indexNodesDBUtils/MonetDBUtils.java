@@ -44,10 +44,9 @@ public class MonetDBUtils implements JDBCImpl{
     }
 
 	@Override
-    public Long insertNode(String node) throws SQLException{
+    public void insertNode(String node) throws SQLException{
     	_st.executeUpdate("INSERT INTO indexnodes(data) "
     			+ "values ('" + node + "');");
-    	return fetchIdByNode(node);
     }
 
 	@Override
