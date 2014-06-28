@@ -134,7 +134,7 @@ public class RedisUtils implements COMMImpl{
 
 	@Override
 	public void loadFromFile(String path) {
-		// TODO https://github.com/ldodds/redis-load
+		// TODO direct load https://github.com/ldodds/redis-load
 		try {
 			jedis.connect();
 			jedis.select(DBLOAD);
@@ -171,19 +171,19 @@ public class RedisUtils implements COMMImpl{
 
 	@Override
 	public void writeMatS(String outputFilePath, String comparePath, String inFileName) {
-		// TODO Auto-generated method stub
+		// TODO Sort & Bulk load
 		
 	}
 
 	@Override
 	public void writeMatO(String outputFilePath, String comparePath, String inFileName) {
-		// TODO Auto-generated method stub
+		// TODO Sort & Bulk load
 		
 	}
 
 	@Override
 	public void writeIndex(String outputFilePath) {
-		// TODO Auto-generated method stub
+		// TODO Bulk load
 		
 	}
 	
