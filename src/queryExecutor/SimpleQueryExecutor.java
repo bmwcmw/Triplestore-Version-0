@@ -26,6 +26,12 @@ import queryObjects.SubQuerySet;
 import queryRewriter.SimpleQueryTranslator;
 import queryUtils.QueryUtils.VarType;
 
+/**
+ * This is the query executor which performs processed SPARQL query by asking 
+ * different file systems
+ * @author Cedar
+ *
+ */
 public class SimpleQueryExecutor {
 	
 	public static enum MODE{

@@ -7,6 +7,11 @@ import queryObjects.ParsedQuery;
 import queryObjects.StringPattern;
 import queryUtils.InvalidPatternException;
 
+/**
+ * This is the query planner which splits SPARQL queries into sub-queries by the
+ * number of variable(s)
+ * @author Cedar
+ */
 public class SimpleQueryPlanner {
 	
 	/**

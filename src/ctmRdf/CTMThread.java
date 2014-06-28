@@ -163,6 +163,7 @@ public class CTMThread implements Runnable {
 					break;
 			}
 			dm.closeAllWriters();
+			/* Don't forget to close DB utils */
 			if(indexNodes != null) indexNodes.closeAll();
 		} catch (Exception e) {
 			IOUtils.logLog("Error in thread " + threadId + " : " + e.getMessage());
@@ -174,6 +175,9 @@ public class CTMThread implements Runnable {
 				+ " finished in " + String.valueOf(duration) + "ms");
     }
 
+    /**
+     * Starts thread
+     */
     public void start() {
 		System.out.println("Starting " + threadId);
 		if (t == null) {
