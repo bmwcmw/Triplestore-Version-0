@@ -746,30 +746,36 @@ public class CTMServer {
 	 * Tries to load predicates' similarities from a predefined file.
 	 * Returns null if the file doesn't exist or is unreadable.
 	 * 
-	 * @return a matrix
+	 * @return Grouped predicates
 	 * @throws IOException 
 	 */
 	static ArrayList<ArrayList<String>> groupBySimilarities(String indicatorPath,
-			int nbThreads, boolean random) throws IOException{
-		File indFiles = new File(indicatorPath);
-		// USE indicators
-		if(indFiles.exists() && indFiles.isFile() && indFiles.canRead()){
-			ArrayList<ArrayList<String>> groups = new ArrayList<ArrayList<String>>();
-			switch (CTMServer._indicatorMode){
-				case CTMConstants.CTMINDICATORS : 
-					break;
-				case CTMConstants.CTMINDICATORO : 
-					break;
-				case CTMConstants.CTMINDICATORSO : 
-					break;
-			}
-			//TODO Load indicator files and calculate
-			return groups;
-		} 
+			int nbThreads, boolean forceRandom) throws IOException{
 		// USE random plan
-		else {
-			//TODO
+		if(forceRandom) {
+			//TODO random plan
 			return null;
+		}
+		// USE indicators
+		else {
+			File indFiles = new File(indicatorPath);
+			if(indFiles.exists() && indFiles.isFile() && indFiles.canRead()){
+				ArrayList<ArrayList<String>> groups = new ArrayList<ArrayList<String>>();
+				switch (CTMServer._indicatorMode){
+					case CTMConstants.CTMINDICATORS : 
+						break;
+					case CTMConstants.CTMINDICATORO : 
+						break;
+					case CTMConstants.CTMINDICATORSO : 
+						break;
+					default :
+						return groupBySimilarities(indicatorPath, nbThreads, true);
+				}
+				//TODO Load indicator files and calculate
+				return groups;
+			} else {
+				return groupBySimilarities(indicatorPath, nbThreads, true);
+			}
 		}
 	}
 
