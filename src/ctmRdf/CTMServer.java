@@ -651,7 +651,9 @@ public class CTMServer {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	static int distribute(int programInd) throws IOException, ParseException{		
+	static int distribute(int programInd) throws IOException, ParseException{	
+		String indicatorPath = _ctlParams.get("indicatorPath");
+		
 		/* Check compressed files */
 		String compressedPath = _ctlParams.get("compressedPath");
 		File folder = new File(compressedPath);
@@ -691,11 +693,7 @@ public class CTMServer {
 		IOUtils.logLog("Local compressed file checked");
 		
 		//Load if the indicator file exists(with check of file entries), otherwise, use a random plan 
-		int [][] simMat = loadPredicateSimilarities();
-		if(listOfFiles.length!=simMat.length){
-			IOUtils.logLog("Indicator file contains error number of file : using random plan.");
-			simMat = null;
-		}
+		ArrayList<ArrayList<String>> groups = groupBySimilarities(indicatorPath, CTMServer._nbThreads);
 
 		/* Contact DN and get the number of CNs with their available space */
 		String ipDN = "134.214.142.58";
@@ -747,15 +745,19 @@ public class CTMServer {
 	 * @return a matrix
 	 * @throws IOException 
 	 */
-	static int[][] loadPredicateSimilarities() throws IOException{
-		String distIndPath = _workingDir +  File.separator + ".dist.ind";
-		File distIndFile = new File(distIndPath);
-		if(distIndFile.exists() && distIndFile.isFile() && distIndFile.canRead()){
-			int[][] similarArray = new int[IOUtils.countLines(distIndPath)][IOUtils.countLines(distIndPath)];
-			//TODO Load indicator files
-			return similarArray;
-		} else 
+	static ArrayList<ArrayList<String>> groupBySimilarities(String indicatorPath,
+			int nbThreads) throws IOException{
+		File indFiles = new File(indicatorPath);
+		// USE indicators
+		if(indFiles.exists() && indFiles.isFile() && indFiles.canRead()){
+			ArrayList<ArrayList<String>> groups = new ArrayList<ArrayList<String>>();
+			//TODO Load indicator files and calculate
+			return groups;
+		} 
+		// USE random plan
+		else {
 			return null;
+		}
 	}
 
 	/**
