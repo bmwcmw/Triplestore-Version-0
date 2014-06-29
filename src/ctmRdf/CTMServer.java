@@ -57,6 +57,7 @@ public class CTMServer {
 	private static int _precompareMode;
 	private static int _compareMode;
 	private static int _distributeMode;
+	private static int _indicatorMode;
 	private static Map<String, String> _ctlParams;
 	private final static String _workingDir = System.getProperty("user.dir");
 	private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -86,6 +87,9 @@ public class CTMServer {
 		
 		// XXX SETUP : Distributor mode, to various distributed environments
 		CTMServer._distributeMode = CTMConstants.CTMDISTRIBUTE_HDFS;
+		
+		// XXX SETUP : Use only S/O or S and O for indicator in the distribution part
+		CTMServer._indicatorMode = CTMConstants.CTMINDICATORSO;
 		
 		// XXX SETUP : Global in/out paths
 		CTMServer._ctlParams = new HashMap<String, String>();
@@ -693,7 +697,7 @@ public class CTMServer {
 		IOUtils.logLog("Local compressed file checked");
 		
 		//Load if the indicator file exists(with check of file entries), otherwise, use a random plan 
-		ArrayList<ArrayList<String>> groups = groupBySimilarities(indicatorPath, CTMServer._nbThreads);
+		ArrayList<ArrayList<String>> groups = groupBySimilarities(indicatorPath, CTMServer._nbThreads, false);
 
 		/* Contact DN and get the number of CNs with their available space */
 		String ipDN = "134.214.142.58";
@@ -746,16 +750,25 @@ public class CTMServer {
 	 * @throws IOException 
 	 */
 	static ArrayList<ArrayList<String>> groupBySimilarities(String indicatorPath,
-			int nbThreads) throws IOException{
+			int nbThreads, boolean random) throws IOException{
 		File indFiles = new File(indicatorPath);
 		// USE indicators
 		if(indFiles.exists() && indFiles.isFile() && indFiles.canRead()){
 			ArrayList<ArrayList<String>> groups = new ArrayList<ArrayList<String>>();
+			switch (CTMServer._indicatorMode){
+				case CTMConstants.CTMINDICATORS : 
+					break;
+				case CTMConstants.CTMINDICATORO : 
+					break;
+				case CTMConstants.CTMINDICATORSO : 
+					break;
+			}
 			//TODO Load indicator files and calculate
 			return groups;
 		} 
 		// USE random plan
 		else {
+			//TODO
 			return null;
 		}
 	}

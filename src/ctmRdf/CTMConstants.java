@@ -28,6 +28,10 @@ public class CTMConstants {
 	public final static int CTMDISTRIBUTE_CEDAR = 1071;
 	public final static int CTMDISTRIBUTE_HDFS = 1072;
 	
+	public final static int CTMINDICATORS = 10701;
+	public final static int CTMINDICATORO = 10702;
+	public final static int CTMINDICATORSO = 10703;
+	
 	public final static int CTMEXIT = -1;
 	public final static int CTMEMPTY = 10000;
 }
