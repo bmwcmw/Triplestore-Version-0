@@ -697,7 +697,7 @@ public class CTMServer {
 		IOUtils.logLog("Local compressed file checked");
 		
 		//Load if the indicator file exists(with check of file entries), otherwise, use a random plan 
-		ArrayList<ArrayList<String>> groups = groupBySimilarities(indicatorPath, CTMServer._nbThreads, false);
+		ArrayList<ArrayList<String>> groups = groupBySimilarities(indicatorPath, compressedPath, CTMServer._nbThreads, false);
 
 		/* Contact DN and get the number of CNs with their available space */
 		String ipDN = "134.214.142.58";
@@ -749,8 +749,13 @@ public class CTMServer {
 	 * @return Grouped predicates
 	 * @throws IOException 
 	 */
-	static ArrayList<ArrayList<String>> groupBySimilarities(String indicatorPath,
-			int nbThreads, boolean forceRandom) throws IOException{
+	public static ArrayList<ArrayList<String>> groupBySimilarities(String compressedPath, 
+			String indicatorPath, int nbThreads, boolean forceRandom) throws IOException{
+		ArrayList<File> allfiles = IOUtils.loadFolder(compressedPath);
+		HashSet<String> predicateFilenames = new HashSet<String>();
+		for(int i=0;i<allfiles.size();i++){
+			predicateFilenames.add(IOUtils.filenameWithoutExt(allfiles.get(i).getName()));
+		}
 		// USE random plan
 		if(forceRandom) {
 			//TODO random plan
@@ -759,7 +764,7 @@ public class CTMServer {
 		// USE indicators
 		else {
 			File indFiles = new File(indicatorPath);
-			if(indFiles.exists() && indFiles.isFile() && indFiles.canRead()){
+			if(indFiles.exists() && indFiles.isDirectory() && indFiles.canRead()){
 				ArrayList<ArrayList<String>> groups = new ArrayList<ArrayList<String>>();
 				switch (CTMServer._indicatorMode){
 					case CTMConstants.CTMINDICATORS : 
@@ -769,12 +774,12 @@ public class CTMServer {
 					case CTMConstants.CTMINDICATORSO : 
 						break;
 					default :
-						return groupBySimilarities(indicatorPath, nbThreads, true);
+						return groupBySimilarities(indicatorPath, compressedPath, nbThreads, true);
 				}
 				//TODO Load indicator files and calculate
 				return groups;
 			} else {
-				return groupBySimilarities(indicatorPath, nbThreads, true);
+				return groupBySimilarities(indicatorPath, compressedPath, nbThreads, true);
 			}
 		}
 	}
