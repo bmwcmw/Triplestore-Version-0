@@ -104,6 +104,7 @@ public class IOUtils {
 	
 	/**
 	 * Returns an ArrayList of all files in a specified folder
+	 * @return list of File if no error, otherwise null
 	 * @param foldername
 	 * @throws IOException 
 	 */
@@ -111,15 +112,16 @@ public class IOUtils {
 		File folder = new File(foldername);
 		ArrayList<File> result = new ArrayList<File>();
 
-		if (folder.exists()) {
+		if (folder.isDirectory() && folder.canRead()) {
 			for (File file : folder.listFiles()) {
 				if (file.isFile()) {
 					result.add(file);
 				}
 			}
 		} else {
-			IOUtils.logLog("Error folder doesn't exist : "
+			IOUtils.logLog("Error folder doesn't exist or cannot be read : "
 					+ foldername);
+			return null;
 		}
 		return result;
 	}

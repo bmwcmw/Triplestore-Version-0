@@ -697,7 +697,8 @@ public class CTMServer {
 		IOUtils.logLog("Local compressed file checked");
 		
 		//Load if the indicator file exists(with check of file entries), otherwise, use a random plan 
-		ArrayList<ArrayList<String>> groups = groupBySimilarities(indicatorPath, compressedPath, CTMServer._nbThreads, false);
+		HashMap<String, HashSet<String>> groups = 
+				groupBySimilarities(indicatorPath, compressedPath, CTMServer._nbThreads, false);
 
 		/* Contact DN and get the number of CNs with their available space */
 		String ipDN = "134.214.142.58";
@@ -743,29 +744,32 @@ public class CTMServer {
 	}
 	
 	/**
-	 * Tries to load predicates' similarities from a predefined file.
+	 * Tries to load predicates' similarities from a predefined file, 
+	 * then to create predicate groups.
 	 * Returns null if the file doesn't exist or is unreadable.
 	 * 
 	 * @return Grouped predicates
 	 * @throws IOException 
 	 */
-	public static ArrayList<ArrayList<String>> groupBySimilarities(String compressedPath, 
+	public static HashMap<String, HashSet<String>> groupBySimilarities(String compressedPath, 
 			String indicatorPath, int nbThreads, boolean forceRandom) throws IOException{
-		ArrayList<File> allfiles = IOUtils.loadFolder(compressedPath);
+		ArrayList<File> allPredFiles = IOUtils.loadFolder(compressedPath);
 		HashSet<String> predicateFilenames = new HashSet<String>();
-		for(int i=0;i<allfiles.size();i++){
-			predicateFilenames.add(IOUtils.filenameWithoutExt(allfiles.get(i).getName()));
+		for(int i=0;i<allPredFiles.size();i++){
+			predicateFilenames.add(IOUtils.filenameWithoutExt(allPredFiles.get(i).getName()));
 		}
 		// USE random plan
 		if(forceRandom) {
-			//TODO random plan
-			return null;
+			HashMap<String, HashSet<String>> groups = new HashMap<String, HashSet<String>>();
+			
+			return groups;
 		}
 		// USE indicators
 		else {
-			File indFiles = new File(indicatorPath);
-			if(indFiles.exists() && indFiles.isDirectory() && indFiles.canRead()){
-				ArrayList<ArrayList<String>> groups = new ArrayList<ArrayList<String>>();
+			ArrayList<File> allIndFiles = IOUtils.loadFolder(compressedPath);
+			if(allIndFiles != null){
+				HashMap<String, HashSet<String>> groups = new HashMap<String, HashSet<String>>();
+				//TODO Load indicator files and calculate
 				switch (CTMServer._indicatorMode){
 					case CTMConstants.CTMINDICATORS : 
 						break;
@@ -773,10 +777,9 @@ public class CTMServer {
 						break;
 					case CTMConstants.CTMINDICATORSO : 
 						break;
-					default :
+					default : //This shouldn't happen
 						return groupBySimilarities(indicatorPath, compressedPath, nbThreads, true);
 				}
-				//TODO Load indicator files and calculate
 				return groups;
 			} else {
 				return groupBySimilarities(indicatorPath, compressedPath, nbThreads, true);
