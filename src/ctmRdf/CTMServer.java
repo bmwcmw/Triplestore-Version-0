@@ -751,24 +751,24 @@ public class CTMServer {
 	 * @return Grouped predicates
 	 * @throws IOException 
 	 */
-	public static HashMap<String, HashSet<String>> groupBySimilarities(String compressedPath, 
+	public static ArrayList<ArrayList<File>> groupBySimilarities(String compressedPath, 
 			String indicatorPath, int nbThreads, boolean forceRandom) throws IOException{
 		ArrayList<File> allPredFiles = IOUtils.loadFolder(compressedPath);
 		HashSet<String> predicateFilenames = new HashSet<String>();
 		for(int i=0;i<allPredFiles.size();i++){
 			predicateFilenames.add(IOUtils.filenameWithoutExt(allPredFiles.get(i).getName()));
 		}
-		// USE random plan
+		// USE random plan to group files of varying sizes into approximately equal blocks 
 		if(forceRandom) {
 			HashMap<String, HashSet<String>> groups = new HashMap<String, HashSet<String>>();
-			
+			ArrayList<ArrayList<File>> tempGroups = assignJobs(allPredFiles, true);
 			return groups;
 		}
 		// USE indicators
 		else {
 			ArrayList<File> allIndFiles = IOUtils.loadFolder(compressedPath);
 			if(allIndFiles != null){
-				HashMap<String, HashSet<String>> groups = new HashMap<String, HashSet<String>>();
+				ArrayList<ArrayList<File>> groups = new HashMap<String, HashSet<String>>();
 				//TODO Load indicator files and calculate
 				switch (CTMServer._indicatorMode){
 					case CTMConstants.CTMINDICATORS : 
