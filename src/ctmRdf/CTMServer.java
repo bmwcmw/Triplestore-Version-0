@@ -38,6 +38,7 @@ import org.json.simple.parser.ParseException;
 
 import commandRunner.FormatConverter;
 import dataComparator.FilePair;
+import dataCompressor.SOLongPair;
 import dataDistributor.ConnectDN;
 import dataDistributor.DestInfo;
 import localIOUtils.IOUtils;
@@ -698,7 +699,7 @@ public class CTMServer {
 		
 		//Load if the indicator file exists(with check of file entries), otherwise, use a random plan 
 		ArrayList<ArrayList<File>> groups = 
-				groupBySimilarities(indicatorPath, compressedPath, CTMServer._nbThreads, false);
+				groupBySimilarities(indicatorPath, compressedPath, false);
 
 		/* Contact DN and get the number of CNs with their available space */
 		String ipDN = "134.214.142.58";
@@ -752,7 +753,7 @@ public class CTMServer {
 	 * @throws IOException 
 	 */
 	public static ArrayList<ArrayList<File>> groupBySimilarities(String compressedPath, 
-			String indicatorPath, int nbThreads, boolean forceRandom) throws IOException{
+			String indicatorPath, boolean forceRandom) throws IOException{
 		ArrayList<File> allPredFiles = IOUtils.loadFolder(compressedPath);
 		HashSet<String> predicateFilenames = new HashSet<String>();
 		for(int i=0;i<allPredFiles.size();i++){
@@ -777,11 +778,11 @@ public class CTMServer {
 					case CTMConstants.CTMINDICATORSO : 
 						break;
 					default : //This shouldn't happen
-						return groupBySimilarities(indicatorPath, compressedPath, nbThreads, true);
+						return groupBySimilarities(indicatorPath, compressedPath, true);
 				}
 				return groups;
 			} else {
-				return groupBySimilarities(indicatorPath, compressedPath, nbThreads, true);
+				return groupBySimilarities(indicatorPath, compressedPath, true);
 			}
 		}
 	}
@@ -833,8 +834,8 @@ public class CTMServer {
 	 * @param allFiles all source files
 	 * @param averageSize false to assign tasks only according to number of files(faster),
 	 * true if you want to have more average size between each group of files(slower)
-	 * //TODO assign to average size groups
-	 * @return
+	 * 
+	 * @return List of grouped files (sub-lists)
 	 */
 	static ArrayList<ArrayList<File>> assignJobs(ArrayList<File> allFiles, boolean averageSize){
 		ArrayList<ArrayList<File>> outputLists = new ArrayList<ArrayList<File>>();
@@ -870,7 +871,51 @@ public class CTMServer {
 			}
 		}
 		else { //To approximately equal-sized blocks
+			/* Find the target group size - the sum of all sizes divided by n. */
+			double sizeAll = 0;
+			for(File f : allFiles){
+				sizeAll += f.length();
+			}
+			double expected = sizeAll / CTMServer._nbThreads;
 			
+			/* Sort the files decreasing in size. */
+			Collections.sort(allFiles, new Comparator<File>() {
+				@Override
+				public int compare(final File f1, final File f2) {
+					return Long.valueOf(f1.length()).compareTo(f2.length());
+				}
+	        });
+			//TODO TEST
+			/* Creates groups */
+			double tempsize = expected;
+			int currentGroup = 0;
+			while(allFiles.size() > 0 && currentGroup < CTMServer._nbThreads){
+				/* for each group, while the remaining space in your group is 
+				 * bigger than the first element of the list take the first element 
+				 * of the list and move it to the group
+				 */
+				for(int i=0;i<allFiles.size();i++){
+					/* for each element, find the element for which the difference 
+					 * between group size and target group size is minimal move this 
+					 * element to the group(decreasing size loop)
+				     */
+					File f = allFiles.get(i);
+					if(tempsize > f.length()){
+						outputLists.get(currentGroup).add(f);
+						tempsize = tempsize - f.length();
+						allFiles.remove(i);
+						i--;
+					}
+					currentGroup++;
+				}
+			}
+			/* This shouldn't happen */
+			if((currentGroup == CTMServer._nbThreads) && (allFiles.size()>0)){
+				IOUtils.logLog("Error : ???");
+				return null;
+			}
+			    
+
 		}
 		IOUtils.logLog("Sub tasks assigned");
 		return outputLists;
@@ -883,39 +928,44 @@ public class CTMServer {
 	 * @param allFiles all source files
 	 * @param averageSize false to assign tasks only according to number of files(faster),
 	 * true if you want to have more average size between each group of files(slower)
-	 * //TODO assign to average size groups
+	 * //TODO Once the other tested, follow the method
 	 * @return
 	 */
 	static LinkedList<LinkedList<FilePair>> assignJobs(LinkedList<FilePair> allPairs, boolean averageSize){
 		LinkedList<LinkedList<FilePair>> inputLists = new LinkedList<LinkedList<FilePair>>();
-		//Distribute all input files to threads, as average as possible
-		int partitionSize = allPairs.size()/CTMServer._nbThreads;
-		int remainder = allPairs.size()%CTMServer._nbThreads;
-		int i = 0;
-		if(remainder > 0){
-			partitionSize++;
-			while (remainder > 0) {
+		if(!averageSize){ //Random plan only according to the number of files
+			//Distribute all input files to threads, as average as possible
+			int partitionSize = allPairs.size()/CTMServer._nbThreads;
+			int remainder = allPairs.size()%CTMServer._nbThreads;
+			int i = 0;
+			if(remainder > 0){
+				partitionSize++;
+				while (remainder > 0) {
+					System.out.println("Adding "+Math.min(partitionSize, allPairs.size() - i));
+					inputLists.addFirst(new LinkedList<FilePair>(allPairs.subList(i,
+							i + Math.min(partitionSize, allPairs.size() - i))));
+					i += partitionSize;
+					remainder--;
+				}
+				partitionSize--;
+			}
+			while (i < allPairs.size()) {
 				System.out.println("Adding "+Math.min(partitionSize, allPairs.size() - i));
 				inputLists.addFirst(new LinkedList<FilePair>(allPairs.subList(i,
-						i + Math.min(partitionSize, allPairs.size() - i))));
+			            i + Math.min(partitionSize, allPairs.size() - i))));
 				i += partitionSize;
-				remainder--;
 			}
-			partitionSize--;
+			//Show result
+			for (i = 0; i < inputLists.size(); i++) {
+				IOUtils.logLog("Sub task " + i + " with " + 
+						inputLists.get(i).size() + "file(s)");
+	//			for (int j = 0; j < inputLists.get(i).size(); j++) {
+	//				IOUtils.logLog(inputLists.get(i).get(j).getName());
+	//			}
+			}
 		}
-		while (i < allPairs.size()) {
-			System.out.println("Adding "+Math.min(partitionSize, allPairs.size() - i));
-			inputLists.addFirst(new LinkedList<FilePair>(allPairs.subList(i,
-		            i + Math.min(partitionSize, allPairs.size() - i))));
-			i += partitionSize;
-		}
-		//Show result
-		for (i = 0; i < inputLists.size(); i++) {
-			IOUtils.logLog("Sub task " + i + " with " + 
-					inputLists.get(i).size() + "file(s)");
-//			for (int j = 0; j < inputLists.get(i).size(); j++) {
-//				IOUtils.logLog(inputLists.get(i).get(j).getName());
-//			}
+		else { //To approximately equal-sized blocks
+			
 		}
 		IOUtils.logLog("Sub tasks assigned");
 		return inputLists;
