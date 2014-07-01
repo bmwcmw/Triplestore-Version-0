@@ -45,7 +45,7 @@ import dataReader.PairReader;
  * @author Cedar
  * 
  */
-public class DataManager {
+public class CopyOfDataManager {
 
 	private String threadId;
 	private PrefixManager _prefixManager = new PrefixManager();
@@ -58,7 +58,7 @@ public class DataManager {
 	/**
 	 * Constructor - needs id of the caller thread
 	 */
-	public DataManager(String thread) {
+	public CopyOfDataManager(String thread) {
 		threadId = thread;
 	}
 
@@ -328,7 +328,7 @@ public class DataManager {
 			        FileSenderCN fs = new FileSenderCN(pairs.getValue().addr, pairs.getValue().port);
 			        fs.sendFile(pairs.getKey().getAbsolutePath(), pairs.getValue().size);//20 * 1024
 			        fs.close();
-					//TODO check
+					//TODO check distribution
 			        it.remove();
 			    }
 				break;
@@ -351,7 +351,7 @@ public class DataManager {
 					SSHExecutor.execute(pairs.getValue().addr, "cmw", "123xsd", 
 							"/home/cmw/Bureau/hadoop-1.2.1/bin/hadoop dfs "
 							+ "-ls hdfs://localhost:9000/user/cmw/tmp");
-					//TODO check
+					//TODO check dist
 			        it.remove();
 			    }
 				break;

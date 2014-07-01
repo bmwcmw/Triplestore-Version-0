@@ -25,10 +25,11 @@ public class DgapCompressor {
 		//ArrayList<SOLongPair> arr = dbu.fetchSOList();
     	String outputFilePath = outputPath + File.separator + inFileName;
 		
+    	/* Write matrices */
 		dbu.writeMatS(outputFilePath, comparePath, inFileName);
 		dbu.writeMatO(outputFilePath, comparePath, inFileName);
 		
-		/* Index of nodes */
+		/* Write index */
 		dbu.writeIndex(outputFilePath + ".index");
 	}
 	
