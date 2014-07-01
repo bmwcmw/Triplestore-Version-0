@@ -6,6 +6,11 @@ import java.util.concurrent.Callable;
 import localIOUtils.IOUtils;
 import dataReader.PairReader;
 
+/**
+ * This callable loader loads a text file line by line into a HashSet<String>.
+ * @author Cedar
+ *
+ */
 public class FileLoader implements Callable<HashSet<String>> {
 	
 	private String filename;

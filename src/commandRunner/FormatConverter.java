@@ -28,7 +28,7 @@ public class FormatConverter extends BasicRunner{
 	 * <p>Specifies an input file and an output file</>
 	 * <p>Then retrieves the process output/error messages</p>
 	 * 
-	 * @return -1 if IOException, 0 if it works
+	 * @return -1 if Exception, 0 if it works
 	 */
 	public Integer execute(String inputFile, String outputFile){
 		try {

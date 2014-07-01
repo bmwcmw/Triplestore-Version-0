@@ -17,7 +17,7 @@ public class SimpleQueryPlanner {
 	/**
 	 * Splits an string into chunks by type of variables
 	 * @param triplepatterns
-	 * @return a Graph
+	 * @return a Graph with detailed information
 	 * @throws InvalidPatternException 
 	 */
 	public static ParsedQuery plan(String sparql) throws InvalidPatternException{

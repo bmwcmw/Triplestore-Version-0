@@ -838,34 +838,39 @@ public class CTMServer {
 	 */
 	static ArrayList<ArrayList<File>> assignJobs(ArrayList<File> allFiles, boolean averageSize){
 		ArrayList<ArrayList<File>> outputLists = new ArrayList<ArrayList<File>>();
-		//Distribute all input files to threads, as average as possible
-		int partitionSize = allFiles.size()/CTMServer._nbThreads;
-		int remainder = allFiles.size()%CTMServer._nbThreads;
-		int i = 0;
-		if(remainder > 0){
-			partitionSize++;
-			while (remainder > 0) {
+		if(!averageSize){ //Random plan only according to the number of files
+			//Distribute all input files to threads, as average as possible
+			int partitionSize = allFiles.size()/CTMServer._nbThreads;
+			int remainder = allFiles.size()%CTMServer._nbThreads;
+			int i = 0;
+			if(remainder > 0){
+				partitionSize++;
+				while (remainder > 0) {
+					System.out.println("Adding "+Math.min(partitionSize, allFiles.size() - i));
+					outputLists.add(new ArrayList<File>(allFiles.subList(i,
+							i + Math.min(partitionSize, allFiles.size() - i))));
+					i += partitionSize;
+					remainder--;
+				}
+				partitionSize--;
+			}
+			while (i < allFiles.size()) {
 				System.out.println("Adding "+Math.min(partitionSize, allFiles.size() - i));
 				outputLists.add(new ArrayList<File>(allFiles.subList(i,
-						i + Math.min(partitionSize, allFiles.size() - i))));
+			            i + Math.min(partitionSize, allFiles.size() - i))));
 				i += partitionSize;
-				remainder--;
 			}
-			partitionSize--;
+			//Show result
+			for (i = 0; i < outputLists.size(); i++) {
+				IOUtils.logLog("Sub task " + i + " with " + 
+						outputLists.get(i).size() + "file(s)");
+	//			for (int j = 0; j < inputLists.get(i).size(); j++) {
+	//				IOUtils.logLog(inputLists.get(i).get(j).getName());
+	//			}
+			}
 		}
-		while (i < allFiles.size()) {
-			System.out.println("Adding "+Math.min(partitionSize, allFiles.size() - i));
-			outputLists.add(new ArrayList<File>(allFiles.subList(i,
-		            i + Math.min(partitionSize, allFiles.size() - i))));
-			i += partitionSize;
-		}
-		//Show result
-		for (i = 0; i < outputLists.size(); i++) {
-			IOUtils.logLog("Sub task " + i + " with " + 
-					outputLists.get(i).size() + "file(s)");
-//			for (int j = 0; j < inputLists.get(i).size(); j++) {
-//				IOUtils.logLog(inputLists.get(i).get(j).getName());
-//			}
+		else { //To approximately equal-sized blocks
+			
 		}
 		IOUtils.logLog("Sub tasks assigned");
 		return outputLists;
