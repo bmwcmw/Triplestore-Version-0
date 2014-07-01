@@ -837,7 +837,7 @@ public class CTMServer {
 	 * @return
 	 */
 	static ArrayList<ArrayList<File>> assignJobs(ArrayList<File> allFiles, boolean averageSize){
-		ArrayList<ArrayList<File>> inputLists = new ArrayList<ArrayList<File>>();
+		ArrayList<ArrayList<File>> outputLists = new ArrayList<ArrayList<File>>();
 		//Distribute all input files to threads, as average as possible
 		int partitionSize = allFiles.size()/CTMServer._nbThreads;
 		int remainder = allFiles.size()%CTMServer._nbThreads;
@@ -846,7 +846,7 @@ public class CTMServer {
 			partitionSize++;
 			while (remainder > 0) {
 				System.out.println("Adding "+Math.min(partitionSize, allFiles.size() - i));
-				inputLists.add(new ArrayList<File>(allFiles.subList(i,
+				outputLists.add(new ArrayList<File>(allFiles.subList(i,
 						i + Math.min(partitionSize, allFiles.size() - i))));
 				i += partitionSize;
 				remainder--;
@@ -855,20 +855,20 @@ public class CTMServer {
 		}
 		while (i < allFiles.size()) {
 			System.out.println("Adding "+Math.min(partitionSize, allFiles.size() - i));
-			inputLists.add(new ArrayList<File>(allFiles.subList(i,
+			outputLists.add(new ArrayList<File>(allFiles.subList(i,
 		            i + Math.min(partitionSize, allFiles.size() - i))));
 			i += partitionSize;
 		}
 		//Show result
-		for (i = 0; i < inputLists.size(); i++) {
+		for (i = 0; i < outputLists.size(); i++) {
 			IOUtils.logLog("Sub task " + i + " with " + 
-					inputLists.get(i).size() + "file(s)");
+					outputLists.get(i).size() + "file(s)");
 //			for (int j = 0; j < inputLists.get(i).size(); j++) {
 //				IOUtils.logLog(inputLists.get(i).get(j).getName());
 //			}
 		}
 		IOUtils.logLog("Sub tasks assigned");
-		return inputLists;
+		return outputLists;
 	}
 	
 	/**
