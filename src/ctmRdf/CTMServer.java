@@ -697,7 +697,7 @@ public class CTMServer {
 		IOUtils.logLog("Local compressed file checked");
 		
 		//Load if the indicator file exists(with check of file entries), otherwise, use a random plan 
-		HashMap<String, HashSet<String>> groups = 
+		ArrayList<ArrayList<File>> groups = 
 				groupBySimilarities(indicatorPath, compressedPath, CTMServer._nbThreads, false);
 
 		/* Contact DN and get the number of CNs with their available space */
@@ -760,15 +760,14 @@ public class CTMServer {
 		}
 		// USE random plan to group files of varying sizes into approximately equal blocks 
 		if(forceRandom) {
-			HashMap<String, HashSet<String>> groups = new HashMap<String, HashSet<String>>();
-			ArrayList<ArrayList<File>> tempGroups = assignJobs(allPredFiles, true);
+			ArrayList<ArrayList<File>> groups = assignJobs(allPredFiles, true);
 			return groups;
 		}
 		// USE indicators
 		else {
 			ArrayList<File> allIndFiles = IOUtils.loadFolder(compressedPath);
 			if(allIndFiles != null){
-				ArrayList<ArrayList<File>> groups = new HashMap<String, HashSet<String>>();
+				ArrayList<ArrayList<File>> groups = new ArrayList<ArrayList<File>>();
 				//TODO Load indicator files and calculate
 				switch (CTMServer._indicatorMode){
 					case CTMConstants.CTMINDICATORS : 
