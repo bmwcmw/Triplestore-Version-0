@@ -45,7 +45,7 @@ import dataReader.PairReader;
  * @author Cedar
  * 
  */
-public class CopyOfDataManager {
+public class DataManager {
 
 	private String threadId;
 	private PrefixManager _prefixManager = new PrefixManager();
@@ -58,7 +58,7 @@ public class CopyOfDataManager {
 	/**
 	 * Constructor - needs id of the caller thread
 	 */
-	public CopyOfDataManager(String thread) {
+	public DataManager(String thread) {
 		threadId = thread;
 	}
 
