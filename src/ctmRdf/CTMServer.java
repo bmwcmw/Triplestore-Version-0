@@ -11,6 +11,7 @@ import indexNodesDBUtils.RedisUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -28,6 +29,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.StringTokenizer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,6 +39,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import commandRunner.FormatConverter;
+import dataCleaner.CTMPairStr;
 import dataComparator.FilePair;
 import dataCompressor.SOLongPair;
 import dataDistributor.ConnectDN;
@@ -165,10 +168,9 @@ public class CTMServer {
 	 * 
 	 * @param programInd
 	 * @return 0 if successfully finished or -1 if error
-	 * @throws IOException 
-	 * @throws ParseException 
+	 * @throws Exception 
 	 */
-	public static int processAllFiles(int programInd) throws IOException, ParseException {
+	public static int processAllFiles(int programInd) throws Exception {
 		String rdfPath;
 		String n3Path;
 		String invalidPath;
@@ -653,10 +655,9 @@ public class CTMServer {
 	 * Internal function for distribution
 	 * @param programInd
 	 * @return 0 if OK
-	 * @throws IOException
-	 * @throws ParseException
+	 * @throws Exception 
 	 */
-	static int distribute(int programInd) throws IOException, ParseException{	
+	static int distribute(int programInd) throws Exception{	
 		String indicatorPath = _ctlParams.get("indicatorPath");
 		
 		/* Check compressed files */
@@ -751,9 +752,10 @@ public class CTMServer {
 	 * 
 	 * @return Grouped predicates
 	 * @throws IOException 
+	 * @throws ParseException 
 	 */
 	public static ArrayList<ArrayList<File>> groupBySimilarities(String compressedPath, 
-			String indicatorPath, boolean forceRandom) throws IOException{
+			String indicatorPath, boolean forceRandom) throws Exception{
 		ArrayList<File> allPredFiles = IOUtils.loadFolder(compressedPath);
 		HashSet<String> predicateFilenames = new HashSet<String>();
 		for(int i=0;i<allPredFiles.size();i++){
@@ -769,7 +771,45 @@ public class CTMServer {
 			ArrayList<File> allIndFiles = IOUtils.loadFolder(compressedPath);
 			if(allIndFiles != null){
 				ArrayList<ArrayList<File>> groups = new ArrayList<ArrayList<File>>();
-				//TODO Load indicator files and calculate
+				HashMap<String, HashMap<String, CTMPairStr>> indicators 
+						= new HashMap<String, HashMap<String, CTMPairStr>>();
+				BufferedReader reader = null;
+				for(File f : allIndFiles){
+					try {
+						reader = new BufferedReader(new FileReader(f));
+						String s = reader.readLine();
+						if(s==null) throw new ParseException(0);
+						StringTokenizer nizer = new StringTokenizer(s);
+						if (!nizer.hasMoreTokens()) throw new ParseException(1);
+						String pred1name = nizer.nextToken();
+						if (!nizer.hasMoreTokens()) throw new ParseException(2);
+						String pred2name = nizer.nextToken();
+						if (!nizer.hasMoreTokens()) throw new ParseException(3);
+						String Snumber = nizer.nextToken();
+						if (!nizer.hasMoreTokens()) throw new ParseException(4);
+						String Onumber = nizer.nextToken();
+						HashMap<String, CTMPairStr> toAdd = indicators.get(pred1name);
+						if (toAdd == null){
+							toAdd = new HashMap<String, CTMPairStr>();
+							toAdd.put(pred2name, new CTMPairStr(Snumber, Onumber));
+							indicators.put(pred1name, toAdd);
+						} else {
+							if(toAdd.get(pred2name) != null) // This shouldn't happen
+								throw new Exception("Error : repeated entry for "
+										+ pred1name + " " + pred2name + " in file " + f.getName());
+							toAdd.put(pred2name, new CTMPairStr(Snumber, Onumber));
+						}
+						//TODO Check indicator loading and calculate (using K-means in a converted space?)
+					} catch (Exception e) {
+						e.printStackTrace();
+						throw e;
+					} finally {
+						if (reader != null) {
+							reader.close();
+						}
+					}
+					
+				}
 				switch (CTMServer._indicatorMode){
 					case CTMConstants.CTMINDICATORS : 
 						break;
