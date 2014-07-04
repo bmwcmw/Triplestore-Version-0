@@ -41,7 +41,6 @@ import org.json.simple.parser.ParseException;
 import commandRunner.FormatConverter;
 import dataCleaner.CTMPairStr;
 import dataComparator.FilePair;
-import dataCompressor.SOLongPair;
 import dataDistributor.ConnectDN;
 import dataDistributor.DestInfo;
 import localIOUtils.IOUtils;
@@ -87,7 +86,7 @@ public class CTMServer {
 		CTMServer._precompareMode = CTMConstants.CTMPRECOMPARE_JAVA;
 		
 		// XXX SETUP : Comparator mode, perhaps needs PERL or GNU executable in PATH
-		CTMServer._compareMode = CTMConstants.CTMCOMPARE_JAVA;
+		CTMServer._compareMode = CTMConstants.CTMCOMPARE_JAVA_INRAM;
 		
 		// XXX SETUP : Distributor mode, to various distributed environments
 		CTMServer._distributeMode = CTMConstants.CTMDISTRIBUTE_HDFS;
@@ -702,46 +701,46 @@ public class CTMServer {
 		ArrayList<ArrayList<File>> groups = 
 				groupBySimilarities(indicatorPath, compressedPath, false);
 
-		/* Contact DN and get the number of CNs with their available space */
-		String ipDN = "134.214.142.58";
-		int portDN = 7474;
-		ConnectDN directoryNode = new ConnectDN(ipDN, portDN);
-		directoryNode.sendMessage("HELLO");
-		String jsonRespStr = directoryNode.receiveMessage();
-//		String jsonRespStr = "[{\"address\":\"192.168.0.1\",\"port\":\"8888\",\"free_space\":\"20480\",\"ratio\":\"0.5\"},"
-//			+ "{\"address\":\"192.168.0.2\",\"port\":\"8686\",\"free_space\":\"200000\",\"ratio\":\"0.3\"}]";
-		JSONParser parser = new JSONParser();
-		JSONArray jsonResp = (JSONArray) parser.parse(jsonRespStr);
-		int nbNodes = jsonResp.size();
-		IOUtils.logLog("Available compute nodes : " + nbNodes);
-		ArrayList<JSONObject> jsonRespArray = new ArrayList<JSONObject>();
-		IOUtils.logLog("Available compute nodes information : ");
-		for (Object o : jsonResp){
-			JSONObject newJO = (JSONObject) o;
-			jsonRespArray.add(newJO);
-			String address = (String) newJO.get("address");
-    		//Use directory node's address if returned IP == LOCALHOST
-        	if(address.equals("127.0.0.1")) {
-        		address = ipDN;
-        	}
-			Integer port = Integer.valueOf( (String) newJO.get("port") );
-			Integer free_space = Integer.valueOf( (String) newJO.get("free_space") );
-			Float ratio = Float.valueOf( (String) newJO.get("ratio") );
-		    IOUtils.logLog(address+":"+port+"|"+free_space+"Mb|"+ratio);
-		}
-		//TODO Algorithm to distribute
-		
-		//Create and execute threads with assigned sub task
-		ExecutorService executor = Executors.newFixedThreadPool(CTMServer._nbThreads);
-	        for (int i = 0; i < CTMServer._nbThreads; i++) {
-	            Runnable thread = new CTMThread(String.valueOf(i), _distributeMode, 
-	            		new HashMap<File,DestInfo>());
-	            executor.execute(thread);
-	        }
-	        executor.shutdown();
-	        while (!executor.isTerminated()) {
-        }
-        //System.out.println(directoryNode.receiveMessage());
+//		/* Contact DN and get the number of CNs with their available space */
+//		String ipDN = "134.214.142.58";
+//		int portDN = 7474;
+//		ConnectDN directoryNode = new ConnectDN(ipDN, portDN);
+//		directoryNode.sendMessage("HELLO");
+//		String jsonRespStr = directoryNode.receiveMessage();
+////		String jsonRespStr = "[{\"address\":\"192.168.0.1\",\"port\":\"8888\",\"free_space\":\"20480\",\"ratio\":\"0.5\"},"
+////			+ "{\"address\":\"192.168.0.2\",\"port\":\"8686\",\"free_space\":\"200000\",\"ratio\":\"0.3\"}]";
+//		JSONParser parser = new JSONParser();
+//		JSONArray jsonResp = (JSONArray) parser.parse(jsonRespStr);
+//		int nbNodes = jsonResp.size();
+//		IOUtils.logLog("Available compute nodes : " + nbNodes);
+//		ArrayList<JSONObject> jsonRespArray = new ArrayList<JSONObject>();
+//		IOUtils.logLog("Available compute nodes information : ");
+//		for (Object o : jsonResp){
+//			JSONObject newJO = (JSONObject) o;
+//			jsonRespArray.add(newJO);
+//			String address = (String) newJO.get("address");
+//    		//Use directory node's address if returned IP == LOCALHOST
+//        	if(address.equals("127.0.0.1")) {
+//        		address = ipDN;
+//        	}
+//			Integer port = Integer.valueOf( (String) newJO.get("port") );
+//			Integer free_space = Integer.valueOf( (String) newJO.get("free_space") );
+//			Float ratio = Float.valueOf( (String) newJO.get("ratio") );
+//		    IOUtils.logLog(address+":"+port+"|"+free_space+"Mb|"+ratio);
+//		}
+//		//TODO Algorithm to distribute
+//		
+//		//Create and execute threads with assigned sub task
+//		ExecutorService executor = Executors.newFixedThreadPool(CTMServer._nbThreads);
+//	        for (int i = 0; i < CTMServer._nbThreads; i++) {
+//	            Runnable thread = new CTMThread(String.valueOf(i), _distributeMode, 
+//	            		new HashMap<File,DestInfo>());
+//	            executor.execute(thread);
+//	        }
+//	        executor.shutdown();
+//	        while (!executor.isTerminated()) {
+//        }
+//        //System.out.println(directoryNode.receiveMessage());
 		return 0;
 	}
 	
@@ -761,7 +760,7 @@ public class CTMServer {
 		for(int i=0;i<allPredFiles.size();i++){
 			predicateFilenames.add(IOUtils.filenameWithoutExt(allPredFiles.get(i).getName()));
 		}
-		// USE random plan to group files of varying sizes into approximately equal blocks 
+		// USE random plan to group files of varying sizes into approximately EQUAL SIZE blocks 
 		if(forceRandom) {
 			ArrayList<ArrayList<File>> groups = assignJobs(allPredFiles, true);
 			return groups;
@@ -774,6 +773,7 @@ public class CTMServer {
 				HashMap<String, HashMap<String, CTMPairStr>> indicators 
 						= new HashMap<String, HashMap<String, CTMPairStr>>();
 				BufferedReader reader = null;
+				/* Load all indicators */
 				for(File f : allIndFiles){
 					try {
 						reader = new BufferedReader(new FileReader(f));
@@ -799,7 +799,6 @@ public class CTMServer {
 										+ pred1name + " " + pred2name + " in file " + f.getName());
 							toAdd.put(pred2name, new CTMPairStr(Snumber, Onumber));
 						}
-						//TODO Check indicator loading and calculate (using K-means in a converted space?)
 					} catch (Exception e) {
 						e.printStackTrace();
 						throw e;
@@ -808,18 +807,52 @@ public class CTMServer {
 							reader.close();
 						}
 					}
-					
 				}
+				/* Rank the predicate having most common subject + object */
+				ArrayList<String> sortedPredicates = new ArrayList<String>();
 				switch (CTMServer._indicatorMode){
-					case CTMConstants.CTMINDICATORS : 
+					case CTMConstants.CTMINDICATORS :
+						for (Entry<String, HashMap<String, CTMPairStr>> e : indicators.entrySet()) {
+							long temp = 0;
+							for(Entry<String, CTMPairStr> e2 : e.getValue().entrySet()) {
+								temp = temp + Long.valueOf(e2.getValue().getSubject());
+							}
+							if((temp) > maxValue) {
+								maxValue = temp;
+								maxPredicate = e.getKey();
+							}
+						} 
 						break;
 					case CTMConstants.CTMINDICATORO : 
+						for (Entry<String, HashMap<String, CTMPairStr>> e : indicators.entrySet()) {
+							long temp = 0;
+							for(Entry<String, CTMPairStr> e2 : e.getValue().entrySet()) {
+								temp = temp + Long.valueOf(e2.getValue().getObject());
+							}
+							if((temp) > maxValue) {
+								maxValue = temp;
+								maxPredicate = e.getKey();
+							}
+						}
 						break;
 					case CTMConstants.CTMINDICATORSO : 
+						for (Entry<String, HashMap<String, CTMPairStr>> e : indicators.entrySet()) {
+							long temp = 0;
+							for(Entry<String, CTMPairStr> e2 : e.getValue().entrySet()) {
+								temp = temp + Long.valueOf(e2.getValue().getSubject())
+										+ Long.valueOf(e2.getValue().getObject());
+							}
+							if((temp) > maxValue) {
+								maxValue = temp;
+								maxPredicate = e.getKey();
+							}
+						}
 						break;
 					default : //This shouldn't happen
 						return groupBySimilarities(indicatorPath, compressedPath, true);
 				}
+				
+				//TODO Check indicator loading and calculate (using K-means in a converted space?)
 				return groups;
 			} else {
 				return groupBySimilarities(indicatorPath, compressedPath, true);

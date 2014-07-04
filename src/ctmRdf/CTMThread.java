@@ -147,6 +147,9 @@ public class CTMThread implements Runnable {
 				case CTMConstants.CTMCOMPARE_JAVA:
 					dm.compareJava(comparePairs, outputFolder);
 					break;
+				case CTMConstants.CTMCOMPARE_JAVA_INRAM:
+					dm.compareJavaInRam(comparePairs, outputFolder);
+					break;
 				case CTMConstants.CTMCOMPARE_GNU:
 					dm.compareGnu(comparePairs, outputFolder);
 					break;

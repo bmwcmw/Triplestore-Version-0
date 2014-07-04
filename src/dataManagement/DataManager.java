@@ -24,6 +24,7 @@ import dataCleaner.CTMPairStr;
 import dataCleaner.CTMTriple;
 import dataCleaner.CTMPair;
 import dataComparator.FilePair;
+import dataComparator.InRamComparator;
 import dataComparator.JavaComparator;
 import dataCompressor.DgapCompressor;
 import dataCompressor.SOLongPair;
@@ -253,6 +254,42 @@ public class DataManager {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
+	public void compareJavaInRam(LinkedList<FilePair> pairs, String outputPath) 
+			throws IOException, ParseException, InterruptedException, ExecutionException {
+	    FilePair fp = null;
+		int count = 0;
+		String outFileName = null;
+	    while(true){
+	    	try{
+	    		fp = pairs.getFirst();
+	    	} catch (NoSuchElementException e) {
+	    		break;
+	    	}
+			count++;
+			outFileName = outputPath + File.separator 
+					+ this.threadId + "_" + count;
+		    Long resultS = InRamComparator.compareTwoPredicates(fp.f1S, fp.f2S);
+		    Long resultO = InRamComparator.compareTwoPredicates(fp.f1O, fp.f2O);
+		    System.out.println(fp.f1S.getName()+" and "+fp.f2S.getName()+" have "+resultS+" common entries.");
+		    System.out.println(fp.f1O.getName()+" and "+fp.f2O.getName()+" have "+resultO+" common entries.");
+		    writeToBigFile(outFileName, IOUtils.filenameWithoutExt(fp.f1S.getName()) + " " 
+					+ IOUtils.filenameWithoutExt(fp.f2S.getName()) + " " + resultS + " " + resultO);
+		    pairs.removeFirst();
+	    }
+	    IOUtils.logLog("Thread " + threadId + " executed " + count + " comparisons.");
+	}
+	
+
+	/**
+	 * Compares each two predicate S/O array, then output a similarity indicator
+	 * using Java method
+	 * @param pairs : pairs of files to compare by this worker thread
+	 * @param outputPath : output path for indicator information
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
 	public void compareJava(LinkedList<FilePair> pairs, String outputPath) 
 			throws IOException, ParseException, InterruptedException, ExecutionException {
 	    JavaComparator jc = new JavaComparator();
@@ -272,8 +309,8 @@ public class DataManager {
 		    Long resultO = jc.compareTwoPredicates(fp.f1O, fp.f2O);
 		    System.out.println(fp.f1S.getName()+" and "+fp.f2S.getName()+" have "+resultS+" common entries.");
 		    System.out.println(fp.f1O.getName()+" and "+fp.f2O.getName()+" have "+resultO+" common entries.");
-		    writeToBigFile(outFileName, IOUtils.filenameWithoutExt(fp.f1S.getName()) + "_" 
-					+ IOUtils.filenameWithoutExt(fp.f2S.getName()) + resultS + " " + resultO);
+		    writeToBigFile(outFileName, IOUtils.filenameWithoutExt(fp.f1S.getName()) + " " 
+					+ IOUtils.filenameWithoutExt(fp.f2S.getName()) + " " + resultS + " " + resultO);
 		    pairs.removeFirst();
 	    }
 	    IOUtils.logLog("Thread " + threadId + " executed " + count + " comparisons.");

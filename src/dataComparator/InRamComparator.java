@@ -20,7 +20,7 @@ public class InRamComparator {
 	public final static int S = 0;
 	public final static int O = 1;
 	
-	public static int compareTwoPredicates(File f1, File f2)
+	public static long compareTwoPredicates(File f1, File f2)
 			throws IOException, ParseException, 
 			InterruptedException, ExecutionException {
 		IOUtils.logLog("Start loading");
@@ -40,12 +40,14 @@ public class InRamComparator {
 		//small.retainAll(large);
 		if(s1.size()<s2.size()){
 			int bigsize = s2.size();
+			int oldsize = s1.size();
 			s1.retainAll(s2);
-			return bigsize - s1.size();
+			return bigsize - oldsize;
 		} else {
 			int bigsize = s1.size();
+			int oldsize = s2.size();
 			s2.retainAll(s1);
-			return bigsize - s2.size();
+			return bigsize - oldsize;
 		}
 	}
 }
