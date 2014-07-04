@@ -8,7 +8,7 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
-public class SSHExecutor {
+public class SSHCommandExecutor {
 	
 	public static void execute(String host, String user, String pwd, String command) {
 	    try {

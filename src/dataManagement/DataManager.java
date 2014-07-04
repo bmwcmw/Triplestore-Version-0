@@ -28,10 +28,10 @@ import dataComparator.InRamComparator;
 import dataComparator.JavaComparator;
 import dataCompressor.DgapCompressor;
 import dataCompressor.SOLongPair;
-import dataDistributor.DataDistributor;
+import dataDistributor.SSHDataDistributor;
 import dataDistributor.DestInfo;
 import dataDistributor.FileSenderCN;
-import dataDistributor.SSHExecutor;
+import dataDistributor.SSHCommandExecutor;
 import dataReader.N3Reader;
 import dataReader.PairReader;
 
@@ -378,14 +378,14 @@ public class DataManager {
 //			        fs.sendFile(pairs.getKey().getAbsolutePath(), pairs.getValue().size);//20 * 1024
 //			        fs.close();
 			        
-			        SSHExecutor.execute(pairs.getValue().addr, "cmw", "123xsd", "pwd");
-					DataDistributor.sendFileSFTP(pairs.getValue().addr, pairs.getValue().port
+			        SSHCommandExecutor.execute(pairs.getValue().addr, "cmw", "123xsd", "pwd");
+					SSHDataDistributor.sendFileSFTP(pairs.getValue().addr, pairs.getValue().port
 							, "cmw", "123xsd", pairs.getKey().getAbsolutePath(), pairs.getKey().getName());
-					SSHExecutor.execute(pairs.getValue().addr, "cmw", "123xsd", 
+					SSHCommandExecutor.execute(pairs.getValue().addr, "cmw", "123xsd", 
 							"/home/cmw/Bureau/hadoop-1.2.1/bin/hadoop dfs "
 							+ "-copyFromLocal " + pairs.getKey().getName()
 							+ " hdfs://localhost:9000/user/cmw/tmp");
-					SSHExecutor.execute(pairs.getValue().addr, "cmw", "123xsd", 
+					SSHCommandExecutor.execute(pairs.getValue().addr, "cmw", "123xsd", 
 							"/home/cmw/Bureau/hadoop-1.2.1/bin/hadoop dfs "
 							+ "-ls hdfs://localhost:9000/user/cmw/tmp");
 					//TODO check dist

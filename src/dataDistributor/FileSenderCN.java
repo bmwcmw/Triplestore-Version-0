@@ -12,10 +12,10 @@ import java.text.DecimalFormat;
  */
 public class FileSenderCN {
 
-    ConnectCN connexion;
+    ConnectorCN connexion;
 
     public FileSenderCN(String address, int port) throws IOException {
-        connexion = new ConnectCN(address, port);
+        connexion = new ConnectorCN(address, port);
     }
 
     public void close() {

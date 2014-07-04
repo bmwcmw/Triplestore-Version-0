@@ -40,12 +40,12 @@ public class FormatConverter extends BasicRunner{
 			_in = _proc.getInputStream();
 			byte byteIn[] = new byte[_in.available()];
 			_in.read(byteIn,0,byteIn.length);
-	        System.out.println(new String(byteIn));
+			IOUtils.logLog(new String(byteIn));
 	        
 			_err = _proc.getErrorStream();
 			byte byteErr[] = new byte[_err.available()];
 			_err.read(byteErr,0,byteErr.length);
-	        System.out.println(new String(byteErr));
+			IOUtils.logLog(new String(byteErr));
 	        
 		} catch (IOException e) {
 			IOUtils.logLog(e.getMessage());

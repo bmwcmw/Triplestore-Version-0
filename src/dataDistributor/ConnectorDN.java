@@ -11,7 +11,7 @@ import java.net.Socket;
 
 import localIOUtils.IOUtils;
 
-public class ConnectDN {
+public class ConnectorDN {
 
     private static final int header_length = 8;
 
@@ -19,7 +19,7 @@ public class ConnectDN {
     private BufferedReader socket_reader;
     private PrintWriter socket_writer;
 
-    public ConnectDN(String ipAddress, int port) throws IOException {
+    public ConnectorDN(String ipAddress, int port) throws IOException {
         try {
             InetAddress addr = InetAddress.getByName(ipAddress);
             socket = new Socket(addr, port);

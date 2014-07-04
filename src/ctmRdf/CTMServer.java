@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -41,7 +42,7 @@ import org.json.simple.parser.ParseException;
 import commandRunner.FormatConverter;
 import dataCleaner.CTMPairStr;
 import dataComparator.FilePair;
-import dataDistributor.ConnectDN;
+import dataDistributor.ConnectorDN;
 import dataDistributor.DestInfo;
 import localIOUtils.IOUtils;
 
@@ -808,8 +809,8 @@ public class CTMServer {
 						}
 					}
 				}
-				/* Rank the predicate having most common subject + object */
-				ArrayList<String> sortedPredicates = new ArrayList<String>();
+				/* Calculate the sum of common subject and/or object */
+				Map<String, Long> predsWithInd = new HashMap<String, Long>();
 				switch (CTMServer._indicatorMode){
 					case CTMConstants.CTMINDICATORS :
 						for (Entry<String, HashMap<String, CTMPairStr>> e : indicators.entrySet()) {
@@ -817,10 +818,7 @@ public class CTMServer {
 							for(Entry<String, CTMPairStr> e2 : e.getValue().entrySet()) {
 								temp = temp + Long.valueOf(e2.getValue().getSubject());
 							}
-							if((temp) > maxValue) {
-								maxValue = temp;
-								maxPredicate = e.getKey();
-							}
+							predsWithInd.put(e.getKey(), temp);
 						} 
 						break;
 					case CTMConstants.CTMINDICATORO : 
@@ -829,10 +827,7 @@ public class CTMServer {
 							for(Entry<String, CTMPairStr> e2 : e.getValue().entrySet()) {
 								temp = temp + Long.valueOf(e2.getValue().getObject());
 							}
-							if((temp) > maxValue) {
-								maxValue = temp;
-								maxPredicate = e.getKey();
-							}
+							predsWithInd.put(e.getKey(), temp);
 						}
 						break;
 					case CTMConstants.CTMINDICATORSO : 
@@ -842,16 +837,16 @@ public class CTMServer {
 								temp = temp + Long.valueOf(e2.getValue().getSubject())
 										+ Long.valueOf(e2.getValue().getObject());
 							}
-							if((temp) > maxValue) {
-								maxValue = temp;
-								maxPredicate = e.getKey();
-							}
+							predsWithInd.put(e.getKey(), temp);
 						}
 						break;
 					default : //This shouldn't happen
 						return groupBySimilarities(indicatorPath, compressedPath, true);
 				}
-				
+				/* Sort predicates by the sum of common subject and/or object */
+				ValueComparator bvc =  new ValueComparator(predsWithInd);
+		        TreeMap<String,Long> sortedPreds = new TreeMap<String,Long>(bvc);
+		        sortedPreds.putAll(predsWithInd);
 				//TODO Check indicator loading and calculate (using K-means in a converted space?)
 				return groups;
 			} else {
