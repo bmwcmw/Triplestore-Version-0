@@ -52,7 +52,7 @@ public class CTMThread implements Runnable {
     }
     
     /**
-     * For POS and Pre-Compare tasks
+     * For Conversion, POS and Pre-Compare tasks
      * @param tid
      * @param task
      * @param inputList
@@ -127,7 +127,7 @@ public class CTMThread implements Runnable {
 		try {
 			switch (taskId) {
 				case CTMConstants.CTMCONVERTER:
-					//TODO add multi-threading support
+					dm.convert(inputFiles, outputFolder);
 					break;
 				case CTMConstants.CTMREADERPS:
 					dm.psSplit(inputFiles, outputFolder, nsPath, invalidPath);

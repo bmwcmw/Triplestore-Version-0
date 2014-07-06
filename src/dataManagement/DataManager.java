@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
+import commandRunner.FormatConverter;
 import commandRunner.PerlPreComparator;
 import ctmRdf.CTMConstants;
 import localIOUtils.IOUtils;
@@ -75,6 +76,22 @@ public class DataManager {
 	 */
 	public synchronized void addPrefix(String prefix, String uri) {
 		_prefixManager.addPrefix(prefix, uri);
+	}
+	
+	public void convert(ArrayList<File> rdfSrc, String outputPath) {
+		FormatConverter fc = new FormatConverter();
+		String inFilePath;
+	    String outFilePath;
+	    String inFileName;
+		for (File f : rdfSrc) {
+			if (f.isFile() && f.canRead()) {
+				inFilePath = f.getAbsolutePath();
+		    	inFileName = f.getName();
+		    	outFilePath = outputPath + File.separator
+							+ IOUtils.changeExtension(inFileName,".n3");
+				IOUtils.logLog(fc.execute(inFilePath, outFilePath));
+			}
+		}
 	}
 
 	/**

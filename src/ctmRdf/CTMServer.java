@@ -211,44 +211,8 @@ public class CTMServer {
 				break;
 			case CTMConstants.CTMCONVERTER:
 				setNbThreads();
-				rdfPath = _ctlParams.get("rdfPath");
-				IOUtils.checkOrCreateFolder(rdfPath);
-				n3Path = _ctlParams.get("n3Path");
-				IOUtils.checkOrCreateFolder(n3Path);
-				IOUtils.logLog("\nConverting rdf to n3 : ");
-				IOUtils.logLog("Input : " + rdfPath);
-				IOUtils.logLog("Output : " + n3Path);
-				/* Conversion */
 				startTime = System.currentTimeMillis();
-				File folder;
-				folder = new File(rdfPath);
-				ArrayList<File> listOfFiles = new ArrayList<File>(Arrays.asList(folder.listFiles()));
-				File temp;
-				//Check all input files
-				for (int i = 0; i < listOfFiles.size(); i++) {
-					temp = listOfFiles.get(i);
-					if (!temp.isFile() || !isRdf(temp.getName())) {
-						IOUtils.logLog("Input folder contains error : " + temp.getName());
-						return -1;
-					}
-				}
-				
-				String inputFile, outputFile;
-				FormatConverter fc = new FormatConverter();
-				folder = new File(rdfPath);
-				File[] listOfRdfFiles = folder.listFiles();
-				for (int i = 0; i < listOfRdfFiles.length; i++) {
-					if (listOfRdfFiles[i].isFile()) {
-						if (isRdf(listOfRdfFiles[i].getName())) {
-							inputFile = rdfPath + File.separator
-									+ listOfRdfFiles[i].getName();
-							outputFile = n3Path + File.separator
-									+ IOUtils.changeExtension(listOfRdfFiles[i].getName(),".n3");
-							IOUtils.logLog(fc.execute(inputFile, outputFile));
-						}
-					}
-				}
-				
+				CTMServer.convert(programInd);
 				endTime = System.currentTimeMillis();
 				duration = endTime - startTime;
 				IOUtils.logLog("---------------------------------------");
@@ -387,6 +351,48 @@ public class CTMServer {
 				return -1;
 		}
 		return 0;
+	}
+	
+	/**
+	 * Internal function for conversion
+	 * @param programInd
+	 * @return 0 if OK
+	 */
+	static int convert(int programInd){
+		String n3Path = _ctlParams.get("n3Path");
+		IOUtils.checkOrCreateFolder(n3Path);
+		String rdfPath = _ctlParams.get("rdfPath");
+		IOUtils.logLog("\nConverting RDF/OWL/WML to N3 : ");
+		IOUtils.logLog("Input : " + rdfPath);
+		IOUtils.logLog("Output : " + n3Path);
+
+		File folder = new File(rdfPath);
+		if(!folder.canRead() && !folder.isDirectory()) return -1;
+		ArrayList<File> listOfFiles = new ArrayList<File>(Arrays.asList(folder.listFiles()));
+		ArrayList<ArrayList<File>> inputLists = assignJobs(listOfFiles, false);
+		
+		File temp;
+		//Check all input files
+		for (int i = 0; i < listOfFiles.size(); i++) {
+			temp = listOfFiles.get(i);
+			if (!temp.isFile() || !isRdfOwl(temp.getName())) {
+				IOUtils.logLog("Input folder contains error : " + temp.getName());
+				return -1;
+			}
+		}
+		
+		//Create and execute threads with assigned sub task
+		ExecutorService executor = Executors.newFixedThreadPool(CTMServer._nbThreads);
+        for (int i = 0; i < CTMServer._nbThreads; i++) {
+            Runnable thread = new CTMThread(String.valueOf(i), 
+            		programInd, inputLists.get(i), 
+            		n3Path + File.separator + String.valueOf(i));
+            executor.execute(thread);
+        }
+        executor.shutdown();
+        while (!executor.isTerminated()) {
+        }
+        return 0;
 	}
 	
 	/**
@@ -847,6 +853,16 @@ public class CTMServer {
 				ValueComparator bvc =  new ValueComparator(predsWithInd);
 		        TreeMap<String,Long> sortedPreds = new TreeMap<String,Long>(bvc);
 		        sortedPreds.putAll(predsWithInd);
+		        /* Group predicates from the first ones */
+		        while(sortedPreds.size()>0){
+		        	//Check if Comparator descending or not
+		        	//Get first element of sortedPreds
+		        	String pred0 = sortedPreds.firstKey();
+		        	HashMap<String, CTMPairStr> relatedPreds = indicators.get(pred0);
+		        	//Get first N elements, put them in groups(n)
+		        	//Remove these first N elements from sortedPreds
+		        }
+		        
 				//TODO Check indicator loading and calculate (using K-means in a converted space?)
 				return groups;
 			} else {
@@ -861,7 +877,7 @@ public class CTMServer {
 	 * @param fileName
 	 * @return true if yes
 	 */
-	static boolean isRdf(String fileName) {
+	static boolean isRdfOwl(String fileName) {
 		return fileName.endsWith(".rdf");
 	}
 	
