@@ -40,6 +40,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import commandRunner.FormatConverter;
+import dataCleaner.CTMPairLong;
 import dataCleaner.CTMPairStr;
 import dataComparator.FilePair;
 import dataDistributor.ConnectorDN;
@@ -158,6 +159,7 @@ public class CTMServer {
 					System.out.println("---------------------------------------");
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -764,29 +766,32 @@ public class CTMServer {
 			String indicatorPath, HashMap<String,HashSet<String>> noRepNames,
 			boolean forceRandom) throws Exception{
 		ArrayList<File> allPredFiles = IOUtils.loadFolder(compressedPath);
-		HashSet<String> predicateFilenames = new HashSet<String>();
-		for(int i=0;i<allPredFiles.size();i++){
-			predicateFilenames.add(IOUtils.filenameWithoutExt(allPredFiles.get(i).getName()));
-		}
+//		HashSet<String> predicateFilenames = new HashSet<String>();
+//		for(int i=0;i<allPredFiles.size();i++){
+//			predicateFilenames.add(IOUtils.filenameWithoutExt(allPredFiles.get(i).getName()));
+//		}
 		// USE random plan to group files of varying sizes into approximately EQUAL SIZED blocks 
 		if(forceRandom) {
+			IOUtils.logLog("Forced to use random plan...");
 			ArrayList<ArrayList<File>> groups = assignJobs(allPredFiles, true);
 			return groups;
 		}
 		// USE indicators
 		else {
+			IOUtils.logLog("Try to group by similarity");
 			/* Calculate size of each group */
 			int sizeOfGroup = noRepNames.size()/CTMServer._nbThreads;
 			if (noRepNames.size()%CTMServer._nbThreads > 0) sizeOfGroup++;
 			/* Get all indicator files */
 			ArrayList<File> allIndFiles = IOUtils.loadFolder(compressedPath);
 			if(allIndFiles != null){
+				IOUtils.logLog("Found indicators, try to group by indicator");
 				ArrayList<ArrayList<File>> groups = new ArrayList<ArrayList<File>>();
-				/* <PredA, HashMap<PredB, (S,O)> */
-				HashMap<String, HashMap<String, CTMPairStr>> indicators 
-						= new HashMap<String, HashMap<String, CTMPairStr>>();
+				/* Create structure <PredA, HashMap<PredB, Common(S,O)> */
+				HashMap<String, HashMap<String, CTMPairLong>> indicators 
+						= new HashMap<String, HashMap<String, CTMPairLong>>();
 				BufferedReader reader = null;
-				/* Load all indicators */
+				/* Load all indicators from files */
 				for(File f : allIndFiles){
 					try {
 						reader = new BufferedReader(new FileReader(f));
@@ -798,19 +803,33 @@ public class CTMServer {
 						if (!nizer.hasMoreTokens()) throw new ParseException(2);
 						String pred2name = nizer.nextToken();
 						if (!nizer.hasMoreTokens()) throw new ParseException(3);
-						String Snumber = nizer.nextToken();
+						Long Snumber = Long.valueOf(nizer.nextToken());
 						if (!nizer.hasMoreTokens()) throw new ParseException(4);
-						String Onumber = nizer.nextToken();
-						HashMap<String, CTMPairStr> toAdd = indicators.get(pred1name);
+						Long Onumber = Long.valueOf(nizer.nextToken());
+						/* Add to predicate 1's list */
+						HashMap<String, CTMPairLong> toAdd = indicators.get(pred1name);
 						if (toAdd == null){
-							toAdd = new HashMap<String, CTMPairStr>();
-							toAdd.put(pred2name, new CTMPairStr(Snumber, Onumber));
+							toAdd = new HashMap<String, CTMPairLong>();
+							toAdd.put(pred2name, new CTMPairLong(Snumber, Onumber));
 							indicators.put(pred1name, toAdd);
 						} else {
 							if(toAdd.get(pred2name) != null) // This shouldn't happen
 								throw new Exception("Error : repeated entry for "
 										+ pred1name + " " + pred2name + " in file " + f.getName());
-							toAdd.put(pred2name, new CTMPairStr(Snumber, Onumber));
+							toAdd.put(pred2name, new CTMPairLong(Snumber, Onumber));
+						}
+
+						/* Add to predicate 2's list */
+						toAdd = indicators.get(pred2name);
+						if (toAdd == null){
+							toAdd = new HashMap<String, CTMPairLong>();
+							toAdd.put(pred1name, new CTMPairLong(Snumber, Onumber));
+							indicators.put(pred2name, toAdd);
+						} else {
+							if(toAdd.get(pred1name) != null) // This shouldn't happen
+								throw new Exception("Error : repeated entry for "
+										+ pred2name + " " + pred1name + " in file " + f.getName());
+							toAdd.put(pred1name, new CTMPairLong(Snumber, Onumber));
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -821,33 +840,36 @@ public class CTMServer {
 						}
 					}
 				}
+//				/* DEBUG */
+//	        	for (Entry<String, HashMap<String, CTMPairLong>> entry : indicators.entrySet()) {
+//	        		System.out.println("Indicators loaded Key: " + entry.getKey() + ". Value: " + entry.getValue());
+//	       		}
 				/* Calculate the sum of common subject and/or object */
 				Map<String, Long> predsWithInd = new HashMap<String, Long>();
 				switch (CTMServer._indicatorMode){
 					case CTMConstants.CTMINDICATORS :
-						for (Entry<String, HashMap<String, CTMPairStr>> e : indicators.entrySet()) {
+						for (Entry<String, HashMap<String, CTMPairLong>> e : indicators.entrySet()) {
 							long temp = 0;
-							for(Entry<String, CTMPairStr> e2 : e.getValue().entrySet()) {
-								temp = temp + Long.valueOf(e2.getValue().getSubject());
+							for(Entry<String, CTMPairLong> e2 : e.getValue().entrySet()) {
+								temp = temp + e2.getValue().getSubject();
 							}
 							predsWithInd.put(e.getKey(), temp);
 						} 
 						break;
 					case CTMConstants.CTMINDICATORO : 
-						for (Entry<String, HashMap<String, CTMPairStr>> e : indicators.entrySet()) {
+						for (Entry<String, HashMap<String, CTMPairLong>> e : indicators.entrySet()) {
 							long temp = 0;
-							for(Entry<String, CTMPairStr> e2 : e.getValue().entrySet()) {
-								temp = temp + Long.valueOf(e2.getValue().getObject());
+							for(Entry<String, CTMPairLong> e2 : e.getValue().entrySet()) {
+								temp = temp + e2.getValue().getObject();
 							}
 							predsWithInd.put(e.getKey(), temp);
 						}
 						break;
 					case CTMConstants.CTMINDICATORSO : 
-						for (Entry<String, HashMap<String, CTMPairStr>> e : indicators.entrySet()) {
+						for (Entry<String, HashMap<String, CTMPairLong>> e : indicators.entrySet()) {
 							long temp = 0;
-							for(Entry<String, CTMPairStr> e2 : e.getValue().entrySet()) {
-								temp = temp + Long.valueOf(e2.getValue().getSubject())
-										+ Long.valueOf(e2.getValue().getObject());
+							for(Entry<String, CTMPairLong> e2 : e.getValue().entrySet()) {
+								temp = temp + e2.getValue().getSubject() + e2.getValue().getObject();
 							}
 							predsWithInd.put(e.getKey(), temp);
 						}
@@ -856,24 +878,84 @@ public class CTMServer {
 						return groupBySimilarities(indicatorPath, compressedPath, noRepNames, true);
 				}
 				/* Sort predicates by the sum of common subject and/or object */
-				ValueComparator bvc =  new ValueComparator(predsWithInd);
+				MapValueComparator bvc =  new MapValueComparator(predsWithInd);
 		        TreeMap<String,Long> sortedPreds = new TreeMap<String,Long>(bvc);
 		        sortedPreds.putAll(predsWithInd);
-		        /* Group predicates from the first ones */
+				
+				/* DEBUG */
+        		for (Entry<String,Long> entry : sortedPreds.entrySet()) {
+        		     System.out.println("Sorted Key: " + entry.getKey() + ". Value: " + entry.getValue());
+        		}
+		        /* Group predicates */
+		        int currentGroup=0;
 		        while(sortedPreds.size()>0){
+		        	groups.add(currentGroup, new ArrayList<File>());
 		        	//Check if Comparator descending or not
-		        	//Get first element of sortedPreds
+		        	//Get first(best) element of sortedPreds to begin the group N
 		        	String pred0 = sortedPreds.firstKey();
-		        	HashMap<String, CTMPairStr> relatedPreds = indicators.get(pred0);
-		        	//Get first N elements, put them in groups(n)
+		        	IOUtils.logLog("Group "+currentGroup+" : beginning from "+pred0
+		        			+" having "+sortedPreds.firstEntry().getValue()+" total common entries");
+		        	HashMap<String, CTMPairLong> relatedPreds = indicators.get(pred0);
+	        		/* Add it(index, matrix S, matrix O) to group N and remove it from temporary set */
+	        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
+	        				+ pred0 + ".index"));
+	        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
+	        				+ pred0 + ".matrixS"));
+	        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
+	        				+ pred0 + ".matrixO"));
+	        		sortedPreds.remove(pred0);
+	        		
+		        	//Get first N elements related, put them in groups(n)
+		        	//And remove these first N elements from sortedPreds
 		        	int i=0;
+		        	long maxValue=0;
+		        	String maxPred="";
 		        	while(i < sizeOfGroup){
-		        		//TODO sort its related predicates by common S/O first!
+		        		/* Find nearest predicate */
+		        		switch (CTMServer._indicatorMode){
+							case CTMConstants.CTMINDICATORS :
+				        		for(Entry<String, CTMPairLong> e : relatedPreds.entrySet()){
+				        			if(e.getValue().getSubject() >= maxValue){
+				        				maxValue = e.getValue().getSubject();
+				        				maxPred = e.getKey();
+				        			}
+				        		}
+				        		break;
+							case CTMConstants.CTMINDICATORO : 
+								for(Entry<String, CTMPairLong> e : relatedPreds.entrySet()){
+				        			if(e.getValue().getObject() >= maxValue){
+				        				maxValue = e.getValue().getObject();
+				        				maxPred = e.getKey();
+				        			}
+				        		}
+				        		break;
+							case CTMConstants.CTMINDICATORSO : 
+								for(Entry<String, CTMPairLong> e : relatedPreds.entrySet()){
+				        			if((e.getValue().getSubject()+e.getValue().getObject()) >= maxValue){
+				        				maxValue = e.getValue().getSubject() + e.getValue().getObject();
+				        				maxPred = e.getKey();
+				        			}
+				        		}
+				        		break;
+							default : //This shouldn't happen
+								return groupBySimilarities(indicatorPath, compressedPath, noRepNames, true);
+						}
+		        		/* Add it(index, matrix S, matrix O) to group N and remove it from temporary sets */
+			        	IOUtils.logLog("Add "+maxPred+" to group "+currentGroup
+			        			+" having "+maxValue+" common entries with "+pred0);
+		        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
+		        				+ maxPred + ".index"));
+		        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
+		        				+ maxPred + ".matrixS"));
+		        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
+		        				+ maxPred + ".matrixO"));
+		        		//TODO PROBLEM!
+		        		relatedPreds.remove(maxPred);
+		        		sortedPreds.remove(maxPred);
+		        		i++;
 		        	}
-		        	//Remove these first N elements from sortedPreds
+		        	currentGroup++;
 		        }
-		        
-				//TODO Check indicator loading and calculate (using K-means in a converted space?)
 				return groups;
 			} else {
 				return groupBySimilarities(indicatorPath, compressedPath, noRepNames, true);

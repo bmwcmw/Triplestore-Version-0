@@ -3,10 +3,10 @@ package ctmRdf;
 import java.util.Comparator;
 import java.util.Map;
 
-class ValueComparator implements Comparator<String> {
+class MapValueComparator implements Comparator<String> {
 
     Map<String, Long> base;
-    public ValueComparator(Map<String, Long> base) {
+    public MapValueComparator(Map<String, Long> base) {
         this.base = base;
     }
 

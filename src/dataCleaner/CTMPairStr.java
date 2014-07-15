@@ -3,7 +3,7 @@ package dataCleaner;
 
 /**
  * <p>Light version of CTM Triple</p>
- * <p>A CTM String Triple contains three strings : Subject, Predicate and Object</p>
+ * <p>A CTM Pair String contains two strings : Subject and Object</p>
  * 
  * @author Cedar
  *
@@ -14,7 +14,7 @@ public class CTMPairStr implements SPOObject{
 	private String _object;
 	
 	/**
-	 * <p>Create a CTMTriple directly using three strings.</p>
+	 * <p>Create a CTMPairStr directly using three strings.</p>
 	 */
 	public CTMPairStr(String subject, String object){
 		_subject = subject;
@@ -30,7 +30,7 @@ public class CTMPairStr implements SPOObject{
 	}
 	
 	/**
-	 * @return S, P and O separated by whitespace
+	 * @return S and O separated by whitespace
 	 */
 	public String toString(){
 		return _subject.toString() + " " + _object.toString();
