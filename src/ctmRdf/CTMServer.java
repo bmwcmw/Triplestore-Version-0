@@ -679,13 +679,13 @@ public class CTMServer {
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				temp = listOfFiles[i];
-				tempName = IOUtils.filenameWithoutExt(temp.getName());
-				if(!tempName.contains(".index") && !tempName.contains(".matrixSO")
-						&& !tempName.contains(".matrixOS")){
+				if(!temp.getName().contains(".index") && !temp.getName().contains(".matrixSO")
+						&& !temp.getName().contains(".matrixOS")){
 					IOUtils.logLog("Input folder contains error : "
-							+ tempName + " neither .index nor .matrixSO nor .matrixOS");
+							+ temp.getName() + " neither .index nor .matrixSO nor .matrixOS");
 					return -1;
 				}
+				tempName = IOUtils.filenameWithoutExt(temp.getName());
 				if(noRepNames.containsKey(tempName)){
 					noRepNames.get(tempName).add(temp.getName());
 				} else {
@@ -706,7 +706,7 @@ public class CTMServer {
 		
 		//Load if the indicator file exists(with check of file entries), otherwise, use a random plan 
 		ArrayList<ArrayList<File>> groups = 
-				groupBySimilarities(indicatorPath, compressedPath, false);
+				groupBySimilarities(indicatorPath, compressedPath, noRepNames, false);
 
 //		/* Contact DN and get the number of CNs with their available space */
 //		String ipDN = "134.214.142.58";
@@ -761,22 +761,28 @@ public class CTMServer {
 	 * @throws ParseException 
 	 */
 	public static ArrayList<ArrayList<File>> groupBySimilarities(String compressedPath, 
-			String indicatorPath, boolean forceRandom) throws Exception{
+			String indicatorPath, HashMap<String,HashSet<String>> noRepNames,
+			boolean forceRandom) throws Exception{
 		ArrayList<File> allPredFiles = IOUtils.loadFolder(compressedPath);
 		HashSet<String> predicateFilenames = new HashSet<String>();
 		for(int i=0;i<allPredFiles.size();i++){
 			predicateFilenames.add(IOUtils.filenameWithoutExt(allPredFiles.get(i).getName()));
 		}
-		// USE random plan to group files of varying sizes into approximately EQUAL SIZE blocks 
+		// USE random plan to group files of varying sizes into approximately EQUAL SIZED blocks 
 		if(forceRandom) {
 			ArrayList<ArrayList<File>> groups = assignJobs(allPredFiles, true);
 			return groups;
 		}
 		// USE indicators
 		else {
+			/* Calculate size of each group */
+			int sizeOfGroup = noRepNames.size()/CTMServer._nbThreads;
+			if (noRepNames.size()%CTMServer._nbThreads > 0) sizeOfGroup++;
+			/* Get all indicator files */
 			ArrayList<File> allIndFiles = IOUtils.loadFolder(compressedPath);
 			if(allIndFiles != null){
 				ArrayList<ArrayList<File>> groups = new ArrayList<ArrayList<File>>();
+				/* <PredA, HashMap<PredB, (S,O)> */
 				HashMap<String, HashMap<String, CTMPairStr>> indicators 
 						= new HashMap<String, HashMap<String, CTMPairStr>>();
 				BufferedReader reader = null;
@@ -847,7 +853,7 @@ public class CTMServer {
 						}
 						break;
 					default : //This shouldn't happen
-						return groupBySimilarities(indicatorPath, compressedPath, true);
+						return groupBySimilarities(indicatorPath, compressedPath, noRepNames, true);
 				}
 				/* Sort predicates by the sum of common subject and/or object */
 				ValueComparator bvc =  new ValueComparator(predsWithInd);
@@ -860,13 +866,17 @@ public class CTMServer {
 		        	String pred0 = sortedPreds.firstKey();
 		        	HashMap<String, CTMPairStr> relatedPreds = indicators.get(pred0);
 		        	//Get first N elements, put them in groups(n)
+		        	int i=0;
+		        	while(i < sizeOfGroup){
+		        		//TODO sort its related predicates by common S/O first!
+		        	}
 		        	//Remove these first N elements from sortedPreds
 		        }
 		        
 				//TODO Check indicator loading and calculate (using K-means in a converted space?)
 				return groups;
 			} else {
-				return groupBySimilarities(indicatorPath, compressedPath, true);
+				return groupBySimilarities(indicatorPath, compressedPath, noRepNames, true);
 			}
 		}
 	}
@@ -1012,7 +1022,6 @@ public class CTMServer {
 	 * @param allFiles all source files
 	 * @param averageSize false to assign tasks only according to number of files(faster),
 	 * true if you want to have more average size between each group of files(slower)
-	 * //TODO Once the other tested, follow the method
 	 * @return
 	 */
 	static LinkedList<LinkedList<FilePair>> assignJobs(LinkedList<FilePair> allPairs, boolean averageSize){
@@ -1049,7 +1058,7 @@ public class CTMServer {
 			}
 		}
 		else { //To approximately equal-sized blocks
-			
+			//TODO Once the other tested, follow the method
 		}
 		IOUtils.logLog("Sub tasks assigned");
 		return inputLists;
