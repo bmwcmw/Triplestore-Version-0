@@ -782,6 +782,8 @@ public class CTMServer {
 			/* Calculate size of each group */
 			int sizeOfGroup = noRepNames.size()/CTMServer._nbThreads;
 			if (noRepNames.size()%CTMServer._nbThreads > 0) sizeOfGroup++;
+			IOUtils.logLog(CTMServer._nbThreads+"group(s), each group will have "+sizeOfGroup
+					+" or "+(sizeOfGroup-1)+" predicate(s)");
 			/* Get all indicator files */
 			ArrayList<File> allIndFiles = IOUtils.loadFolder(compressedPath);
 			if(allIndFiles != null){
@@ -832,6 +834,7 @@ public class CTMServer {
 							toAdd.put(pred1name, new CTMPairLong(Snumber, Onumber));
 						}
 					} catch (Exception e) {
+						IOUtils.logLog("Parse error?");
 						e.printStackTrace();
 						throw e;
 					} finally {
@@ -888,7 +891,8 @@ public class CTMServer {
         		}
 		        /* Group predicates */
 		        int currentGroup=0;
-		        while(sortedPreds.size()>0){
+		        HashSet<String> predsToFill = new HashSet<String>();
+		        while(sortedPreds.size()>0 && currentGroup<CTMServer._nbThreads){
 		        	groups.add(currentGroup, new ArrayList<File>());
 		        	//Check if Comparator descending or not
 		        	//Get first(best) element of sortedPreds to begin the group N
@@ -903,7 +907,8 @@ public class CTMServer {
 	        				+ pred0 + ".matrixS"));
 	        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
 	        				+ pred0 + ".matrixO"));
-	        		sortedPreds.remove(pred0);
+	        		predsToFill.add(pred0);
+	        		System.out.println(sortedPreds.size());
 	        		
 		        	//Get first N elements related, put them in groups(n)
 		        	//And remove these first N elements from sortedPreds
