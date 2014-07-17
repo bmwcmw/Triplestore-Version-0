@@ -848,7 +848,7 @@ public class CTMServer {
 //	        		System.out.println("Indicators loaded Key: " + entry.getKey() + ". Value: " + entry.getValue());
 //	       		}
 				/* Calculate the sum of common subject and/or object */
-				Map<String, Long> predsWithInd = new HashMap<String, Long>();
+				Map<Long, String> predsWithInd = new HashMap<Long, String>();
 				switch (CTMServer._indicatorMode){
 					case CTMConstants.CTMINDICATORS :
 						for (Entry<String, HashMap<String, CTMPairLong>> e : indicators.entrySet()) {
@@ -856,7 +856,7 @@ public class CTMServer {
 							for(Entry<String, CTMPairLong> e2 : e.getValue().entrySet()) {
 								temp = temp + e2.getValue().getSubject();
 							}
-							predsWithInd.put(e.getKey(), temp);
+							predsWithInd.put(temp, e.getKey());
 						} 
 						break;
 					case CTMConstants.CTMINDICATORO : 
@@ -865,7 +865,7 @@ public class CTMServer {
 							for(Entry<String, CTMPairLong> e2 : e.getValue().entrySet()) {
 								temp = temp + e2.getValue().getObject();
 							}
-							predsWithInd.put(e.getKey(), temp);
+							predsWithInd.put(temp, e.getKey());
 						}
 						break;
 					case CTMConstants.CTMINDICATORSO : 
@@ -874,93 +874,106 @@ public class CTMServer {
 							for(Entry<String, CTMPairLong> e2 : e.getValue().entrySet()) {
 								temp = temp + e2.getValue().getSubject() + e2.getValue().getObject();
 							}
-							predsWithInd.put(e.getKey(), temp);
+							predsWithInd.put(temp, e.getKey());
 						}
 						break;
 					default : //This shouldn't happen
 						return groupBySimilarities(indicatorPath, compressedPath, noRepNames, true);
 				}
-				/* Sort predicates by the sum of common subject and/or object */
-				MapValueComparator bvc =  new MapValueComparator(predsWithInd);
-		        TreeMap<String,Long> sortedPreds = new TreeMap<String,Long>(bvc);
-		        sortedPreds.putAll(predsWithInd);
+				/* Sort predicates by the sum of common subject and/or object (descending order) */
+				//MapValueComparator bvc =  new MapValueComparator(predsWithInd);
+		        //TreeMap<String,Long> sortedPreds = new TreeMap<String,Long>(bvc);
+		        //sortedPreds.putAll(predsWithInd);
+				TreeMap<Long,String> sortedPreds = new TreeMap<Long,String>(Collections.reverseOrder());
+				sortedPreds.putAll(predsWithInd);
 				
 				/* DEBUG */
-        		for (Entry<String,Long> entry : sortedPreds.entrySet()) {
+        		for (Entry<Long,String> entry : sortedPreds.entrySet()) {
         		     System.out.println("Sorted Key: " + entry.getKey() + ". Value: " + entry.getValue());
         		}
 		        /* Group predicates */
-		        int currentGroup=0;
-		        HashSet<String> predsToFill = new HashSet<String>();
-		        while(sortedPreds.size()>0 && currentGroup<CTMServer._nbThreads){
-		        	groups.add(currentGroup, new ArrayList<File>());
-		        	//Check if Comparator descending or not
-		        	//Get first(best) element of sortedPreds to begin the group N
-		        	String pred0 = sortedPreds.firstKey();
-		        	IOUtils.logLog("Group "+currentGroup+" : beginning from "+pred0
-		        			+" having "+sortedPreds.firstEntry().getValue()+" total common entries");
-		        	HashMap<String, CTMPairLong> relatedPreds = indicators.get(pred0);
-	        		/* Add it(index, matrix S, matrix O) to group N and remove it from temporary set */
-	        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
-	        				+ pred0 + ".index"));
-	        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
-	        				+ pred0 + ".matrixS"));
-	        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
-	        				+ pred0 + ".matrixO"));
-	        		predsToFill.add(pred0);
-	        		System.out.println(sortedPreds.size());
-	        		
-		        	//Get first N elements related, put them in groups(n)
-		        	//And remove these first N elements from sortedPreds
-		        	int i=0;
-		        	long maxValue=0;
-		        	String maxPred="";
-		        	while(i < sizeOfGroup){
-		        		/* Find nearest predicate */
-		        		switch (CTMServer._indicatorMode){
-							case CTMConstants.CTMINDICATORS :
-				        		for(Entry<String, CTMPairLong> e : relatedPreds.entrySet()){
-				        			if(e.getValue().getSubject() >= maxValue){
-				        				maxValue = e.getValue().getSubject();
-				        				maxPred = e.getKey();
-				        			}
-				        		}
-				        		break;
-							case CTMConstants.CTMINDICATORO : 
-								for(Entry<String, CTMPairLong> e : relatedPreds.entrySet()){
-				        			if(e.getValue().getObject() >= maxValue){
-				        				maxValue = e.getValue().getObject();
-				        				maxPred = e.getKey();
-				        			}
-				        		}
-				        		break;
-							case CTMConstants.CTMINDICATORSO : 
-								for(Entry<String, CTMPairLong> e : relatedPreds.entrySet()){
-				        			if((e.getValue().getSubject()+e.getValue().getObject()) >= maxValue){
-				        				maxValue = e.getValue().getSubject() + e.getValue().getObject();
-				        				maxPred = e.getKey();
-				        			}
-				        		}
-				        		break;
-							default : //This shouldn't happen
-								return groupBySimilarities(indicatorPath, compressedPath, noRepNames, true);
-						}
-		        		/* Add it(index, matrix S, matrix O) to group N and remove it from temporary sets */
-			        	IOUtils.logLog("Add "+maxPred+" to group "+currentGroup
-			        			+" having "+maxValue+" common entries with "+pred0);
-		        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
-		        				+ maxPred + ".index"));
-		        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
-		        				+ maxPred + ".matrixS"));
-		        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
-		        				+ maxPred + ".matrixO"));
-		        		//TODO PROBLEM!
-		        		relatedPreds.remove(maxPred);
-		        		sortedPreds.remove(maxPred);
-		        		i++;
-		        	}
-		        	currentGroup++;
-		        }
+        		HashMap<String, TreeMap<String, CTMPairLong>> sortedIndicators 
+        				= new HashMap<String, TreeMap<String, CTMPairLong>>();
+//		        int currentGroup=0;
+//		        HashSet<String> predsToFill = new HashSet<String>();
+//		        while(sortedPreds.size()>predsToFill.size() && currentGroup<CTMServer._nbThreads){
+//		        	groups.add(currentGroup, new ArrayList<File>());
+//		        	//Check if Comparator descending or not
+//		        	//Get first(best) element of sortedPreds to begin the group N
+//		        	String pred0 = null;
+////		        	predsToFill.add(pred0);
+//		        	for(Entry<Long,String> entry : sortedPreds.entrySet()){
+//		        		if(!predsToFill.contains(entry.getValue())){
+//		        			System.out.println(entry.getValue());
+//		        			pred0 = entry.getValue();
+//		        			break;
+//		        		}
+//		        	}
+//		        	IOUtils.logLog("Group " + currentGroup + " : beginning from " + pred0);
+//		        	HashMap<String, CTMPairLong> relatedPreds = indicators.get(pred0);
+//	        		/* Add it(index, matrix S, matrix O) to group N and remove it from temporary set */
+//	        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
+//	        				+ pred0 + ".index"));
+//	        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
+//	        				+ pred0 + ".matrixS"));
+//	        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
+//	        				+ pred0 + ".matrixO"));
+//	        		predsToFill.add(pred0);
+//	        		IOUtils.logLog(predsToFill.size() + " predicate(s) assigned");
+//	        		
+//		        	//Get first N elements related, put them in groups(n)
+//		        	//And remove these first N elements from sortedPreds
+//		        	int i=0;
+//		        	long maxValue=0;
+//		        	String maxPred="";
+//		        	while(i < sizeOfGroup){
+//		        		/* Find nearest predicate */
+//		        		switch (CTMServer._indicatorMode){
+//							case CTMConstants.CTMINDICATORS :
+//				        		for(Entry<String, CTMPairLong> e : relatedPreds.entrySet()){
+//				        			if(e.getValue().getSubject() >= maxValue 
+//				        					&& !predsToFill.contains(e.getKey())){
+//				        				maxValue = e.getValue().getSubject();
+//				        				maxPred = e.getKey();
+//				        			}
+//				        		}
+//				        		break;
+//							case CTMConstants.CTMINDICATORO : 
+//								for(Entry<String, CTMPairLong> e : relatedPreds.entrySet()){
+//				        			if(e.getValue().getObject() >= maxValue 
+//				        					&& !predsToFill.contains(e.getKey())){
+//				        				maxValue = e.getValue().getObject();
+//				        				maxPred = e.getKey();
+//				        			}
+//				        		}
+//				        		break;
+//							case CTMConstants.CTMINDICATORSO : 
+//								for(Entry<String, CTMPairLong> e : relatedPreds.entrySet()){
+//				        			if((e.getValue().getSubject()+e.getValue().getObject()) >= maxValue 
+//				        					&& !predsToFill.contains(e.getKey())){
+//				        				maxValue = e.getValue().getSubject() + e.getValue().getObject();
+//				        				maxPred = e.getKey();
+//				        			}
+//				        		}
+//				        		break;
+//							default : //This shouldn't happen
+//								return groupBySimilarities(indicatorPath, compressedPath, noRepNames, true);
+//						}
+//		        		/* Add it(index, matrix S, matrix O) to group N and remove it from temporary sets */
+//			        	IOUtils.logLog("Add "+maxPred+" to group "+currentGroup
+//			        			+" having "+maxValue+" common entries with "+pred0);
+//		        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
+//		        				+ maxPred + ".index"));
+//		        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
+//		        				+ maxPred + ".matrixS"));
+//		        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
+//		        				+ maxPred + ".matrixO"));
+//		        		predsToFill.add(maxPred);
+//		        		IOUtils.logLog(predsToFill.size() + " predicate(s) assigned");
+//		        		i++;
+//		        	}
+//		        	currentGroup++;
+//		        }
 				return groups;
 			} else {
 				return groupBySimilarities(indicatorPath, compressedPath, noRepNames, true);
