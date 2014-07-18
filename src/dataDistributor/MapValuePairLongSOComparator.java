@@ -1,4 +1,4 @@
-package ctmRdf;
+package dataDistributor;
 
 import java.util.Comparator;
 import java.util.Map;

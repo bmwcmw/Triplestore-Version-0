@@ -1,21 +1,19 @@
-package ctmRdf;
+package dataDistributor;
 
 import java.util.Comparator;
 import java.util.Map;
 
-import dataCleaner.CTMPairLong;
+class MapValueComparator implements Comparator<String> {
 
-class MapValuePairLongSComparator implements Comparator<String> {
-
-    Map<String, CTMPairLong> base;
-    public MapValuePairLongSComparator(Map<String, CTMPairLong> base) {
+    Map<String, Long> base;
+    public MapValueComparator(Map<String, Long> base) {
         this.base = base;
     }
 
     // Note: this comparator imposes orderings that are inconsistent with equals.    
     @Override
     public int compare(String a, String b) {
-        if (base.get(a).getSubject() >= base.get(b).getSubject()) {
+        if (base.get(a) >= base.get(b)) {
             return -1;
         } else {
             return 1;
