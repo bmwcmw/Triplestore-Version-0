@@ -245,7 +245,8 @@ public class CTMServer {
 				if(in.readLine().equals("y")){
 					//Merge results of each thread
 					IOUtils.logLog("Begin merging");
-					final HashMap<String, ArrayList<File>> predicateFiles = new HashMap<String, ArrayList<File>>();
+					final HashMap<String, ArrayList<File>> predicateFiles = 
+							new HashMap<String, ArrayList<File>>();
 					Path start = FileSystems.getDefault().getPath(psPath);
 					try {
 						Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
@@ -782,8 +783,8 @@ public class CTMServer {
 			/* Calculate size of each group */
 			int sizeOfGroup = noRepNames.size()/CTMServer._nbThreads;
 			if (noRepNames.size()%CTMServer._nbThreads > 0) sizeOfGroup++;
-			IOUtils.logLog(CTMServer._nbThreads+"group(s), each group will have "+sizeOfGroup
-					+" or "+(sizeOfGroup-1)+" predicate(s)");
+			IOUtils.logLog(CTMServer._nbThreads+"group(s), each group will have " 
+					+ sizeOfGroup +" or "+(sizeOfGroup-1)+" predicate(s)");
 			/* Get all indicator files */
 			ArrayList<File> allIndFiles = IOUtils.loadFolder(compressedPath);
 			if(allIndFiles != null){
@@ -817,7 +818,8 @@ public class CTMServer {
 						} else {
 							if(toAdd.get(pred2name) != null) // This shouldn't happen
 								throw new Exception("Error : repeated entry for "
-										+ pred1name + " " + pred2name + " in file " + f.getName());
+										+ pred1name + " " + pred2name + " in file " 
+										+ f.getName());
 							toAdd.put(pred2name, new CTMPairLong(Snumber, Onumber));
 						}
 
@@ -830,7 +832,8 @@ public class CTMServer {
 						} else {
 							if(toAdd.get(pred1name) != null) // This shouldn't happen
 								throw new Exception("Error : repeated entry for "
-										+ pred2name + " " + pred1name + " in file " + f.getName());
+										+ pred2name + " " + pred1name + " in file " 
+										+ f.getName());
 							toAdd.put(pred1name, new CTMPairLong(Snumber, Onumber));
 						}
 					} catch (Exception e) {
@@ -844,11 +847,15 @@ public class CTMServer {
 					}
 				}
 //				/* DEBUG */
-//	        	for (Entry<String, HashMap<String, CTMPairLong>> entry : indicators.entrySet()) {
-//	        		System.out.println("Indicators loaded Key: " + entry.getKey() + ". Value: " + entry.getValue());
-//	       		}
+	        	for (Entry<String, HashMap<String, CTMPairLong>> entry : indicators.entrySet()) {
+	        		System.out.println("Indicators loaded. Key: " + entry.getKey() 
+	        				+ ". Value: " + entry.getValue());
+	       		}
 				/* Calculate the sum of common subject and/or object */
+				/* And sort the indicators */
 				Map<Long, String> predsWithInd = new HashMap<Long, String>();
+        		HashMap<String, TreeMap<String, CTMPairLong>> sortedIndicators 
+        				= new HashMap<String, TreeMap<String, CTMPairLong>>();
 				switch (CTMServer._indicatorMode){
 					case CTMConstants.CTMINDICATORS :
 						for (Entry<String, HashMap<String, CTMPairLong>> e : indicators.entrySet()) {
@@ -856,6 +863,12 @@ public class CTMServer {
 							for(Entry<String, CTMPairLong> e2 : e.getValue().entrySet()) {
 								temp = temp + e2.getValue().getSubject();
 							}
+							MapValuePairLongSComparator rator = 
+									new MapValuePairLongSComparator(e.getValue());
+							TreeMap<String,CTMPairLong> sorted = 
+									new TreeMap<String,CTMPairLong>(rator);
+							sorted.putAll(e.getValue());
+							sortedIndicators.put(e.getKey(), sorted);
 							predsWithInd.put(temp, e.getKey());
 						} 
 						break;
@@ -865,6 +878,12 @@ public class CTMServer {
 							for(Entry<String, CTMPairLong> e2 : e.getValue().entrySet()) {
 								temp = temp + e2.getValue().getObject();
 							}
+							MapValuePairLongOComparator rator = 
+									new MapValuePairLongOComparator(e.getValue());
+							TreeMap<String,CTMPairLong> sorted = 
+									new TreeMap<String,CTMPairLong>(rator);
+							sorted.putAll(e.getValue());
+							sortedIndicators.put(e.getKey(), sorted);
 							predsWithInd.put(temp, e.getKey());
 						}
 						break;
@@ -874,6 +893,12 @@ public class CTMServer {
 							for(Entry<String, CTMPairLong> e2 : e.getValue().entrySet()) {
 								temp = temp + e2.getValue().getSubject() + e2.getValue().getObject();
 							}
+							MapValuePairLongSOComparator rator = 
+									new MapValuePairLongSOComparator(e.getValue());
+							TreeMap<String,CTMPairLong> sorted = 
+									new TreeMap<String,CTMPairLong>(rator);
+							sorted.putAll(e.getValue());
+							sortedIndicators.put(e.getKey(), sorted);
 							predsWithInd.put(temp, e.getKey());
 						}
 						break;
@@ -889,11 +914,14 @@ public class CTMServer {
 				
 				/* DEBUG */
         		for (Entry<Long,String> entry : sortedPreds.entrySet()) {
-        		     System.out.println("Sorted Key: " + entry.getKey() + ". Value: " + entry.getValue());
+        		     System.out.println("Sorted Key: " + entry.getKey() 
+        		    		 + "(total common). Value: " + entry.getValue()+"(predicate)");
         		}
+	        	for (Entry<String, TreeMap<String, CTMPairLong>> entry : sortedIndicators.entrySet()) {
+	        		System.out.println("Indicators sorted. Key: " + entry.getKey() 
+	        				+ ". Value: " + entry.getValue());
+	       		}
 		        /* Group predicates */
-        		HashMap<String, TreeMap<String, CTMPairLong>> sortedIndicators 
-        				= new HashMap<String, TreeMap<String, CTMPairLong>>();
 //		        int currentGroup=0;
 //		        HashSet<String> predsToFill = new HashSet<String>();
 //		        while(sortedPreds.size()>predsToFill.size() && currentGroup<CTMServer._nbThreads){
