@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
@@ -283,15 +282,41 @@ public class IndicatorGrouper {
 		}
 	}
 	
-	private static TreeMap<String, CTMPairLong> getFirstEntries(int max, 
+//	/**
+//	 * Return first N entries of a sorted map
+//	 * @param max : N
+//	 * @param source : source map
+//	 * @return A sorted map
+//	 */
+//	private static TreeMap<String, CTMPairLong> getFirstEntries(int max, 
+//			TreeMap<String, CTMPairLong> source) {
+//		int count = 0;
+//		TreeMap<String, CTMPairLong> target = new TreeMap<String, CTMPairLong>();
+//		for (Entry<String, CTMPairLong> entry : source.entrySet()) {
+//			if (count >= max)
+//				break;
+//
+//			target.put(entry.getKey(), entry.getValue());
+//			count++;
+//		}
+//		return target;
+//	}
+	
+	/**
+	 * Return first N entries of a sorted map
+	 * @param max : N
+	 * @param source : source map
+	 * @return An ArrayList
+	 */
+	private static ArrayList<String> getFirstEntries(int max, 
 			TreeMap<String, CTMPairLong> source) {
 		int count = 0;
-		TreeMap<String, CTMPairLong> target = new TreeMap<String, CTMPairLong>();
+		ArrayList<String> target = new ArrayList<String>();
 		for (Entry<String, CTMPairLong> entry : source.entrySet()) {
 			if (count >= max)
 				break;
 
-			target.put(entry.getKey(), entry.getValue());
+			target.add(entry.getKey());
 			count++;
 		}
 		return target;
