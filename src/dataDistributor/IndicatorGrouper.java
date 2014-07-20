@@ -193,6 +193,9 @@ public class IndicatorGrouper {
 	        				+ ". Value: " + entry.getValue());
 	       		}
 		        /* Group predicates */
+	        	_nbThreads
+	        	sizeOfGroup
+	        	sortedIndicators
 	        	//TODO
 //		        int currentGroup=0;
 //		        HashSet<String> predsToFill = new HashSet<String>();
