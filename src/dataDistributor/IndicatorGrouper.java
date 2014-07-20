@@ -193,7 +193,7 @@ public class IndicatorGrouper {
 	        				+ ". Value: " + entry.getValue());
 	       		}
 		        /* Group predicates */
-	        	
+	        	//TODO
 //		        int currentGroup=0;
 //		        HashSet<String> predsToFill = new HashSet<String>();
 //		        while(sortedPreds.size()>predsToFill.size() && currentGroup<CTMServer._nbThreads){
