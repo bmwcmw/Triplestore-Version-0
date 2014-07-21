@@ -59,7 +59,6 @@ public class IndicatorGrouper {
 			ArrayList<File> allIndFiles = IOUtils.loadFolder(compressedPath);
 			if(allIndFiles != null){
 				IOUtils.logLog("Found indicators, try to group by indicator");
-				ArrayList<ArrayList<File>> groups = new ArrayList<ArrayList<File>>();
 				/* Create structure <PredA, HashMap<PredB, Common(S,O)> */
 				HashMap<String, HashMap<String, CTMPairLong>> indicators 
 						= new HashMap<String, HashMap<String, CTMPairLong>>();
@@ -116,7 +115,7 @@ public class IndicatorGrouper {
 						}
 					}
 				}
-//				/* DEBUG */
+				/* DEBUG display */
 	        	for (Entry<String, HashMap<String, CTMPairLong>> entry : indicators.entrySet()) {
 	        		System.out.println("Indicators loaded. Key: " + entry.getKey() 
 	        				+ ". Value: " + entry.getValue());
@@ -183,7 +182,7 @@ public class IndicatorGrouper {
 				TreeMap<Long,String> sortedPreds = new TreeMap<Long,String>(Collections.reverseOrder());
 				sortedPreds.putAll(predsWithInd);
 				
-				/* DEBUG */
+				/* DEBUG display */
         		for (Entry<Long,String> entry : sortedPreds.entrySet()) {
         		     System.out.println("Sorted Key: " + entry.getKey() 
         		    		 + "(total common). Value: " + entry.getValue()+"(predicate)");
@@ -193,10 +192,17 @@ public class IndicatorGrouper {
 	        				+ ". Value: " + entry.getValue());
 	       		}
 		        /* Group predicates */
-	        	_nbThreads
-	        	sizeOfGroup
-	        	sortedIndicators
+	        	ArrayList<ArrayList<File>> groups = new ArrayList<ArrayList<File>>();
+	        	int nbAllPreds = predsWithInd.keySet().size();
+	        	HashSet<String> selectedPreds = new HashSet<String>();
+	        	int n = 0;//Nth predicate
+	        	//Assign predicates from those having highest value indicator
+	        	for (Entry<String, TreeMap<String, CTMPairLong>> entry : sortedIndicators.entrySet()) {
+	        		//Add sizeOfGroup or sizeOfGroup-1 entries (not yet selected) to group N
+	        	}
+	        	//_nbThreads	        	
 	        	//TODO
+	        	
 //		        int currentGroup=0;
 //		        HashSet<String> predsToFill = new HashSet<String>();
 //		        while(sortedPreds.size()>predsToFill.size() && currentGroup<CTMServer._nbThreads){
@@ -306,16 +312,19 @@ public class IndicatorGrouper {
 //	}
 	
 	/**
-	 * Return first N entries of a sorted map
+	 * Return from M to N entries of a sorted map
+	 * @param min : M
 	 * @param max : N
 	 * @param source : source map
 	 * @return An ArrayList
 	 */
-	private static ArrayList<String> getFirstEntries(int max, 
+	private static ArrayList<String> getFirstEntries(int min, int max, 
 			TreeMap<String, CTMPairLong> source) {
 		int count = 0;
 		ArrayList<String> target = new ArrayList<String>();
 		for (Entry<String, CTMPairLong> entry : source.entrySet()) {
+			if (count < min)
+				continue;
 			if (count >= max)
 				break;
 
