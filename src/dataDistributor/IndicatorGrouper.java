@@ -193,15 +193,29 @@ public class IndicatorGrouper {
 	       		}
 		        /* Group predicates */
 	        	ArrayList<ArrayList<File>> groups = new ArrayList<ArrayList<File>>();
-	        	int nbAllPreds = predsWithInd.keySet().size();
+	        	//int nbAllPreds = predsWithInd.keySet().size();
 	        	HashSet<String> selectedPreds = new HashSet<String>();
-	        	int n = 0;//Nth predicate
+	        	int groupN = 0;//Nth group of predicate(s)
 	        	//Assign predicates from those having highest value indicator
 	        	for (Entry<String, TreeMap<String, CTMPairLong>> entry : sortedIndicators.entrySet()) {
+	        		if(selectedPreds.contains(entry.getKey())) continue;
+	        		for (Entry<String, CTMPairLong> entry2 : entry.getValue().entrySet()) {
+		        		if(!selectedPreds.contains(entry2.getKey())){
+		        			if(groups.get(groupN)==null)
+		        					groups.add(groupN, new ArrayList<File>());
+		        			groups.get(groupN).add(new File(compressedPath + 
+		        					File.separator + entry2.getKey() + "index"));
+		        			groups.get(groupN).add(new File(compressedPath + 
+		        					File.separator + entry2.getKey() + "matrixS"));
+		        			groups.get(groupN).add(new File(compressedPath + 
+		        					File.separator + entry2.getKey() + "matrixO"));
+		        			selectedPreds.add(entry2.getKey());
+		        		}
+	        		}        	
+		        	//TODO
 	        		//Add sizeOfGroup or sizeOfGroup-1 entries (not yet selected) to group N
 	        	}
-	        	//_nbThreads	        	
-	        	//TODO
+	        	//_nbThreads	
 	        	
 //		        int currentGroup=0;
 //		        HashSet<String> predsToFill = new HashSet<String>();
