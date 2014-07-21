@@ -76,7 +76,7 @@ public class SimpleQueryExecutor {
 			throws Exception{
 		Set<String> result = new HashSet<String>();
 		LongPattern intPat = SimpleQueryTranslator.toCompressed(dbu, pat);
-		//TODO file location
+		//TODO file location = compressedPath
 		FileInputStream fs= new FileInputStream(dest);
 		BufferedReader br = new BufferedReader(new InputStreamReader(fs));
 		//TODO functions to convert file names

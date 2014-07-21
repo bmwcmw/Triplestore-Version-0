@@ -2,10 +2,13 @@ package ctmSPARQL;
 
 import indexNodesDBUtils.InRamDBUtils;
 import queryExecutor.SimpleQueryExecutor;
+import queryObjects.ParsedQuery;
+import queryPlanner.SimpleQueryPlanner;
+import queryUtils.InvalidPatternException;
 
 public class CTMLauncher {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InvalidPatternException {
 		SimpleQueryExecutor.setMode(SimpleQueryExecutor.MODE.LOCALFS);
 		SimpleQueryExecutor.setDBU(new InRamDBUtils());
 		
@@ -18,6 +21,9 @@ public class CTMLauncher {
 				+ "  ?X ub:memberOf ?Z ."
 				+ "  ?Z ub:subOrganizationOf ?Y ."
 				+ "  ?X ub:undergraduateDegreeFrom ?Y}";
+		
+		ParsedQuery planed = SimpleQueryPlanner.plan(query);
+		
 	}
 
 }
