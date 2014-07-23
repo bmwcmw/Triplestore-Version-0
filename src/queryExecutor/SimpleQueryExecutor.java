@@ -107,6 +107,16 @@ public class SimpleQueryExecutor {
 		String line;
 		long lineNb = 0;
 		switch(type){
+		/* 
+		 * Note variable patterns and variable type, for example ?X pred0 ?Y has 
+		 * type SO then note them in a SubQueryVariable containing string variable
+		 * and variable type
+		 * 
+		 * Then return the string result set and SubQueryVariable of subquery, 
+		 * while all subqueries are done, the executer combine results according 
+		 * to selected variables in order (using getSelect() function) and return
+		 * a list of list that can be displayed.
+		 */
 			case NON:
 				break;
 			case S: 

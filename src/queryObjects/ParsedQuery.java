@@ -40,6 +40,10 @@ public class ParsedQuery {
 		variables = new HashMap<QueryVariable, HashSet<Integer>>();
 	}
 	
+	public ArrayList<String> getSelect(){
+		return selectedvariables;
+	}
+	
 	public HashMap<Integer, SubQuerySet> getPatterns(){
 		return patterns;
 	}
