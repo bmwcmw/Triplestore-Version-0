@@ -29,10 +29,10 @@ import dataComparator.InRamComparator;
 import dataComparator.JavaComparator;
 import dataCompressor.DgapCompressor;
 import dataCompressor.SOLongPair;
-import dataDistributor.SSHDataDistributor;
-import dataDistributor.DestInfo;
-import dataDistributor.FileSenderCN;
-import dataDistributor.SSHCommandExecutor;
+import dataDistributor.CEDAR.DestInfo;
+import dataDistributor.CEDAR.FileSenderCN;
+import dataDistributor.SSH.SSHCommandExecutor;
+import dataDistributor.SSH.SSHDataDistributor;
 import dataReader.N3Reader;
 import dataReader.PairReader;
 

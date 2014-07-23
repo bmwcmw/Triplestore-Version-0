@@ -1,4 +1,4 @@
-package dataDistributor;
+package dataDistributor.CEDAR;
 
 /**
  * Pair of two strings

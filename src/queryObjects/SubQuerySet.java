@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 /**
  * This is used to store a graph of SPARQL queries with all sub-queries categorized
- * by their variable type.  
+ * by their variable type, number of variables, or some cretaria else.  
  * @author Cedar
  */
 public class SubQuerySet {
@@ -15,7 +15,7 @@ public class SubQuerySet {
 	 }
 	 
 	 /**
-	  * Inserts a pattern into a Graph
+	  * Inserts a pattern into the set
 	  * @param id : the unique id of pattern
 	  * @param p : the pattern to insert
 	  */

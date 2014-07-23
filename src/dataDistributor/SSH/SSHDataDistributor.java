@@ -1,4 +1,4 @@
-package dataDistributor;
+package dataDistributor.SSH;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;

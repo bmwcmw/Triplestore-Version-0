@@ -206,9 +206,9 @@ public class IndicatorGrouper {
 		        			groups.get(groupN).add(new File(compressedPath + 
 		        					File.separator + entry2.getKey() + "index"));
 		        			groups.get(groupN).add(new File(compressedPath + 
-		        					File.separator + entry2.getKey() + "matrixS"));
+		        					File.separator + entry2.getKey() + "matrixSO"));
 		        			groups.get(groupN).add(new File(compressedPath + 
-		        					File.separator + entry2.getKey() + "matrixO"));
+		        					File.separator + entry2.getKey() + "matrixOS"));
 		        			selectedPreds.add(entry2.getKey());
 		        		}
 	        		}        	

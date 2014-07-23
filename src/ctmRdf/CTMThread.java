@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import localIOUtils.IOUtils;
 import dataComparator.FilePair;
-import dataDistributor.DestInfo;
+import dataDistributor.CEDAR.DestInfo;
 import dataManagement.DataManager;
 
 public class CTMThread implements Runnable {

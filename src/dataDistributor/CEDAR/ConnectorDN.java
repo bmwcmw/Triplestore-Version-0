@@ -1,4 +1,4 @@
-package dataDistributor;
+package dataDistributor.CEDAR;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -2,6 +2,10 @@ package queryObjects;
 
 import queryUtils.QueryUtils.VarType;
 
+/**
+ * The variable string and its type (S, P or O)
+ * @author Cedar
+ */
 public class QueryVariable {
 	private VarType type;
 	private String var;

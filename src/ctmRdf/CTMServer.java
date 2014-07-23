@@ -43,9 +43,9 @@ import commandRunner.FormatConverter;
 import dataCleaner.CTMPairLong;
 import dataCleaner.CTMPairStr;
 import dataComparator.FilePair;
-import dataDistributor.ConnectorDN;
-import dataDistributor.DestInfo;
 import dataDistributor.IndicatorGrouper;
+import dataDistributor.CEDAR.ConnectorDN;
+import dataDistributor.CEDAR.DestInfo;
 import localIOUtils.IOUtils;
 
 /**
