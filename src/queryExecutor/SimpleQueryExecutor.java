@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -24,8 +25,10 @@ import com.google.common.collect.Sets;
 
 import queryObjects.LongPattern;
 import queryObjects.ParsedQuery;
+import queryObjects.QueryPatternResult;
+import queryObjects.QueryResult;
 import queryObjects.StringPattern;
-import queryObjects.SubQuerySet;
+import queryObjects.SubQueryPatternSet;
 import queryRewriter.SimpleQueryTranslator;
 import queryUtils.QueryUtils.VarType;
 
@@ -76,22 +79,24 @@ public class SimpleQueryExecutor {
 		return dbu;
 	}
 	
-	public static Set<String> fetchFromDest(String dest,  VarType type, StringPattern pat)
+	public static QueryPatternResult fetchFromDest(String dest,  StringPattern pat)
 			throws Exception{
 		switch(mode){
 			case LOCALFS:
-				return fetchFromLocalFS(dest, type, pat);
+				return fetchFromLocalFS(dest, pat);
 			case HDFS:
-				return fetchFromHDFS(dest, type, pat);
+				return fetchFromHDFS(dest, pat);
 			case CEDAR:
-				return fetchFromCEDAR(dest, type, pat);
+				return fetchFromCEDAR(dest, pat);
 			default:
 				return null;
 		}
 	}
 	
-	private static Set<String> fetchFromLocalFS(String pred, VarType type, StringPattern pat) 
-			throws Exception{
+	private static QueryPatternResult fetchFromLocalFS(String pred, StringPattern pat) 
+			throws Exception {
+		QueryPatternResult result = null;
+		
 		IOUtils.logLog("Predicate term : "+pred);
 		/* Paths of specified predicate */
 		String indPath = localPath + File.separator + pred + ".index";
@@ -101,53 +106,125 @@ public class SimpleQueryExecutor {
 		dbu.loadFromFile(indPath);
 		LongPattern intPat = SimpleQueryTranslator.toCompressed(dbu, pat);
 		
-		Set<String> result = new HashSet<String>();
+		Set<String> resultLines = new HashSet<String>();
 		/* Here P is never variable */
 		IOUtils.logLog(pat.toString() + " ==> " + intPat.toString());
+		Long sId = null;
+		Long oId = null;
+		String sLine = null;
+		String oLine = null;
+		HashSet<Long> sSet = null;
+		HashSet<Long> oSet = null;
 		String line;
 		long lineNb = 0;
-		switch(type){
+		switch(pat.getType()){
 		/* 
 		 * Note variable patterns and variable type, for example ?X pred0 ?Y has 
-		 * type SO then note them in a SubQueryVariable containing string variable
+		 * type SO then note them in a QueryPatternResult containing string variable
 		 * and variable type
 		 * 
-		 * Then return the string result set and SubQueryVariable of subquery, 
-		 * while all subqueries are done, the executer combine results according 
+		 * Then return the string result set and QueryPatternResult of pattern, 
+		 * while all patterns are done, the executer combine results according 
 		 * to selected variables in order (using getSelect() function) and return
 		 * a list of list that can be displayed.
 		 */
 			case NON:
+				/* Fetch the line containing the Subject, and see if the object 
+				 * id appears in the set decoded from the subject's line */
+				sId = dbu.fetchIdByNode(pat.getS());
+				oId = dbu.fetchIdByNode(pat.getO());
+				sLine = MatrixLineReaderLocalFS.readLocalLine(sId, new File(matSOPath));
+				oSet = MatrixLineParser.parseMatrixLine(sLine);
+				if(!oSet.contains(oId)) 
+					/* If this non-variable pattern isn't not satisfied, return 
+					 * null as result list */
+					result = new QueryPatternResult(pat, null);
+				else {
+					/* If this non-variable pattern is satisfied, return a list 
+					 * containing 3 sub-lists (with size=1,1,1) where S, P and O
+					 * strings are the only values separately stored in each list 
+					 */
+					ArrayList<ArrayList<String>> resList = 
+							new ArrayList<ArrayList<String>>();
+					ArrayList<String> arrS = new ArrayList<String>();
+					arrS.add(pat.getS());
+					ArrayList<String> arrP = new ArrayList<String>();
+					arrP.add(pat.getP());
+					ArrayList<String> arrO = new ArrayList<String>();
+					arrO.add(pat.getO());
+					resList.add(arrS);
+					resList.add(arrP);
+					resList.add(arrO);
+					/* DEBUG */
+					System.out.println(resList);
+					result = new QueryPatternResult(pat, resList);
+				}
 				break;
 			case S: 
-				BufferedReader matSOReader = new BufferedReader(new InputStreamReader(
-						new FileInputStream(matSOPath)));
-				while ((line = matSOReader.readLine()) != null) {
-					/* 
-					 * When a line with content appear in the matrix SO file,
-					 * add it to the result set.
-					 */
-					if (line.length()>0) {
-						result.add(dbu.fetchNodeById(lineNb));
+				/* Fetch the line containing the Object, and see the set decoded 
+				 * from the object's line has any entry */
+				oId = dbu.fetchIdByNode(pat.getO());
+				oLine = MatrixLineReaderLocalFS.readLocalLine(oId, new File(matOSPath));
+				sSet = MatrixLineParser.parseMatrixLine(oLine);
+				if(sSet.size()==0)
+					/* If the pattern isn't not satisfied, return null as result 
+					 * list */
+					result = new QueryPatternResult(pat, null);
+				else {
+					/* If the pattern is satisfied, return a list containing 3 
+					 * sub-lists (with size=n,1,1) where P, O strings are 
+					 * the only values separately stored in each list, and S the
+					 * list decoded from object's line */
+					ArrayList<String> convertedList = new ArrayList<String>();
+					for(Long i : sSet){
+						convertedList.add(dbu.fetchNodeById(i));
 					}
-					lineNb++;
+					ArrayList<ArrayList<String>> resList = 
+							new ArrayList<ArrayList<String>>();
+					ArrayList<String> arrP = new ArrayList<String>();
+					arrP.add(pat.getP());
+					ArrayList<String> arrO = new ArrayList<String>();
+					arrO.add(pat.getO());
+					resList.add(convertedList);
+					resList.add(arrP);
+					resList.add(arrO);
+					/* DEBUG */
+					System.out.println(resList);
+					result = new QueryPatternResult(pat, resList);
 				}
-				matSOReader.close();
 				break;
 			case O:
-				BufferedReader matOSReader = new BufferedReader(new InputStreamReader(
-						new FileInputStream(matOSPath)));
-				while ((line = matOSReader.readLine()) != null) {
-					/* 
-					 * When a line with content appear in the matrix OS file,
-					 * add it to the result set
-					 */
-					if (line.length()>0) {
-						result.add(dbu.fetchNodeById(lineNb));
+				/* Fetch the line containing the Subject, and see the set decoded 
+				 * from the subject's line has any entry */
+				sId = dbu.fetchIdByNode(pat.getS());
+				sLine = MatrixLineReaderLocalFS.readLocalLine(sId, new File(matSOPath));
+				oSet = MatrixLineParser.parseMatrixLine(sLine);
+				if(oSet.size()==0)
+					/* If the pattern isn't not satisfied, return null as result 
+					 * list */
+					result = new QueryPatternResult(pat, null);
+				else {
+					/* If the pattern is satisfied, return a list containing 3 
+					 * sub-lists (with size=1,1,n) where S, P strings are 
+					 * the only values separately stored in each list, and O the
+					 * list decoded from subject's line */
+					ArrayList<String> arrS = new ArrayList<String>();
+					arrS.add(pat.getS());
+					ArrayList<String> arrP = new ArrayList<String>();
+					arrP.add(pat.getP());
+					ArrayList<String> convertedList = new ArrayList<String>();
+					for(Long i : oSet){
+						convertedList.add(dbu.fetchNodeById(i));
 					}
-					lineNb++;
+					ArrayList<ArrayList<String>> resList = 
+							new ArrayList<ArrayList<String>>();
+					resList.add(arrS);
+					resList.add(arrP);
+					resList.add(convertedList);
+					/* DEBUG */
+					System.out.println(resList);
+					result = new QueryPatternResult(pat, resList);
 				}
-				matOSReader.close();
 				break;
 			case SO:
 				break;
@@ -159,13 +236,13 @@ public class SimpleQueryExecutor {
 		return result;
 	}
 	
-	private static Set<String> fetchFromHDFS(String dest, VarType type, StringPattern pat){
-		Set<String> result = new HashSet<String>();
+	private static QueryPatternResult fetchFromHDFS(String dest, StringPattern pat){
+		QueryPatternResult result = new QueryPatternResult(pat, null);
 		return result;
 	}
 	
-	private static Set<String> fetchFromCEDAR(String dest, VarType type, StringPattern pat){
-		Set<String> result = new HashSet<String>();
+	private static QueryPatternResult fetchFromCEDAR(String dest, StringPattern pat){
+		QueryPatternResult result = new QueryPatternResult(pat, null);
 		return result;
 	}
 	
@@ -176,15 +253,17 @@ public class SimpleQueryExecutor {
 	 * @return The result set
 	 * @throws Exception
 	 */
-	public static Set<String> execute(ParsedQuery parsed, JSONArray dstInfo) 
+	public static QueryResult execute(ParsedQuery parsed, JSONArray dstInfo) 
 			throws Exception{
-		/*  */
+		/* If we use Local FS, we must specify the path of local files. */
 		if(mode == MODE.LOCALFS && localPath == null){
 			throw new Exception("ERROR : Local source folder not set " +
 					"while using local file system mode.");
 		}
 		
-		if((mode==MODE.HDFS||mode==MODE.CEDAR) && dstInfo == null){
+		/* If we use distributed systems, we must specify the connection 
+		 * information */
+		if((mode == MODE.HDFS||mode==MODE.CEDAR) && dstInfo == null){
 			throw new Exception("ERROR : Destination information null " +
 					"while using distributed file system mode.");
 		}
@@ -194,9 +273,9 @@ public class SimpleQueryExecutor {
 //			JSONObject newJO = (JSONObject) o;
 //		}
 		
-		HashMap<Integer, SubQuerySet> patterns = parsed.getPatterns();
-		SubQuerySet subset;
-		Set<String> result = null;
+		HashMap<Integer, SubQueryPatternSet> patterns = parsed.getPatterns();
+		SubQueryPatternSet subset;
+		QueryResult result = null;
 		/* Naif version : execute from 0 to 3 variable(s) */
 		for(int i=0; i<=3; i++){
 			if((subset = patterns.get(i)) != null){
@@ -204,27 +283,17 @@ public class SimpleQueryExecutor {
 				for(Entry<Integer, StringPattern> ent : subpatterns.entrySet()){
 					StringPattern pat = ent.getValue();
 					if(pat.getType().toString().contains("P")){
+						IOUtils.logLog("Predicate is variable. Preparing broadcast.");
 						/* Predicate is a variable */
 						//TODO broadcast, where is all predicates' information?
 					} else {
-						/* Predicate is not a variable */
-						// Convert predicate to filename : 
-						// Remove all before ":", then ":" to "-"
+						IOUtils.logLog("Predicate is not variable. Preparing subqueries.");
+						/* Predicate is not a variable 
+						 * Convert predicate to filename : 
+						 * Remove all before ":", then ":" to "-"
+						 */
 						String destPred = pat.getP().replaceAll(".*:", "").replace(":", "-");
-						result = SimpleQueryExecutor.fetchFromDest(destPred, pat.getType(), pat);
-//						/* First get results of S only */
-//						if(pat.getType().toString().contains("S")){
-//							result = SimpleQueryExecutor.fetchFromDest(destPred, VarType.S, pat);
-//						}
-//						/* Then get results of O only */
-//						if(pat.getType().toString().contains("O")){
-//							Set<String> resultO = 
-//									SimpleQueryExecutor.fetchFromDest(destPred, VarType.O, pat);
-//							/* Guava : If you have reason to believe one of your sets will generally
-//							 * smaller than the other, pass it first. */
-//							result = (Set<String>) Sets.intersection(
-//									result, resultO);
-//						}
+						QueryPatternResult thisRes = SimpleQueryExecutor.fetchFromDest(destPred, pat);
 					}
 				}
 			}

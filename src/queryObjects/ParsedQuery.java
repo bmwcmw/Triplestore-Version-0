@@ -24,7 +24,7 @@ public class ParsedQuery {
 	/**
 	 * Number of variables and sets of sub-queries with specified number of variables
 	 */
-	private HashMap<Integer, SubQuerySet> patterns;
+	private HashMap<Integer, SubQueryPatternSet> patterns;
 	
 	/**
 	 * All variables with the set containing all sub-queries having this variable
@@ -36,7 +36,7 @@ public class ParsedQuery {
 	public ParsedQuery(){
 		selectedvariables = new ArrayList<String>();
 		idPattern = 0;
-		patterns = new HashMap<Integer, SubQuerySet>();
+		patterns = new HashMap<Integer, SubQueryPatternSet>();
 		variables = new HashMap<QueryVariable, HashSet<Integer>>();
 	}
 	
@@ -44,7 +44,7 @@ public class ParsedQuery {
 		return selectedvariables;
 	}
 	
-	public HashMap<Integer, SubQuerySet> getPatterns(){
+	public HashMap<Integer, SubQueryPatternSet> getPatterns(){
 		return patterns;
 	}
 	
@@ -68,9 +68,9 @@ public class ParsedQuery {
 			varList.add(VarType.O, p.getO());
 		}
 		
-		SubQuerySet dest = patterns.get(varList.size());
+		SubQueryPatternSet dest = patterns.get(varList.size());
 		if(dest==null){
-			dest = new SubQuerySet();
+			dest = new SubQueryPatternSet();
 			patterns.put(varList.size(), dest);
 		}
 		dest.putStringPattern(idPattern, p);
@@ -93,7 +93,7 @@ public class ParsedQuery {
 		String returns = "SELECT : \n"
 				+ selectedvariables.toString() + "\n"
 				+ "WHERE : \n";
-		for(Entry<Integer, SubQuerySet> e : patterns.entrySet()){
+		for(Entry<Integer, SubQueryPatternSet> e : patterns.entrySet()){
 			returns = returns + "with (" + e.getKey() + ") variable(s) \n";
 			returns = returns + e.getValue().getAll().toString() + "\n";
 		}

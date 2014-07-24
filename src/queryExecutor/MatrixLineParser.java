@@ -11,12 +11,13 @@ public class MatrixLineParser {
 	
 	/**
 	 * Parses a line of compressed matrix to a hashset containing numerical indexes.
-	 * @param line of compressed matrix
-	 * @return a hashset
+	 * @param line : the line fetched from compressed matrix
+	 * @return a hashset with >=0 entry(ies)
 	 * @throws ParseException When the string line is not correctly formatted
 	 */
 	public static HashSet<Long> parseMatrixLine(String line) throws ParseException{
 		HashSet<Long> tempSet = new HashSet<Long>();
+		if(line.length()==0) return tempSet;
 		//4:[1]1,1,1,2,2
 		String nbEntry = line.substring(0, line.indexOf(":"));
 		String begin = line.substring(0, line.indexOf("]"))

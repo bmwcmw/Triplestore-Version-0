@@ -7,10 +7,10 @@ import java.util.HashMap;
  * by their variable type, number of variables, or some cretaria else.  
  * @author Cedar
  */
-public class SubQuerySet {
+public class SubQueryPatternSet {
 	 private HashMap<Integer, StringPattern> set;
 	 
-	 public SubQuerySet(){
+	 public SubQueryPatternSet(){
 		 set = new HashMap<Integer, StringPattern>();
 	 }
 	 
