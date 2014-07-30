@@ -82,19 +82,20 @@ public class CTMServer {
 		
 		// XXX SETUP : Compressor mode, perhaps needs external DB support
 		CTMServer._compressMode = CTMConstants.CTMCOMPRESS_INRAM;
-		// XXX SETUP : Compressor writes sorted S/O files of each predicate or not (InRam only)
+		// XXX SETUP : Compressor writes sorted S/O files of each predicate or 
+		// 			   not (InRam only)
 		CTMServer._writeprecompare = true;
 		
 		// XXX SETUP : Pre-Comparator mode, perhaps needs PERL executable in PATH
 		CTMServer._precompareMode = CTMConstants.CTMPRECOMPARE_JAVA;
 		
-		// XXX SETUP : Comparator mode, perhaps needs PERL or GNU executable in PATH
+		// XXX SETUP : Comparator mode, perhaps needs PERL/GNU executable in PATH
 		CTMServer._compareMode = CTMConstants.CTMCOMPARE_JAVA_INRAM;
 		
 		// XXX SETUP : Distributor mode, to various distributed environments
 		CTMServer._distributeMode = CTMConstants.CTMDISTRIBUTE_HDFS;
 		
-		// XXX SETUP : Use only S/O or S and O for indicator in the distribution part
+		// XXX SETUP : Use only S/O or S and O for indicator in the distribution
 		CTMServer._indicatorMode = CTMConstants.CTMINDICATORSO;
 		
 		// XXX SETUP : Global in/out paths
@@ -112,8 +113,7 @@ public class CTMServer {
 		CTMServer._ctlParams.put("indicatorPath", _workingDir + File.separator + "_indicator");
 
 		for (String key : CTMServer._ctlParams.keySet())
-			IOUtils.logLog("Using parameter : " + key
-					+ " - " + CTMServer._ctlParams.get(key));
+			IOUtils.logLog("Using parameter : " + key + " - " + CTMServer._ctlParams.get(key));
 
 		System.out.println("---------------------------------------");
 		
@@ -126,19 +126,16 @@ public class CTMServer {
 			System.out.println("Type number to execute : ");
 			System.out.println("\tClean all existing processed data - "
 							+ CTMConstants.CTMEMPTY);
-			System.out.println("\tRDF to N3 converter - "
-					+ CTMConstants.CTMCONVERTER);
-			System.out.println("\tN3 Reader/Partitionner(PS) - "
-							+ CTMConstants.CTMREADERPS);
-			System.out.println("\tPredicate Reader/Splitter(POS) - "
-							+ CTMConstants.CTMREADERPOS);
-			System.out.println("\tCompressor for PS files(with optional Pre-Comparator for PS files) - "
-					+ CTMConstants.CTMCOMPRESS);
+			System.out.println("\tRDF to N3 converter - " + CTMConstants.CTMCONVERTER);
+			System.out.println("\tN3 Reader/Partitionner(PS) - " + CTMConstants.CTMREADERPS);
+			System.out.println("\tPredicate Reader/Splitter(POS) - " + CTMConstants.CTMREADERPOS);
+			System.out.println("\tCompressor for PS files(with optional "
+					+ "Pre-Comparator for PS files) - "	+ CTMConstants.CTMCOMPRESS);
 			System.out.println("\tPre-Comparator for PS files - "
 					+ CTMConstants.CTMPRECOMPARE);
 			System.out.println("\tComparator for S/O arrays - "
 					+ CTMConstants.CTMCOMPARE);
-			System.out.println("\tDistributor of compressed PS files - "
+			System.out.println("\tDistributor of compressed PS files - " 
 					+ CTMConstants.CTMDISTRIBUTE);
 			System.out.println("\tExit - " + CTMConstants.CTMEXIT);
 			System.out.println("#");
@@ -154,9 +151,8 @@ public class CTMServer {
 					endTime = System.currentTimeMillis();
 					duration = endTime - startTime;
 					System.out.println("---------------------------------------");
-					System.out.println("| " + userCmd
-							+ " code=" + result
-							+ " finished in " + duration + " ms)");
+					System.out.println("| " + userCmd + " code=" + result + " finished in " 
+							+ duration + " ms)");
 					System.out.println("---------------------------------------");
 				}
 			} catch (Exception e) {
@@ -232,8 +228,7 @@ public class CTMServer {
 				endTime = System.currentTimeMillis();
 				duration = endTime - startTime;
 				IOUtils.logLog("---------------------------------------");
-				IOUtils.logLog("| PS finished (Time elapsed : "
-						+ duration + " ms)");
+				IOUtils.logLog("| PS finished (Time elapsed : "	+ duration + " ms)");
 				IOUtils.logLog("---------------------------------------"
 						+ "\n---------------------------------------");
 				
@@ -807,7 +802,8 @@ public class CTMServer {
 	 * 
 	 * @return List of grouped files (sub-lists)
 	 */
-	public static ArrayList<ArrayList<File>> assignJobs(ArrayList<File> allFiles, boolean averageSize){
+	public static ArrayList<ArrayList<File>> assignJobs(ArrayList<File> allFiles
+			, boolean averageSize){
 		ArrayList<ArrayList<File>> outputLists = new ArrayList<ArrayList<File>>();
 		if(!averageSize){ //Random plan only according to the number of files
 			//Distribute all input files to threads, as average as possible
@@ -817,7 +813,8 @@ public class CTMServer {
 			if(remainder > 0){
 				partitionSize++;
 				while (remainder > 0) {
-					System.out.println("Adding "+Math.min(partitionSize, allFiles.size() - i));
+					System.out.println("Adding "+Math.min(partitionSize, 
+							allFiles.size() - i));
 					outputLists.add(new ArrayList<File>(allFiles.subList(i,
 							i + Math.min(partitionSize, allFiles.size() - i))));
 					i += partitionSize;
@@ -900,7 +897,8 @@ public class CTMServer {
 	 * true if you want to have more average size between each group of files(slower)
 	 * @return
 	 */
-	static LinkedList<LinkedList<FilePair>> assignJobs(LinkedList<FilePair> allPairs, boolean averageSize){
+	static LinkedList<LinkedList<FilePair>> assignJobs(LinkedList<FilePair> allPairs, 
+			boolean averageSize){
 		LinkedList<LinkedList<FilePair>> inputLists = new LinkedList<LinkedList<FilePair>>();
 		if(!averageSize){ //Random plan only according to the number of files
 			//Distribute all input files to threads, as average as possible
