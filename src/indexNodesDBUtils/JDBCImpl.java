@@ -3,7 +3,10 @@ package indexNodesDBUtils;
 import java.sql.SQLException;
 
 import dataCompressor.SOLongPair;
-
+/**
+ * Extending DBImpl, this interface is for jdbc-like databases, generally relational DBMS
+ * @author Cedar
+ */
 public interface JDBCImpl extends DBImpl{
 	
 	public void addSO(SOLongPair so);

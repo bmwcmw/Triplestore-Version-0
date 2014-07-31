@@ -2,11 +2,9 @@ package indexNodesDBUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +21,6 @@ import dataCleaner.CTMPairStr;
 import dataCompressor.SOLongPair;
 import dataReader.PairReader;
 
-@SuppressWarnings("unused")
 public class InRamDBUtils implements COMMImpl{
 	private BiMap<Long, String> nodes;
 	private ArrayList<SOLongPair> soList = new ArrayList<SOLongPair>();

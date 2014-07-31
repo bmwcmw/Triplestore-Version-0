@@ -2,6 +2,10 @@ package indexNodesDBUtils;
 
 import dataCompressor.SOLongPair;
 
+/**
+ * Extending DBImpl, this interface is for non jdbc-like databases, generally NoSQL
+ * @author Cedar
+ */
 public interface COMMImpl extends DBImpl{
 	
 	public void addSO(SOLongPair so);
