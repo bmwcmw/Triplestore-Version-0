@@ -127,7 +127,8 @@ public class IndicatorGrouper {
         				= new HashMap<String, TreeMap<String, CTMPairLong>>();
 				switch (_indicatorMode){
 					case CTMConstants.CTMINDICATORS :
-						for (Entry<String, HashMap<String, CTMPairLong>> e : indicators.entrySet()) {
+						for (Entry<String, HashMap<String, CTMPairLong>> e : 
+								indicators.entrySet()) {
 							long temp = 0;
 							for(Entry<String, CTMPairLong> e2 : e.getValue().entrySet()) {
 								temp = temp + e2.getValue().getSubject();
@@ -142,7 +143,8 @@ public class IndicatorGrouper {
 						} 
 						break;
 					case CTMConstants.CTMINDICATORO : 
-						for (Entry<String, HashMap<String, CTMPairLong>> e : indicators.entrySet()) {
+						for (Entry<String, HashMap<String, CTMPairLong>> e : 
+								indicators.entrySet()) {
 							long temp = 0;
 							for(Entry<String, CTMPairLong> e2 : e.getValue().entrySet()) {
 								temp = temp + e2.getValue().getObject();
@@ -157,10 +159,12 @@ public class IndicatorGrouper {
 						}
 						break;
 					case CTMConstants.CTMINDICATORSO : 
-						for (Entry<String, HashMap<String, CTMPairLong>> e : indicators.entrySet()) {
+						for (Entry<String, HashMap<String, CTMPairLong>> e : 
+								indicators.entrySet()) {
 							long temp = 0;
 							for(Entry<String, CTMPairLong> e2 : e.getValue().entrySet()) {
-								temp = temp + e2.getValue().getSubject() + e2.getValue().getObject();
+								temp = 
+									temp + e2.getValue().getSubject() + e2.getValue().getObject();
 							}
 							MapValuePairLongSOComparator rator = 
 									new MapValuePairLongSOComparator(e.getValue());
@@ -179,7 +183,8 @@ public class IndicatorGrouper {
 				//MapValueComparator bvc =  new MapValueComparator(predsWithInd);
 		        //TreeMap<String,Long> sortedPreds = new TreeMap<String,Long>(bvc);
 		        //sortedPreds.putAll(predsWithInd);
-				TreeMap<Long,String> sortedPreds = new TreeMap<Long,String>(Collections.reverseOrder());
+				TreeMap<Long,String> sortedPreds = 
+						new TreeMap<Long,String>(Collections.reverseOrder());
 				sortedPreds.putAll(predsWithInd);
 				
 				/* DEBUG display */
@@ -187,7 +192,8 @@ public class IndicatorGrouper {
         		     System.out.println("Sorted Key: " + entry.getKey() 
         		    		 + "(total common). Value: " + entry.getValue()+"(predicate)");
         		}
-	        	for (Entry<String, TreeMap<String, CTMPairLong>> entry : sortedIndicators.entrySet()) {
+	        	for (Entry<String, TreeMap<String, CTMPairLong>> entry : 
+	        			sortedIndicators.entrySet()) {
 	        		System.out.println("Indicators sorted. Key: " + entry.getKey() 
 	        				+ ". Value: " + entry.getValue());
 	       		}
@@ -197,7 +203,8 @@ public class IndicatorGrouper {
 	        	HashSet<String> selectedPreds = new HashSet<String>();
 	        	int groupN = 0;//Nth group of predicate(s)
 	        	//Assign predicates from those having highest value indicator
-	        	for (Entry<String, TreeMap<String, CTMPairLong>> entry : sortedIndicators.entrySet()) {
+	        	for (Entry<String, TreeMap<String, CTMPairLong>> entry : 
+	        			sortedIndicators.entrySet()) {
 	        		if(selectedPreds.contains(entry.getKey())) continue;
 	        		for (Entry<String, CTMPairLong> entry2 : entry.getValue().entrySet()) {
 		        		if(!selectedPreds.contains(entry2.getKey())){

@@ -1,16 +1,5 @@
 package dataCompressor;
 
-import indexNodesDBUtils.DBImpl;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
-import localIOUtils.IOUtils;
-
 public class UnusedDgapCompressor {
 //	
 //	/**

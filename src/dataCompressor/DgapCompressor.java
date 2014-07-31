@@ -8,7 +8,7 @@ import localIOUtils.IOUtils;
 
 /**
  * <p>Data compressor using D-gap</p>
- * <p>Calls the CTM BitMat compressor unit</p>
+ * <p>Calls the BitMat compressor of different DB units</p>
  * 
  * @author Cedar
  *
@@ -22,7 +22,6 @@ public class DgapCompressor {
 		IOUtils.logLog("Start Compressing into matrix");
 		IOUtils.logLog("All nodes : " + indexSize + " (S,O) pairs : "
 				+ soSize);
-		//ArrayList<SOLongPair> arr = dbu.fetchSOList();
     	String outputFilePath = outputPath + File.separator + inFileName;
 		
     	/* Write matrices */

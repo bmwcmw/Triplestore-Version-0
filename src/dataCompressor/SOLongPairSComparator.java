@@ -2,7 +2,7 @@ package dataCompressor;
 
 import java.util.Comparator;
 
-public class CompareS implements Comparator<SOLongPair>{
+public class SOLongPairSComparator implements Comparator<SOLongPair>{
 	
 	@Override
     public int compare(SOLongPair p1, SOLongPair p2){

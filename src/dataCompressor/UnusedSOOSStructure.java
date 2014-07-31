@@ -8,10 +8,10 @@ import java.util.HashSet;
  * S-O or O-S hashing structure using converted index, not litteral data
  * @author Cedar
  */
-public class SOOSStructure {
+public class UnusedSOOSStructure {
 	private HashMap<Integer, HashSet<Integer>> _entries;
 	
-	public SOOSStructure(){
+	public UnusedSOOSStructure(){
 		this._entries = new HashMap<Integer, HashSet<Integer>>();
 	}
 	
