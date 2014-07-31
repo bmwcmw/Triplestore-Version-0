@@ -5,9 +5,9 @@ import queryObjects.StringPattern;
 import indexNodesDBUtils.DBImpl;
 
 /**
- * This is the query reriter which translates queries to convenient format, in order
+ * This is the query rewriter which translates queries to convenient format, in order
  * to perform them on data stored in file system
- * @author Cedar
+ * @author CEDAR
  *
  */
 public class SimpleQueryTranslator {

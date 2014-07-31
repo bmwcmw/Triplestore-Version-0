@@ -50,7 +50,7 @@ import localIOUtils.IOUtils;
 
 /**
  * Preprocessor and predicate distribution calculator
- * @author Cedar
+ * @author CEDAR
  */
 public class CTMServer {
 
@@ -69,6 +69,7 @@ public class CTMServer {
 	private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
 	/**
+	 * Main method of the client program
 	 * @param args
 	 * @throws IOException
 	 */
@@ -163,15 +164,12 @@ public class CTMServer {
 	}
 
 	/**
-	 * Main method
-	 * 
+	 * Begins the execution of the chosen task
 	 * @param programInd
 	 * @return 0 if successfully finished or -1 if error
 	 * @throws Exception 
 	 */
 	public static int processAllFiles(int programInd) throws Exception {
-		String rdfPath;
-		String n3Path;
 		String invalidPath;
 		String psPath;
 		String nsPath;
@@ -353,7 +351,7 @@ public class CTMServer {
 	}
 	
 	/**
-	 * Internal function for conversion
+	 * Internal function for ?==>N3 conversion
 	 * @param programInd
 	 * @return 0 if OK
 	 */

@@ -9,8 +9,8 @@ import queryUtils.InvalidPatternException;
 
 /**
  * This is the query planner which splits SPARQL queries into sub-queries by the
- * number of variable(s)
- * @author Cedar
+ * number of variable(s).
+ * @author CEDAR
  */
 public class SimpleQueryPlanner {
 	

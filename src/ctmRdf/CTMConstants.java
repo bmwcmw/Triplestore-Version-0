@@ -1,8 +1,8 @@
 package ctmRdf;
 
 /**
- * Constants for all optional modules
- * @author Cedar
+ * Constants for all optional modules.
+ * @author CEDAR
  */
 public class CTMConstants {
 	public final static int CTMCONVERTER = 101;

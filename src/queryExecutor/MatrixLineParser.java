@@ -4,8 +4,8 @@ import java.text.ParseException;
 import java.util.HashSet;
 
 /**
- * Parses a line of compressed matrix to a hashset containing numerical indexes.
- * @author Cedar
+ * Parses a line of compressed matrix to a HashSet containing numerical unique indexes.
+ * @author CEDAR
  */
 public class MatrixLineParser {
 	
@@ -24,8 +24,7 @@ public class MatrixLineParser {
 				.substring(line.indexOf("[") + 1);
 		String data = line.substring(line.indexOf("]") + 1);
 		/* DEBUG */
-		System.out.println(nbEntry + " entry(ies) in the line, " +
-				"begins by " + begin);
+		System.out.println(nbEntry + " entry(ies) in the line, " + "begins by " + begin);
 		int currentBegin = 0;
 		int currentEnd = data.indexOf(",", currentBegin);
 		boolean one = false;

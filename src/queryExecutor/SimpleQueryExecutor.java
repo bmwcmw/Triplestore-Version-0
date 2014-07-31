@@ -35,12 +35,12 @@ import queryUtils.QueryUtils.VarType;
 /**
  * This is the query executor which performs processed SPARQL query by asking 
  * different file systems.
- * <p>In this simple version, we use a naif algorithm which begins the execution
- * by processing firstly subqueries having least variable(s).</p>
+ * <p>In this simple version, we use a naive algorithm which begins the execution
+ * by processing firstly sub-queries having least variable(s).</p>
  * <p>Don't forget to setLocalPath(String) if a local file system is used. In this
  * case, the execute function accepts null destination information. Otherwise, 
  * the destination information cannot be null while launching the execution.</p>
- * @author Cedar
+ * @author CEDAR
  *
  */
 public class SimpleQueryExecutor {

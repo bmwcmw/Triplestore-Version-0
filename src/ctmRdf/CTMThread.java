@@ -11,6 +11,11 @@ import dataComparator.FilePair;
 import dataDistributor.CEDAR.DestInfo;
 import dataManagement.DataManager;
 
+/**
+ * Thread for different tasks.
+ * @author CEDAR
+ *
+ */
 public class CTMThread implements Runnable {
     private String threadId;
     private int taskId;

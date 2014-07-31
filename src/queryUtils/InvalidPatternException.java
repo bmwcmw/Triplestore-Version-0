@@ -1,5 +1,10 @@
 package queryUtils;
 
+/**
+ * 
+ * @author CEDAR
+ *
+ */
 public class InvalidPatternException extends Exception {
 
 	/**

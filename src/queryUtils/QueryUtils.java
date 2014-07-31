@@ -1,5 +1,10 @@
 package queryUtils;
 
+/**
+ * Basic elements for the query processing part.
+ * @author CEDAR
+ *
+ */
 public class QueryUtils {
 	
 	public static enum VarType {
