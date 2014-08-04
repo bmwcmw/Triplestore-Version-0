@@ -180,7 +180,7 @@ public class IndicatorGrouper {
 								noRepNames, true, _indicatorMode, _nbThreads);
 				}
 				/* Sort predicates by the sum of common subject and/or object (descending order) */
-				//MapValueComparator bvc =  new MapValueComparator(predsWithInd);
+				//MapValueComparator bvc = new MapValueComparator(predsWithInd);
 		        //TreeMap<String,Long> sortedPreds = new TreeMap<String,Long>(bvc);
 		        //sortedPreds.putAll(predsWithInd);
 				TreeMap<Long,String> sortedPreds = 
