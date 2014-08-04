@@ -86,6 +86,12 @@ public interface DBImpl {
 	 * Writes the index file
 	 */
 	public void writeIndex(String outputFilePath) throws Exception;
+
+	/**
+	 * Writes the meta-data of predicates if block option is enabled
+	 * @param path
+	 */
+	public void writeMeta(String path) throws IOException;
 	
 //	@SuppressWarnings("rawtypes")
 //	public Map fetchIndex();

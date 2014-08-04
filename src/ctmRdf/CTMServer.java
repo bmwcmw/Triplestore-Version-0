@@ -60,6 +60,8 @@ public class CTMServer {
 	private static int _nbThreads;
 	private static int _compressMode;
 	private static boolean _writeprecompare;
+	private static int _blockLineNb;
+	private static int _blockLineLength;
 	private static int _precompareMode;
 	private static int _compareMode;
 	private static int _distributeMode;
@@ -86,6 +88,10 @@ public class CTMServer {
 		// XXX SETUP : Compressor writes sorted S/O files of each predicate or 
 		// 			   not (InRam only)
 		CTMServer._writeprecompare = true;
+		// XXX SETUP : Set the first to 0 if we want to disable the block mode. Then the second one 
+		//			   will be automatically disabled.
+		CTMServer._blockLineNb = 1000;
+		CTMServer._blockLineLength = 32768;
 		
 		// XXX SETUP : Pre-Comparator mode, perhaps needs PERL executable in PATH
 		CTMServer._precompareMode = CTMConstants.CTMPRECOMPARE_JAVA;
