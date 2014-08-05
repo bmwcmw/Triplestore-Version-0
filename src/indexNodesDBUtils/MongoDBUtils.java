@@ -1,5 +1,7 @@
 package indexNodesDBUtils;
 
+import java.io.IOException;
+
 import dataCompressor.SOLongPair;
 
 public class MongoDBUtils implements COMMImpl{
@@ -81,6 +83,12 @@ public class MongoDBUtils implements COMMImpl{
 
 	@Override
 	public void writeIndex(String outputFilePath) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void writeMeta(String path) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

@@ -186,5 +186,11 @@ public class RedisUtils implements COMMImpl{
 		// TODO Bulk load
 		
 	}
+
+	@Override
+	public void writeMeta(String path) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

@@ -355,4 +355,10 @@ public class InRamDBUtils implements COMMImpl{
 		}
 		IOUtils.logLog("Index written to file");
 	}
+
+	@Override
+	public void writeMeta(String path) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
 }

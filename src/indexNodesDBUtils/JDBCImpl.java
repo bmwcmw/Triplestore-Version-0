@@ -51,6 +51,8 @@ public interface JDBCImpl extends DBImpl{
 	
 	public void writeIndex(String outputFilePath);
 	
+	public void writeMeta(String path) throws Exception;
+	
 	/*
 	 * For data nodes
 	 */

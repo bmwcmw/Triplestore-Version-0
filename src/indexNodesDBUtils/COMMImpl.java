@@ -43,6 +43,8 @@ public interface COMMImpl extends DBImpl{
 	
 	public void writeIndex(String outputFilePath) throws Exception;
 	
+	public void writeMeta(String path) throws Exception;
+	
 	/*
 	 * For data nodes
 	 */

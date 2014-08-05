@@ -91,7 +91,7 @@ public interface DBImpl {
 	 * Writes the meta-data of predicates if block option is enabled
 	 * @param path
 	 */
-	public void writeMeta(String path) throws IOException;
+	public void writeMeta(String path) throws Exception;
 	
 //	@SuppressWarnings("rawtypes")
 //	public Map fetchIndex();

@@ -1,5 +1,6 @@
 package indexNodesDBUtils;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -102,6 +103,12 @@ public class MySQLUtils implements JDBCImpl{
 	public Long fetchLoadedSize() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void writeMeta(String path) throws IOException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
