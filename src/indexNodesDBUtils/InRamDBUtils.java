@@ -146,9 +146,9 @@ public class InRamDBUtils implements COMMImpl{
 		BufferedWriter outArrSO = new BufferedWriter(new OutputStreamWriter(
 				new FileOutputStream(outputFilePath + ".matrixSO", true)));
 		if(soList.size()>0){
-			//Row
+			//Begin from the first subject(first row)
 			Long current = soList.get(0).S;
-			//Set of a line
+			//Temporary set of objects of one subject
 			List<Long> lineSet = new ArrayList<Long>();
 			line = "";
 			long count = 0;
