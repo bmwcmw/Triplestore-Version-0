@@ -152,7 +152,7 @@ public class InRamDBUtils implements COMMImpl{
 			List<Long> lineSet = new ArrayList<Long>();
 			line = "";
 			long count = 0;
-			//Col
+			//Temporary indicators of columns
 			Long zero = new Long(0);
 			Long last;
 			long blockSize = 1;
@@ -161,7 +161,7 @@ public class InRamDBUtils implements COMMImpl{
 					outArrSO.newLine();
 					count++;
 				}
-				if(p.S.equals(current)){//lineSet has at least one entry
+				if(p.S.equals(current)){//If lineSet has at least one entry
 					lineSet.add(p.O);
 				} else {//Output current lineSet(from 2nd entry if exists)
 					Collections.sort(lineSet);
