@@ -118,6 +118,14 @@ public class InRamDBUtils implements COMMImpl{
 		String line = "";
 		Long indexSize = fetchIndexSize();
 		/* SO Matrix */
+		/* Sort the S-O pair list by S, so we will have : 
+		 * S1 Ox
+		 * S1 Ox
+		 * S1 Ox
+		 * S2 Ox
+		 * S2 Ox
+		 * ...
+		 */
 		Collections.sort(soList, new Comparator<SOLongPair>() {
 			@Override
 			public int compare(final SOLongPair p1, final SOLongPair p2) {
@@ -156,14 +164,24 @@ public class InRamDBUtils implements COMMImpl{
 			Long zero = new Long(0);
 			Long last;
 			long blockSize = 1;
+			// For each pair P in the S-O list
 			for (SOLongPair p : soList){
+				// Add break line until we reach the right line (p.S)
 				while(count < current){
 					outArrSO.newLine();
 					count++;
 				}
-				if(p.S.equals(current)){//If lineSet has at least one entry
+				/* 
+				 * When we reach the S, we begin to add all O with this S, until 
+				 * the first O with the next S
+				 */
+				if(p.S.equals(current)){
 					lineSet.add(p.O);
-				} else {//Output current lineSet(from 2nd entry if exists)
+				} else {
+					/* Here we see the first O with the next S, then we output 
+					 * current lineSet of the current S, and add this O to a new
+					 * listSet
+					 */
 					Collections.sort(lineSet);
 					blockSize = 1;
 					last = lineSet.get(0);
@@ -197,7 +215,7 @@ public class InRamDBUtils implements COMMImpl{
 							last = i;
 						}
 					}
-					//last entry
+					//Get last entry
 					line = line + blockSize;
 					if(last < indexSize-1){
 						blockSize = indexSize-1 - last;
