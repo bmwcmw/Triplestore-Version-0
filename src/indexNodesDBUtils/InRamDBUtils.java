@@ -17,6 +17,8 @@ import localIOUtils.IOUtils;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+import ctmRdf.CTMServer;
+
 import dataCleaner.CTMPairStr;
 import dataCompressor.SOLongPair;
 import dataReader.PairReader;
@@ -133,112 +135,117 @@ public class InRamDBUtils implements COMMImpl{
 			}
         });
 		IOUtils.logLog("SO sorted");
-    	
-		/* Write sorted S array file if the parameter isn't null */
-		if(comparePath!=null){
-			BufferedWriter outSarray = null;
-			try{
-				outSarray = new BufferedWriter(new OutputStreamWriter(
-						new FileOutputStream(comparePath + File.separator + inFileName + ".S", true)));
-				for (SOLongPair pair : soList){
-					outSarray.write(fetchNodeById(pair.S));
-					outSarray.newLine();
-				}
-			} finally {
-				if(outSarray!=null)
-					outSarray.close();
-			}
-			IOUtils.logLog("S array written to Comparison Path");
-		}
 		
-		BufferedWriter outArrSO = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream(outputFilePath + ".matrixSO", true)));
-		if(soList.size()>0){
-			//Begin from the first subject(first row)
-			Long current = soList.get(0).S;
-			//Temporary set of objects of one subject
-			List<Long> lineSet = new ArrayList<Long>();
-			line = "";
-			long count = 0;
-			//Temporary indicators of columns
-			Long zero = new Long(0);
-			Long last;
-			long blockSize = 1;
-			// For each pair P in the S-O list
-			for (SOLongPair p : soList){
-				// Add break line until we reach the right line (p.S)
-				while(count < current){
-					outArrSO.newLine();
-					count++;
+		if(CTMServer._blockLineNb==0){
+	    	
+			/* Write sorted S array file if the parameter isn't null */
+			if(comparePath!=null){
+				BufferedWriter outSarray = null;
+				try{
+					outSarray = new BufferedWriter(new OutputStreamWriter(
+							new FileOutputStream(comparePath + File.separator + inFileName + ".S", true)));
+					for (SOLongPair pair : soList){
+						outSarray.write(fetchNodeById(pair.S));
+						outSarray.newLine();
+					}
+				} finally {
+					if(outSarray!=null)
+						outSarray.close();
 				}
-				/* 
-				 * When we reach the S, we begin to add all O with this S, until 
-				 * the first O with the next S
-				 */
-				if(p.S.equals(current)){
-					lineSet.add(p.O);
-				} else {
-					/* Here we see the first O with the next S, then we output 
-					 * current lineSet of the current S, and add this O to a new
-					 * listSet
+				IOUtils.logLog("S array written to Comparison Path");
+			}
+			
+			BufferedWriter outArrSO = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(outputFilePath + ".matrixSO", true)));
+			if(soList.size()>0){
+				//Begin from the first subject(first row)
+				Long current = soList.get(0).S;
+				//Temporary set of objects of one subject
+				List<Long> lineSet = new ArrayList<Long>();
+				line = "";
+				long count = 0;
+				//Temporary indicators of columns
+				Long zero = new Long(0);
+				Long last;
+				long blockSize = 1;
+				// For each pair P in the S-O list
+				for (SOLongPair p : soList){
+					// Add break line until we reach the right line (p.S)
+					while(count < current){
+						outArrSO.newLine();
+						count++;
+					}
+					/* 
+					 * When we reach the S, we begin to add all O with this S, until 
+					 * the first O with the next S
 					 */
-					Collections.sort(lineSet);
-					blockSize = 1;
-					last = lineSet.get(0);
-					if(last.equals(zero)){
-						line += lineSet.size() + ":[1]";
+					if(p.S.equals(current)){
+						lineSet.add(p.O);
 					} else {
-						line += lineSet.size() + ":[0]";
-						line += last + ",";
-					}
-					lineSet.remove(0);
-//					String temp = current + " has " + last + ",";
-					for (Long i : lineSet){
-//						temp += i + ",";
-						if(i - last != 0){
-							if(i - last == 1){
-								blockSize ++;
-							} else {
-								//add "1" block
-								line += blockSize + ",";
-								blockSize = i - last - 1;
-								//add "0" block
-								line += blockSize + ",";
-								//initialize "1" block
-								blockSize = 1;
-								//Avoid too large lines
-								if(line.length()>MAXSTRLENGTH){
-									outArrSO.write(line);
-									line = "";
-								}
-							}
-							last = i;
+						/* Here we see the first O with the next S, then we output 
+						 * current lineSet of the current S, and add this O to a new
+						 * listSet
+						 */
+						Collections.sort(lineSet);
+						blockSize = 1;
+						last = lineSet.get(0);
+						if(last.equals(zero)){
+							line += lineSet.size() + ":[1]";
+						} else {
+							line += lineSet.size() + ":[0]";
+							line += last + ",";
 						}
+						lineSet.remove(0);
+	//					String temp = current + " has " + last + ",";
+						for (Long i : lineSet){
+	//						temp += i + ",";
+							if(i - last != 0){
+								if(i - last == 1){
+									blockSize ++;
+								} else {
+									//add "1" block
+									line += blockSize + ",";
+									blockSize = i - last - 1;
+									//add "0" block
+									line += blockSize + ",";
+									//initialize "1" block
+									blockSize = 1;
+									//Avoid too large lines
+									if(line.length()>MAXSTRLENGTH){
+										outArrSO.write(line);
+										line = "";
+									}
+								}
+								last = i;
+							}
+						}
+						//Get last entry
+						line = line + blockSize;
+						if(last < indexSize-1){
+							blockSize = indexSize-1 - last;
+							line = line + "," + blockSize;
+						}
+	//					System.out.println(temp);
+	//					System.out.println(line);
+						outArrSO.write(line);
+						outArrSO.newLine();
+						lineSet = new ArrayList<Long>();
+						current = p.S;
+						lineSet.add(p.O);
+						line = "";
+						count++;
 					}
-					//Get last entry
-					line = line + blockSize;
-					if(last < indexSize-1){
-						blockSize = indexSize-1 - last;
-						line = line + "," + blockSize;
-					}
-//					System.out.println(temp);
-//					System.out.println(line);
-					outArrSO.write(line);
+				}
+				while(count < indexSize-1){
 					outArrSO.newLine();
-					lineSet = new ArrayList<Long>();
-					current = p.S;
-					lineSet.add(p.O);
-					line = "";
 					count++;
 				}
 			}
-			while(count < indexSize-1){
-				outArrSO.newLine();
-				count++;
-			}
+			if(outArrSO!=null) outArrSO.close();
+			IOUtils.logLog("SO written to file");
+		} else {
+			//TODO block mode
 		}
-		if(outArrSO!=null) outArrSO.close();
-		IOUtils.logLog("SO written to file");
 	}
 
 	/**
@@ -250,6 +257,14 @@ public class InRamDBUtils implements COMMImpl{
 		String line = "";
 		Long indexSize = fetchIndexSize();
 		/* OS Matrix */
+		/* Sort the O-S pair list by O, so we will have : 
+		 * Sx O1
+		 * Sx O2
+		 * Sx O2
+		 * Sx O2
+		 * Sx O3
+		 * ...
+		 */
 		Collections.sort(soList, new Comparator<SOLongPair>() {
 			@Override
 			public int compare(final SOLongPair p1, final SOLongPair p2) {
@@ -258,101 +273,105 @@ public class InRamDBUtils implements COMMImpl{
         });
 		IOUtils.logLog("OS sorted");
     	
-		/* Write sorted O array file if the parameter isn't null */
-		if(comparePath!=null){
-			BufferedWriter outOarray = null;
-			try{
-				outOarray = new BufferedWriter(new OutputStreamWriter(
-						new FileOutputStream(comparePath + File.separator + inFileName + ".O", true)));
-				for (SOLongPair pair : soList){
-					outOarray.write(fetchNodeById(pair.O));
-					outOarray.newLine();
-				}
-			} finally {
-				if(outOarray!=null)
-					outOarray.close();
-			}
-			IOUtils.logLog("O array written to Comparison Path");
-		}
-		
-		BufferedWriter outArrOS = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream(outputFilePath + ".matrixOS", true)));
-		if(soList.size()>0){
-			//Row
-			Long current = soList.get(0).O;
-			//Set of a line
-			List<Long> lineSet = new ArrayList<Long>();
-			line = "";
-			long count = 0;
-			//Col
-			Long zero = new Long(0);
-			Long last;
-			long blockSize = 1;
-			for (SOLongPair p : soList){
-				while(count < current){
-					outArrOS.newLine();
-					count++;
-				}
-				if(p.O.equals(current)){//lineSet has at least one entry
-					lineSet.add(p.S);
-				} else {//Output current lineSet(from 2nd entry if exists)
-					Collections.sort(lineSet);
-					blockSize = 1;
-					last = lineSet.get(0);
-					if(last.equals(zero)){
-						line += lineSet.size() + ":[1]";
-					} else {
-						line += lineSet.size() + ":[0]";
-						line += last + ",";
+		if(CTMServer._blockLineNb==0){
+			/* Write sorted O array file if the parameter isn't null */
+			if(comparePath!=null){
+				BufferedWriter outOarray = null;
+				try{
+					outOarray = new BufferedWriter(new OutputStreamWriter(
+							new FileOutputStream(comparePath + File.separator + inFileName + ".O", true)));
+					for (SOLongPair pair : soList){
+						outOarray.write(fetchNodeById(pair.O));
+						outOarray.newLine();
 					}
-					lineSet.remove(0);
-//					String temp = current + " has " + last + ",";
-					for (Long i : lineSet){
-//						temp += i + ",";
-						if(i - last != 0){ 
-							if(i - last == 1){
-								blockSize ++;
-							} else {
-								//add "1" block
-								line += blockSize + ",";
-								blockSize = i - last - 1;
-								//add "0" block
-								line += blockSize + ",";
-								//initialize "1" block
-								blockSize = 1;
-								//Avoid too large lines
-								if(line.length()>MAXSTRLENGTH){
-									outArrOS.write(line);
-									line = "";
-								}
-							}
-							last = i;
+				} finally {
+					if(outOarray!=null)
+						outOarray.close();
+				}
+				IOUtils.logLog("O array written to Comparison Path");
+			}
+			
+			BufferedWriter outArrOS = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(outputFilePath + ".matrixOS", true)));
+			if(soList.size()>0){
+				//Row
+				Long current = soList.get(0).O;
+				//Set of a line
+				List<Long> lineSet = new ArrayList<Long>();
+				line = "";
+				long count = 0;
+				//Col
+				Long zero = new Long(0);
+				Long last;
+				long blockSize = 1;
+				for (SOLongPair p : soList){
+					while(count < current){
+						outArrOS.newLine();
+						count++;
+					}
+					if(p.O.equals(current)){//lineSet has at least one entry
+						lineSet.add(p.S);
+					} else {//Output current lineSet(from 2nd entry if exists)
+						Collections.sort(lineSet);
+						blockSize = 1;
+						last = lineSet.get(0);
+						if(last.equals(zero)){
+							line += lineSet.size() + ":[1]";
+						} else {
+							line += lineSet.size() + ":[0]";
+							line += last + ",";
 						}
+						lineSet.remove(0);
+	//					String temp = current + " has " + last + ",";
+						for (Long i : lineSet){
+	//						temp += i + ",";
+							if(i - last != 0){ 
+								if(i - last == 1){
+									blockSize ++;
+								} else {
+									//add "1" block
+									line += blockSize + ",";
+									blockSize = i - last - 1;
+									//add "0" block
+									line += blockSize + ",";
+									//initialize "1" block
+									blockSize = 1;
+									//Avoid too large lines
+									if(line.length()>MAXSTRLENGTH){
+										outArrOS.write(line);
+										line = "";
+									}
+								}
+								last = i;
+							}
+						}
+						//last entry
+						line = line + blockSize;
+						if(last < indexSize-1){
+							blockSize = indexSize-1 - last;
+							line = line + "," + blockSize;
+						}
+	//					System.out.println(temp);
+	//					System.out.println(line);
+						outArrOS.write(line);
+						outArrOS.newLine();
+						lineSet = new ArrayList<Long>();
+						current = p.O;
+						lineSet.add(p.S);
+						line = "";
+						count++;
 					}
-					//last entry
-					line = line + blockSize;
-					if(last < indexSize-1){
-						blockSize = indexSize-1 - last;
-						line = line + "," + blockSize;
-					}
-//					System.out.println(temp);
-//					System.out.println(line);
-					outArrOS.write(line);
+				}
+				while(count < indexSize-1){
 					outArrOS.newLine();
-					lineSet = new ArrayList<Long>();
-					current = p.O;
-					lineSet.add(p.S);
-					line = "";
 					count++;
 				}
 			}
-			while(count < indexSize-1){
-				outArrOS.newLine();
-				count++;
-			}
+			if(outArrOS!=null) outArrOS.close();
+			IOUtils.logLog("OS written to file");
+		} else {
+			//TODO block mode
 		}
-		if(outArrOS!=null) outArrOS.close();
-		IOUtils.logLog("OS written to file");
 	}
 
 	/**

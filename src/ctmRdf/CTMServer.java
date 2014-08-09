@@ -60,8 +60,8 @@ public class CTMServer {
 	private static int _nbThreads;
 	private static int _compressMode;
 	private static boolean _writeprecompare;
-	private static int _blockLineNb;
-	private static int _blockLineLength;
+	public static int _blockLineNb;
+	public static int _blockLineLength;
 	private static int _precompareMode;
 	private static int _compareMode;
 	private static int _distributeMode;
