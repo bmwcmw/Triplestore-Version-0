@@ -137,7 +137,6 @@ public class InRamDBUtils implements COMMImpl{
 		IOUtils.logLog("SO sorted");
 		
 		if(CTMServer._blockLineNb==0){
-	    	
 			/* Write sorted S array file if the parameter isn't null */
 			if(comparePath!=null){
 				BufferedWriter outSarray = null;
@@ -196,6 +195,7 @@ public class InRamDBUtils implements COMMImpl{
 							line += last + ",";
 						}
 						lineSet.remove(0);
+						/*DEBUG*/
 	//					String temp = current + " has " + last + ",";
 						for (Long i : lineSet){
 	//						temp += i + ",";
@@ -225,6 +225,7 @@ public class InRamDBUtils implements COMMImpl{
 							blockSize = indexSize-1 - last;
 							line = line + "," + blockSize;
 						}
+						/*DEBUG*/
 	//					System.out.println(temp);
 	//					System.out.println(line);
 						outArrSO.write(line);
@@ -294,24 +295,34 @@ public class InRamDBUtils implements COMMImpl{
 			BufferedWriter outArrOS = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(outputFilePath + ".matrixOS", true)));
 			if(soList.size()>0){
-				//Row
+				//Begin from the first object(first row)
 				Long current = soList.get(0).O;
-				//Set of a line
+				//Temporary set of objects of one subject
 				List<Long> lineSet = new ArrayList<Long>();
 				line = "";
 				long count = 0;
-				//Col
+				//Temporary indicators of columns
 				Long zero = new Long(0);
 				Long last;
 				long blockSize = 1;
+				// For each pair P in the S-O list
 				for (SOLongPair p : soList){
+					// Add break line until we reach the right line (p.O)
 					while(count < current){
 						outArrOS.newLine();
 						count++;
 					}
-					if(p.O.equals(current)){//lineSet has at least one entry
+					/* 
+					 * When we reach the O, we begin to add all S with this O, until 
+					 * the first S with the next O
+					 */
+					if(p.O.equals(current)){
 						lineSet.add(p.S);
-					} else {//Output current lineSet(from 2nd entry if exists)
+					} else {
+						/* Here we see the first S with the next O, then we output 
+						 * current lineSet of the current O, and add this S to a new
+						 * listSet
+						 */
 						Collections.sort(lineSet);
 						blockSize = 1;
 						last = lineSet.get(0);
@@ -322,6 +333,7 @@ public class InRamDBUtils implements COMMImpl{
 							line += last + ",";
 						}
 						lineSet.remove(0);
+						/*DEBUG*/
 	//					String temp = current + " has " + last + ",";
 						for (Long i : lineSet){
 	//						temp += i + ",";
@@ -351,6 +363,7 @@ public class InRamDBUtils implements COMMImpl{
 							blockSize = indexSize-1 - last;
 							line = line + "," + blockSize;
 						}
+						/*DEBUG*/
 	//					System.out.println(temp);
 	//					System.out.println(line);
 						outArrOS.write(line);
