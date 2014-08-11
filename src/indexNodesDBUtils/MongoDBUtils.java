@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import dataCompressor.SOLongPair;
 
-public class MongoDBUtils implements COMMImpl{
+public class MongoDBUtils implements DBImpl{
     
 	public MongoDBUtils() {
 		//TODO
@@ -58,7 +58,7 @@ public class MongoDBUtils implements COMMImpl{
 	}
 
 	@Override
-	public void loadFromFile(String path) {
+	public void loadIndexFromFile(String path) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -68,27 +68,10 @@ public class MongoDBUtils implements COMMImpl{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
-	public void writeMatS(String outputFilePath, String comparePath, String inFileName) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void writeMatO(String outputFilePath, String comparePath, String inFileName) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void writeIndex(String outputFilePath) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void writeMeta(String path) throws IOException {
+	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) 
+			throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

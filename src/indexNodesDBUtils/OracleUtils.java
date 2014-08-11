@@ -16,7 +16,7 @@ import dataCompressor.SOLongPair;
 /*
  * See notes
  */
-public class OracleUtils implements JDBCImpl{
+public class OracleUtils implements DBImpl{
 
 	protected String _tablename;
 	protected Statement _st;
@@ -74,12 +74,6 @@ public class OracleUtils implements JDBCImpl{
 	}
 
 	@Override
-	public void setTableName(String name) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void cleanAll() {
 		// TODO Auto-generated method stub
 		
@@ -92,25 +86,14 @@ public class OracleUtils implements JDBCImpl{
 	}
 
 	@Override
-	public void loadFromFile(String path) {
+	public void loadIndexFromFile(String path) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void writeMatS(String outputFilePath, String comparePath, String inFileName) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void writeMatO(String outputFilePath, String comparePath, String inFileName) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void writeIndex(String outputFilePath) {
+	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) 
+			throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -119,12 +102,6 @@ public class OracleUtils implements JDBCImpl{
 	public Long fetchLoadedSize() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void writeMeta(String path) throws IOException {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

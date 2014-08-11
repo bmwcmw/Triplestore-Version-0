@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 import dataCompressor.SOLongPair;
 
-public class MySQLUtils implements JDBCImpl{
+public class MySQLUtils implements DBImpl{
 
 	protected String _tablename;
 	protected Statement _st;
@@ -32,11 +32,6 @@ public class MySQLUtils implements JDBCImpl{
 	public Long fetchSOSize() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void setTableName(String name) {
-		_tablename = name;
 	}
 
 	@Override
@@ -76,25 +71,7 @@ public class MySQLUtils implements JDBCImpl{
 	}
 
 	@Override
-	public void loadFromFile(String path) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void writeMatS(String outputFilePath, String comparePath, String inFileName) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void writeMatO(String outputFilePath, String comparePath, String inFileName) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void writeIndex(String outputFilePath) {
+	public void loadIndexFromFile(String path) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -106,7 +83,8 @@ public class MySQLUtils implements JDBCImpl{
 	}
 
 	@Override
-	public void writeMeta(String path) throws IOException {
+	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) 
+			throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

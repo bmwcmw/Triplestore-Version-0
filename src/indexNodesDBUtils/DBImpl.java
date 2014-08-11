@@ -73,30 +73,13 @@ public interface DBImpl {
 	public void closeAll() throws Exception;
 
 	/**
-	 * Writes the Subject-Object matrix, and optional sorted S array file
+	 * Writes : 
+	 * <p>- the Subject-Object matrix with optional sorted S array file </p>
+	 * <p>- the Object-Subject matrix with optional sorted O array file </p>
+	 * <p>- the index file </p>
+	 * <p>- and the meta-data of predicates (if block option is enabled) </p>
 	 */
-	public void writeMatS(String outputFilePath, String comparePath, String inFileName) throws Exception;
-
-	/**
-	 * Writes the Object-Subject matrix, and optional sorted O array file
-	 */
-	public void writeMatO(String outputFilePath, String comparePath, String inFileName) throws Exception;
-
-	/**
-	 * Writes the index file
-	 */
-	public void writeIndex(String outputFilePath) throws Exception;
-
-	/**
-	 * Writes the meta-data of predicates if block option is enabled
-	 * @param path
-	 */
-	public void writeMeta(String path) throws Exception;
-	
-//	@SuppressWarnings("rawtypes")
-//	public Map fetchIndex();
-//	
-//	public ArrayList<SOLongPair> fetchSOList();
+	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) throws Exception;
 	
 	/*
 	 * For data nodes
@@ -106,7 +89,7 @@ public interface DBImpl {
 	 * Loads the index from a compressed index file
 	 * @param path
 	 */
-	public void loadFromFile(String path) throws IOException;
+	public void loadIndexFromFile(String path) throws IOException;
 	
 
 	/**

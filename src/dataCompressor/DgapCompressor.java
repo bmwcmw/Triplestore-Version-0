@@ -25,12 +25,8 @@ public class DgapCompressor {
 				+ soSize);
     	String outputFilePath = outputPath + File.separator + inFileName;
 		
-    	/* Write matrices */
-		dbu.writeMatS(outputFilePath, comparePath, inFileName);
-		dbu.writeMatO(outputFilePath, comparePath, inFileName);
-		
-		/* Write index */
-		dbu.writeIndex(outputFilePath + ".index");
+    	/* Write compressed predicate to file */
+		dbu.writePredToFile(inFileName, outputFilePath, comparePath);
 	}
 	
 //	unsigned int dgap_compress(unsigned char *in, unsigned int size, unsigned char *out)

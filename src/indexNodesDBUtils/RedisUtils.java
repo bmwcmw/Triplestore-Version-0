@@ -15,7 +15,7 @@ import dataReader.PairReader;
  * <p>Redis is an open source, BSD licensed, advanced key-value store. It is often referred 
  * to as a data structure server since keys can contain strings, hashes, lists, sets and sorted sets.</p>
 **/
-public class RedisUtils implements COMMImpl{
+public class RedisUtils implements DBImpl{
 	private final int DBLOAD = 0;
 	private final int DBINDEX1 = 1; //Index to Node
 	private final int DBINDEX2 = 2; //Node to Index
@@ -133,7 +133,7 @@ public class RedisUtils implements COMMImpl{
 	}
 
 	@Override
-	public void loadFromFile(String path) {
+	public void loadIndexFromFile(String path) {
 		// TODO direct load https://github.com/ldodds/redis-load
 		try {
 			jedis.connect();
@@ -170,26 +170,9 @@ public class RedisUtils implements COMMImpl{
 	}
 
 	@Override
-	public void writeMatS(String outputFilePath, String comparePath, String inFileName) {
+	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) 
+			throws IOException {
 		// TODO Sort & Bulk load
-		
-	}
-
-	@Override
-	public void writeMatO(String outputFilePath, String comparePath, String inFileName) {
-		// TODO Sort & Bulk load
-		
-	}
-
-	@Override
-	public void writeIndex(String outputFilePath) {
-		// TODO Bulk load
-		
-	}
-
-	@Override
-	public void writeMeta(String path) throws IOException {
-		// TODO Auto-generated method stub
 		
 	}
 	

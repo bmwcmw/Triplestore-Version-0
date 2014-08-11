@@ -22,7 +22,7 @@ CREATE TABLE indexnodes (
 DELETE FROM indexnodes;
 DROP TABLE indexnodes;
 */
-public class MonetDBUtils implements JDBCImpl{
+public class MonetDBUtils implements DBImpl{
 
 	protected String _tablename;
 	protected Statement _st;
@@ -89,31 +89,7 @@ public class MonetDBUtils implements JDBCImpl{
 	}
 
 	@Override
-	public void setTableName(String name) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void loadFromFile(String path) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void writeMatS(String outputFilePath, String comparePath, String inFileName) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void writeMatO(String outputFilePath, String comparePath, String inFileName) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void writeIndex(String outputFilePath) {
+	public void loadIndexFromFile(String path) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -125,7 +101,8 @@ public class MonetDBUtils implements JDBCImpl{
 	}
 
 	@Override
-	public void writeMeta(String path) throws IOException {
+	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) 
+			throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

@@ -23,7 +23,7 @@ import dataCleaner.CTMPairStr;
 import dataCompressor.SOLongPair;
 import dataReader.PairReader;
 
-public class InRamDBUtils implements COMMImpl{
+public class InRamDBUtils implements DBImpl{
 	private BiMap<Long, String> nodes;
 	private ArrayList<SOLongPair> soList = new ArrayList<SOLongPair>();
 
@@ -85,7 +85,7 @@ public class InRamDBUtils implements COMMImpl{
 	public void closeAll() {}
 
 	@Override
-	public void loadFromFile(String path) {
+	public void loadIndexFromFile(String path) {
 		try {
 			PairReader reader = new PairReader(path);
 			CTMPairStr pair = null;
@@ -110,13 +110,24 @@ public class InRamDBUtils implements COMMImpl{
 	public Long fetchLoadedSize() {
 		return new Long(fetchIndexSize());
 	}
-
+	
 	/**
 	 * {@inheritDoc}
-	 * <p>In the InRam database, we will sort SOPair list first, then write it line by line</p>
 	 */
 	@Override
-	public final void writeMatS(String outputFilePath, String comparePath, String inFileName) throws IOException {
+	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) throws IOException {
+		writeMatS(inFileName, outputFilePath, comparePath);
+		writeMatO(inFileName, outputFilePath, comparePath);
+		writeIndex(outputFilePath);
+		if(CTMServer._blockLineNb>0){
+			writeMeta(inFileName, outputFilePath);
+		}
+	}
+
+	/**
+	 * <p>In the InRam database, we will sort SOPair list first, then write it line by line</p>
+	 */
+	public final void writeMatS(String inFileName, String outputFilePath, String comparePath) throws IOException {
 		String line = "";
 		Long indexSize = fetchIndexSize();
 		/* SO Matrix */
@@ -136,24 +147,25 @@ public class InRamDBUtils implements COMMImpl{
         });
 		IOUtils.logLog("SO sorted");
 		
-		if(CTMServer._blockLineNb==0){
-			/* Write sorted S array file if the parameter isn't null */
-			if(comparePath!=null){
-				BufferedWriter outSarray = null;
-				try{
-					outSarray = new BufferedWriter(new OutputStreamWriter(
-							new FileOutputStream(comparePath + File.separator + inFileName + ".S", true)));
-					for (SOLongPair pair : soList){
-						outSarray.write(fetchNodeById(pair.S));
-						outSarray.newLine();
-					}
-				} finally {
-					if(outSarray!=null)
-						outSarray.close();
+		/* Write sorted S array file if the parameter isn't null */
+		if(comparePath!=null){
+			BufferedWriter outSarray = null;
+			try{
+				outSarray = new BufferedWriter(new OutputStreamWriter(
+						new FileOutputStream(comparePath + File.separator + inFileName + ".S", true)));
+				for (SOLongPair pair : soList){
+					outSarray.write(fetchNodeById(pair.S));
+					outSarray.newLine();
 				}
-				IOUtils.logLog("S array written to Comparison Path");
+			} finally {
+				if(outSarray!=null)
+					outSarray.close();
 			}
-			
+			IOUtils.logLog("S array written to Comparison Path");
+		}
+		
+		/* If block mode disabled */
+		if(CTMServer._blockLineNb==0){
 			BufferedWriter outArrSO = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(outputFilePath + ".matrixSO", true)));
 			if(soList.size()>0){
@@ -244,17 +256,19 @@ public class InRamDBUtils implements COMMImpl{
 			}
 			if(outArrSO!=null) outArrSO.close();
 			IOUtils.logLog("SO written to file");
-		} else {
+		} 
+
+		/* If block mode enabled */
+		else {
 			//TODO block mode
+			
 		}
 	}
 
 	/**
-	 * {@inheritDoc}
 	 * <p>In the InRam database, we will sort SOPair list first, then write it line by line</p>
 	 */
-	@Override
-	public final void writeMatO(String outputFilePath, String comparePath, String inFileName) throws IOException {
+	public final void writeMatO(String inFileName, String outputFilePath, String comparePath) throws IOException {
 		String line = "";
 		Long indexSize = fetchIndexSize();
 		/* OS Matrix */
@@ -273,25 +287,26 @@ public class InRamDBUtils implements COMMImpl{
 			}
         });
 		IOUtils.logLog("OS sorted");
-    	
-		if(CTMServer._blockLineNb==0){
-			/* Write sorted O array file if the parameter isn't null */
-			if(comparePath!=null){
-				BufferedWriter outOarray = null;
-				try{
-					outOarray = new BufferedWriter(new OutputStreamWriter(
-							new FileOutputStream(comparePath + File.separator + inFileName + ".O", true)));
-					for (SOLongPair pair : soList){
-						outOarray.write(fetchNodeById(pair.O));
-						outOarray.newLine();
-					}
-				} finally {
-					if(outOarray!=null)
-						outOarray.close();
+
+		/* Write sorted O array file if the parameter isn't null */
+		if(comparePath!=null){
+			BufferedWriter outOarray = null;
+			try{
+				outOarray = new BufferedWriter(new OutputStreamWriter(
+						new FileOutputStream(comparePath + File.separator + inFileName + ".O", true)));
+				for (SOLongPair pair : soList){
+					outOarray.write(fetchNodeById(pair.O));
+					outOarray.newLine();
 				}
-				IOUtils.logLog("O array written to Comparison Path");
+			} finally {
+				if(outOarray!=null)
+					outOarray.close();
 			}
-			
+			IOUtils.logLog("O array written to Comparison Path");
+		}
+
+		/* If block mode disabled */
+		if(CTMServer._blockLineNb==0){
 			BufferedWriter outArrOS = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(outputFilePath + ".matrixOS", true)));
 			if(soList.size()>0){
@@ -382,16 +397,17 @@ public class InRamDBUtils implements COMMImpl{
 			}
 			if(outArrOS!=null) outArrOS.close();
 			IOUtils.logLog("OS written to file");
-		} else {
+		} 
+		
+		/* If block mode enabled */
+		else {
 			//TODO block mode
 		}
 	}
 
 	/**
-	 * {@inheritDoc}
 	 * <p>In the InRam database, we will write the BiMap line by line</p>
 	 */
-	@Override
 	public final void writeIndex(String outputFilePath) throws IOException {
 		BufferedWriter fInd = new BufferedWriter(new OutputStreamWriter(
 				new FileOutputStream(outputFilePath,true),"UTF-8"));
@@ -406,8 +422,10 @@ public class InRamDBUtils implements COMMImpl{
 		IOUtils.logLog("Index written to file");
 	}
 
-	@Override
-	public void writeMeta(String path) throws IOException {
+	/**
+	 * <p>If block mode enabled, writes the metadata of file blocks</p>
+	 */
+	public void writeMeta(String inName, String outPath) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

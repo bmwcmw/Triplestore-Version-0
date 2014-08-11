@@ -103,7 +103,7 @@ public class SimpleQueryExecutor {
 		String matSOPath = localPath + File.separator + pred + ".matrixSO";
 		String matOSPath = localPath + File.separator + pred + ".matrixOS";
 		
-		dbu.loadFromFile(indPath);
+		dbu.loadIndexFromFile(indPath);
 		LongPattern intPat = SimpleQueryTranslator.toCompressed(dbu, pat);
 		
 		Set<String> resultLines = new HashSet<String>();
