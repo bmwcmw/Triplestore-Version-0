@@ -38,4 +38,12 @@ public class CTMConstants {
 	
 	public final static int CTMEXIT = -1;
 	public final static int CTMEMPTY = 10000;
+	
+	/* File extension */
+	public final static String SOMatrixExt = ".SO";
+	public final static String OSMatrixExt = ".OS";
+	public final static String IndexExt = ".index";
+	public final static String MetadataExt = ".MD";
+	public final static String SArrayExt = ".S";
+	public final static String OArrayExt = ".O";
 }

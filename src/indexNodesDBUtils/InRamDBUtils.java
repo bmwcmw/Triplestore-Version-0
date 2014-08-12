@@ -17,6 +17,7 @@ import localIOUtils.IOUtils;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+import ctmRdf.CTMConstants;
 import ctmRdf.CTMServer;
 
 import dataCleaner.CTMPairStr;
@@ -115,7 +116,8 @@ public class InRamDBUtils implements DBImpl{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) throws IOException {
+	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) 
+			throws IOException {
 		writeMatS(inFileName, outputFilePath, comparePath);
 		writeMatO(inFileName, outputFilePath, comparePath);
 		writeIndex(outputFilePath);
@@ -127,7 +129,8 @@ public class InRamDBUtils implements DBImpl{
 	/**
 	 * <p>In the InRam database, we will sort SOPair list first, then write it line by line</p>
 	 */
-	public final void writeMatS(String inFileName, String outputFilePath, String comparePath) throws IOException {
+	public final void writeMatS(String inFileName, String outputFilePath, String comparePath) 
+			throws IOException {
 		String line = "";
 		Long indexSize = fetchIndexSize();
 		/* SO Matrix */
@@ -151,8 +154,8 @@ public class InRamDBUtils implements DBImpl{
 		if(comparePath!=null){
 			BufferedWriter outSarray = null;
 			try{
-				outSarray = new BufferedWriter(new OutputStreamWriter(
-						new FileOutputStream(comparePath + File.separator + inFileName + ".S", true)));
+				outSarray = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+						comparePath + File.separator + inFileName + CTMConstants.SArrayExt, true)));
 				for (SOLongPair pair : soList){
 					outSarray.write(fetchNodeById(pair.S));
 					outSarray.newLine();
@@ -167,7 +170,7 @@ public class InRamDBUtils implements DBImpl{
 		/* If block mode disabled */
 		if(CTMServer._blockLineNb==0){
 			BufferedWriter outArrSO = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(outputFilePath + ".matrixSO", true)));
+					new FileOutputStream(outputFilePath + CTMConstants.SOMatrixExt, true)));
 			if(soList.size()>0){
 				//Begin from the first subject(first row)
 				Long current = soList.get(0).S;
@@ -256,10 +259,107 @@ public class InRamDBUtils implements DBImpl{
 			}
 			if(outArrSO!=null) outArrSO.close();
 			IOUtils.logLog("SO written to file");
-		} 
+		}
 
 		/* If block mode enabled */
 		else {
+			BufferedWriter outArrSO = null;
+			int fileBlockCount = 0;
+			if(soList.size()>0){
+				outArrSO = new BufferedWriter(new OutputStreamWriter(
+							new FileOutputStream(outputFilePath + CTMConstants.SOMatrixExt 
+									+ fileBlockCount, true)));
+				//Begin from the first subject(first row)
+				Long current = soList.get(0).S;
+				//Temporary set of objects of one subject
+				List<Long> lineSet = new ArrayList<Long>();
+				line = "";
+				//Temporary indicators of columns
+				Long zero = new Long(0);
+				Long last;
+				long blockSize = 1;
+				long lineCount = 0;
+				// For each pair P in the S-O list
+				for (SOLongPair p : soList){
+					/* 
+					 * When we reach the S, we begin to add all O with this S, until 
+					 * the first O with the next S
+					 */
+					if(p.S.equals(current)){
+						lineSet.add(p.O);
+					} else {
+						/* Here we see the first O with the next S, then we output 
+						 * current lineSet of the current S, and add this O to a new
+						 * listSet
+						 */
+						Collections.sort(lineSet);
+						blockSize = 1;
+						last = lineSet.get(0);
+						//"id-nbentry-offset:[0/1]"
+						if(last.equals(zero)){
+							line += current + "-" + lineSet.size() + "-0:[1]";
+						} else {
+							line += current + "-" + lineSet.size() + "-0:[0]";
+							line += last + ",";
+						}
+						lineSet.remove(0);
+						/*DEBUG*/
+	//					String temp = current + " has " + last + ",";
+						for (Long i : lineSet){
+	//						temp += i + ",";
+							if(i - last != 0){
+								if(i - last == 1){
+									blockSize ++;
+								} else {
+									//add "1" block
+									line += blockSize + ",";
+									blockSize = i - (last + 1);
+									//add "0" block
+									line += blockSize + ",";
+									//initialize "1" block
+									blockSize = 1;
+									//Avoid too large lines by cutting lines with _blockLineLength
+									if(line.length()>CTMServer._blockLineLength){
+										//Remove the last virgule
+										line = line.substring(0, line.length()-1);
+										outArrSO.write(line);
+										//Always begin from 1 (line>=2), "-offset:[0/1]"
+										line = "-" + (last + 1) + ":[1]";
+										lineCount ++;
+										
+										if(lineCount>=CTMServer._blockLineNb){
+											fileBlockCount++;
+											outArrSO.close();
+											outArrSO = new BufferedWriter(new OutputStreamWriter(
+														new FileOutputStream(outputFilePath 
+																+ CTMConstants.SOMatrixExt 
+																+ fileBlockCount, true)));
+										}
+									}
+								}
+								last = i;
+							}
+						}
+						//Get last entry
+						line = line + blockSize;
+						if(last < indexSize-1){
+							blockSize = indexSize-1 - last;
+							line = line + "," + blockSize;
+						}
+						/*DEBUG*/
+	//					System.out.println(temp);
+	//					System.out.println(line);
+						outArrSO.write(line);
+						outArrSO.newLine();
+						lineSet = new ArrayList<Long>();
+						current = p.S;
+						lineSet.add(p.O);
+						line = "";
+					}
+				}
+			}
+			if(outArrSO!=null) outArrSO.close();
+			IOUtils.logLog("SO written to file");
 			//TODO block mode
 			
 		}
@@ -268,7 +368,8 @@ public class InRamDBUtils implements DBImpl{
 	/**
 	 * <p>In the InRam database, we will sort SOPair list first, then write it line by line</p>
 	 */
-	public final void writeMatO(String inFileName, String outputFilePath, String comparePath) throws IOException {
+	public final void writeMatO(String inFileName, String outputFilePath, String comparePath) 
+			throws IOException {
 		String line = "";
 		Long indexSize = fetchIndexSize();
 		/* OS Matrix */
@@ -292,8 +393,8 @@ public class InRamDBUtils implements DBImpl{
 		if(comparePath!=null){
 			BufferedWriter outOarray = null;
 			try{
-				outOarray = new BufferedWriter(new OutputStreamWriter(
-						new FileOutputStream(comparePath + File.separator + inFileName + ".O", true)));
+				outOarray = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+						comparePath + File.separator + inFileName + CTMConstants.OArrayExt, true)));
 				for (SOLongPair pair : soList){
 					outOarray.write(fetchNodeById(pair.O));
 					outOarray.newLine();
@@ -308,7 +409,7 @@ public class InRamDBUtils implements DBImpl{
 		/* If block mode disabled */
 		if(CTMServer._blockLineNb==0){
 			BufferedWriter outArrOS = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(outputFilePath + ".matrixOS", true)));
+					new FileOutputStream(outputFilePath + CTMConstants.OSMatrixExt, true)));
 			if(soList.size()>0){
 				//Begin from the first object(first row)
 				Long current = soList.get(0).O;
