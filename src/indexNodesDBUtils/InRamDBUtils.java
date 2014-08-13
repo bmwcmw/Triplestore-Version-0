@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -21,12 +22,19 @@ import ctmRdf.CTMConstants;
 import ctmRdf.CTMServer;
 
 import dataCleaner.CTMPairStr;
+import dataCompressor.SOArrayPair;
 import dataCompressor.SOLongPair;
 import dataReader.PairReader;
 
 public class InRamDBUtils implements DBImpl{
 	private BiMap<Long, String> nodes;
 	private ArrayList<SOLongPair> soList = new ArrayList<SOLongPair>();
+	
+	/*
+	 * For every predicate, we store for matrix SO and OS (using SOArrayPair) a list of 
+	 * #file and Offset (using SOLongPair).
+	 */
+	private HashMap<String, SOArrayPair> metaList = new HashMap<String, SOArrayPair>();
 
 	
 	public InRamDBUtils(){

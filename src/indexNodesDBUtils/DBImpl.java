@@ -16,6 +16,7 @@ public interface DBImpl {
 
 	/** 
 	 * Since JVM will be very inefficient while a String become large, we flush it periodically.
+	 * (Only for non-block mode)
 	 */
 	public static final int MAXSTRLENGTH = 40000;
 	
