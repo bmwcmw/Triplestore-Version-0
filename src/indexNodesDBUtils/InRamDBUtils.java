@@ -122,7 +122,7 @@ public class InRamDBUtils implements DBImpl{
 		writeMatO(inFileName, outputFilePath, comparePath);
 		writeIndex(outputFilePath);
 		if(CTMServer._blockLineNb>0){
-			writeMeta(inFileName, outputFilePath);
+			writeMeta(outputFilePath);
 		}
 	}
 
@@ -303,10 +303,7 @@ public class InRamDBUtils implements DBImpl{
 							line += last + ",";
 						}
 						lineSet.remove(0);
-						/*DEBUG*/
-	//					String temp = current + " has " + last + ",";
 						for (Long i : lineSet){
-	//						temp += i + ",";
 							if(i - last != 0){
 								if(i - last == 1){
 									blockSize ++;
@@ -319,22 +316,23 @@ public class InRamDBUtils implements DBImpl{
 									//initialize "1" block
 									blockSize = 1;
 									//Avoid too large lines by cutting lines with _blockLineLength
-									if(line.length()>CTMServer._blockLineLength){
+									if(line.length()>=CTMServer._blockLineLength){
 										//Remove the last virgule
 										line = line.substring(0, line.length()-1);
-										outArrSO.write(line);
+										outArrSO.write(line); outArrSO.newLine(); lineCount ++;
 										//Always begin from 1 (line>=2), "-offset:[0/1]"
 										line = "-" + (last + 1) + ":[1]";
-										lineCount ++;
-										
-										if(lineCount>=CTMServer._blockLineNb){
-											fileBlockCount++;
-											outArrSO.close();
-											outArrSO = new BufferedWriter(new OutputStreamWriter(
-														new FileOutputStream(outputFilePath 
-																+ CTMConstants.SOMatrixExt 
-																+ fileBlockCount, true)));
-										}
+									}
+									//Avoid too large file by cutting with _blockLineNb
+									if(lineCount>=CTMServer._blockLineNb){
+										fileBlockCount++;
+										outArrSO.close();
+										outArrSO = new BufferedWriter(new OutputStreamWriter(
+													new FileOutputStream(outputFilePath 
+															+ CTMConstants.SOMatrixExt 
+															+ fileBlockCount, true)));
+										//Reset line count
+										lineCount=0;
 									}
 								}
 								last = i;
@@ -346,11 +344,8 @@ public class InRamDBUtils implements DBImpl{
 							blockSize = indexSize-1 - last;
 							line = line + "," + blockSize;
 						}
-						/*DEBUG*/
-	//					System.out.println(temp);
-	//					System.out.println(line);
-						outArrSO.write(line);
-						outArrSO.newLine();
+						//Current S finished, reset temp variables
+						outArrSO.write(line); outArrSO.newLine(); lineCount ++;
 						lineSet = new ArrayList<Long>();
 						current = p.S;
 						lineSet.add(p.O);
@@ -359,9 +354,7 @@ public class InRamDBUtils implements DBImpl{
 				}
 			}
 			if(outArrSO!=null) outArrSO.close();
-			IOUtils.logLog("SO written to file");
-			//TODO block mode
-			
+			IOUtils.logLog("SO written to file in block mode");
 		}
 	}
 
@@ -499,10 +492,101 @@ public class InRamDBUtils implements DBImpl{
 			if(outArrOS!=null) outArrOS.close();
 			IOUtils.logLog("OS written to file");
 		} 
-		
+
 		/* If block mode enabled */
 		else {
-			//TODO block mode
+			BufferedWriter outArrOS = null;
+			int fileBlockCount = 0;
+			if(soList.size()>0){
+				outArrOS = new BufferedWriter(new OutputStreamWriter(
+							new FileOutputStream(outputFilePath + CTMConstants.OSMatrixExt 
+									+ fileBlockCount, true)));
+				//Begin from the first object(first row)
+				Long current = soList.get(0).O;
+				//Temporary set of objects of one subject
+				List<Long> lineSet = new ArrayList<Long>();
+				line = "";
+				//Temporary indicators of columns
+				Long zero = new Long(0);
+				Long last;
+				long blockSize = 1;
+				long lineCount = 0;
+				// For each pair P in the S-O list
+				for (SOLongPair p : soList){
+					/* 
+					 * When we reach the O, we begin to add all S with this O, until 
+					 * the first S with the next O
+					 */
+					if(p.O.equals(current)){
+						lineSet.add(p.S);
+					} else {
+						/* Here we see the first S with the next O, then we output 
+						 * current lineSet of the current O, and add this S to a new
+						 * listSet
+						 */
+						Collections.sort(lineSet);
+						blockSize = 1;
+						last = lineSet.get(0);
+						//"id-nbentry-offset:[0/1]"
+						if(last.equals(zero)){
+							line += current + "-" + lineSet.size() + "-0:[1]";
+						} else {
+							line += current + "-" + lineSet.size() + "-0:[0]";
+							line += last + ",";
+						}
+						lineSet.remove(0);
+						for (Long i : lineSet){
+							if(i - last != 0){
+								if(i - last == 1){
+									blockSize ++;
+								} else {
+									//add "1" block
+									line += blockSize + ",";
+									blockSize = i - (last + 1);
+									//add "0" block
+									line += blockSize + ",";
+									//initialize "1" block
+									blockSize = 1;
+									//Avoid too large lines by cutting lines with _blockLineLength
+									if(line.length()>=CTMServer._blockLineLength){
+										//Remove the last virgule
+										line = line.substring(0, line.length()-1);
+										outArrOS.write(line); outArrOS.newLine(); lineCount ++;
+										//Always begin from 1 (line>=2), "-offset:[0/1]"
+										line = "-" + (last + 1) + ":[1]";
+									}
+									//Avoid too large file by cutting with _blockLineNb
+									if(lineCount>=CTMServer._blockLineNb){
+										fileBlockCount++;
+										outArrOS.close();
+										outArrOS = new BufferedWriter(new OutputStreamWriter(
+													new FileOutputStream(outputFilePath 
+															+ CTMConstants.OSMatrixExt 
+															+ fileBlockCount, true)));
+										//Reset line count
+										lineCount=0;
+									}
+								}
+								last = i;
+							}
+						}
+						//Get last entry
+						line = line + blockSize;
+						if(last < indexSize-1){
+							blockSize = indexSize-1 - last;
+							line = line + "," + blockSize;
+						}
+						//Current S finished, reset temp variables
+						outArrOS.write(line); outArrOS.newLine(); lineCount ++;
+						lineSet = new ArrayList<Long>();
+						current = p.O;
+						lineSet.add(p.S);
+						line = "";
+					}
+				}
+			}
+			if(outArrOS!=null) outArrOS.close();
+			IOUtils.logLog("OS written to file in block mode");
 		}
 	}
 
@@ -510,8 +594,8 @@ public class InRamDBUtils implements DBImpl{
 	 * <p>In the InRam database, we will write the BiMap line by line</p>
 	 */
 	public final void writeIndex(String outputFilePath) throws IOException {
-		BufferedWriter fInd = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream(outputFilePath,true),"UTF-8"));
+		BufferedWriter fInd = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+				outputFilePath + CTMConstants.IndexExt, true), "UTF-8"));
 		for(Entry<Long, String> pairs : nodes.entrySet()){
 			fInd.write(pairs.getKey() + " " + pairs.getValue());
 			fInd.newLine();
@@ -526,8 +610,13 @@ public class InRamDBUtils implements DBImpl{
 	/**
 	 * <p>If block mode enabled, writes the metadata of file blocks</p>
 	 */
-	public void writeMeta(String inName, String outPath) throws IOException {
+	public void writeMeta(String outFilePath) throws IOException {
+		BufferedWriter fMeta = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+				outFilePath + CTMConstants.MetadataExt, true), "UTF-8"));
 		// TODO Auto-generated method stub
-		
+		if (fMeta != null) {
+			fMeta.flush();
+			fMeta.close();
+		}
 	}
 }

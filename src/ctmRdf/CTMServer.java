@@ -90,7 +90,7 @@ public class CTMServer {
 		CTMServer._writeprecompare = true;
 		// XXX SETUP : Set the first to 0 if we want to disable the block mode. Then the second one 
 		//			   will be automatically disabled.
-		CTMServer._blockLineNb = 1000;
+		CTMServer._blockLineNb = 10000;
 		CTMServer._blockLineLength = 32768;
 		
 		// XXX SETUP : Pre-Comparator mode, perhaps needs PERL executable in PATH
@@ -110,7 +110,7 @@ public class CTMServer {
 		CTMServer._ctlParams.put("rdfPath", _workingDir + File.separator + ".." 
 				+ File.separator + "CtmDataSet" + File.separator + "__rdf");
 		CTMServer._ctlParams.put("n3Path", _workingDir + File.separator + ".." 
-				+ File.separator + "CtmDataSet" + File.separator + "__n3(26M)");
+				+ File.separator + "CtmDataSet" + File.separator + "__n3(2.5G)");
 		CTMServer._ctlParams.put("invalidPath", _workingDir + File.separator + "_invalidTriple");
 		CTMServer._ctlParams.put("psPath", _workingDir + File.separator + "_ps");
 		CTMServer._ctlParams.put("posPath", _workingDir + File.separator + "_pos");

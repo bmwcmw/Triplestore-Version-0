@@ -21,8 +21,7 @@ public class DgapCompressor {
 		Long indexSize = dbu.fetchIndexSize();
 		Long soSize = dbu.fetchSOSize();
 		IOUtils.logLog("Start Compressing into matrix");
-		IOUtils.logLog("All nodes : " + indexSize + " (S,O) pairs : "
-				+ soSize);
+		IOUtils.logLog("All nodes : " + indexSize + " (S,O) pairs : " + soSize);
     	String outputFilePath = outputPath + File.separator + inFileName;
 		
     	/* Write compressed predicate to file */
