@@ -9,7 +9,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -22,7 +21,8 @@ import ctmRdf.CTMConstants;
 import ctmRdf.CTMServer;
 
 import dataCleaner.CTMPairStr;
-import dataCompressor.SOArrayPair;
+import dataCompressor.MetaInfoArray;
+import dataCompressor.MetaInfoTriple;
 import dataCompressor.SOLongPair;
 import dataReader.PairReader;
 
@@ -32,10 +32,9 @@ public class InRamDBUtils implements DBImpl{
 	
 	/*
 	 * For every predicate, we store for matrix SO and OS (using SOArrayPair) a list of 
-	 * #file and Offset (using SOLongPair).
+	 * #file and Offset (using SOLongPair inside).
 	 */
-	private HashMap<String, SOArrayPair> metaList = new HashMap<String, SOArrayPair>();
-
+	private MetaInfoArray metaList = new MetaInfoArray();
 	
 	public InRamDBUtils(){
 		nodes = HashBiMap.create();
@@ -127,10 +126,15 @@ public class InRamDBUtils implements DBImpl{
 	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) 
 			throws IOException {
 		writeMatS(inFileName, outputFilePath, comparePath);
+		if(CTMServer._blockLineNb>0){
+			writeMeta(outputFilePath + CTMConstants.SOMatrixExt);
+			metaList.empty();
+		}
 		writeMatO(inFileName, outputFilePath, comparePath);
 		writeIndex(outputFilePath);
 		if(CTMServer._blockLineNb>0){
-			writeMeta(outputFilePath);
+			writeMeta(outputFilePath + CTMConstants.OSMatrixExt);
+			metaList.empty();
 		}
 	}
 
@@ -279,6 +283,8 @@ public class InRamDBUtils implements DBImpl{
 									+ fileBlockCount, true)));
 				//Begin from the first subject(first row)
 				Long current = soList.get(0).S;
+				//Add first element to metainfo list
+				metaList.getList().add(new MetaInfoTriple(fileBlockCount,current,0));
 				//Temporary set of objects of one subject
 				List<Long> lineSet = new ArrayList<Long>();
 				line = "";
@@ -313,6 +319,7 @@ public class InRamDBUtils implements DBImpl{
 						lineSet.remove(0);
 						for (Long i : lineSet){
 							if(i - last != 0){
+								//If continuous 0 or 1
 								if(i - last == 1){
 									blockSize ++;
 								} else {
@@ -339,6 +346,10 @@ public class InRamDBUtils implements DBImpl{
 													new FileOutputStream(outputFilePath 
 															+ CTMConstants.SOMatrixExt 
 															+ fileBlockCount, true)));
+										//Add meta information of new file
+										metaList.getList().add(
+												new MetaInfoTriple(fileBlockCount, current, 
+														(last + 1)));
 										//Reset line count
 										lineCount=0;
 									}
@@ -511,6 +522,8 @@ public class InRamDBUtils implements DBImpl{
 									+ fileBlockCount, true)));
 				//Begin from the first object(first row)
 				Long current = soList.get(0).O;
+				//Add first element to metainfo list
+				metaList.getList().add(new MetaInfoTriple(fileBlockCount,current,0));
 				//Temporary set of objects of one subject
 				List<Long> lineSet = new ArrayList<Long>();
 				line = "";
@@ -544,6 +557,7 @@ public class InRamDBUtils implements DBImpl{
 						}
 						lineSet.remove(0);
 						for (Long i : lineSet){
+							//If continuous 0 or 1
 							if(i - last != 0){
 								if(i - last == 1){
 									blockSize ++;
@@ -571,6 +585,10 @@ public class InRamDBUtils implements DBImpl{
 													new FileOutputStream(outputFilePath 
 															+ CTMConstants.OSMatrixExt 
 															+ fileBlockCount, true)));
+										//Add meta information of new file
+										metaList.getList().add(
+												new MetaInfoTriple(fileBlockCount, current, 
+														(last + 1)));
 										//Reset line count
 										lineCount=0;
 									}
