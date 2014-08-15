@@ -277,6 +277,8 @@ public class InRamDBUtils implements DBImpl{
 		else {
 			BufferedWriter outArrSO = null;
 			int fileBlockCount = 0;
+			/*DEBUG*/
+			System.out.println(CTMServer._blockLineNb);
 			if(soList.size()>0){
 				outArrSO = new BufferedWriter(new OutputStreamWriter(
 							new FileOutputStream(outputFilePath + CTMConstants.SOMatrixExt 
@@ -331,15 +333,15 @@ public class InRamDBUtils implements DBImpl{
 									//initialize "1" block
 									blockSize = 1;
 									//Avoid too large lines by cutting lines with _blockLineLength
-									if(line.length()>=CTMServer._blockLineLength){
+									if(line.length() >= CTMServer._blockLineLength){
 										//Remove the last virgule
 										line = line.substring(0, line.length()-1);
-										outArrSO.write(line); outArrSO.newLine(); lineCount ++;
+										outArrSO.write(line); outArrSO.newLine(); lineCount++;
 										//Always begin from 1 (line>=2), "-offset:[0/1]"
 										line = "-" + (last + 1) + ":[1]";
 									}
 									//Avoid too large file by cutting with _blockLineNb
-									if(lineCount>=CTMServer._blockLineNb){
+									if(lineCount >= CTMServer._blockLineNb){
 										fileBlockCount++;
 										outArrSO.close();
 										outArrSO = new BufferedWriter(new OutputStreamWriter(
@@ -348,8 +350,7 @@ public class InRamDBUtils implements DBImpl{
 															+ fileBlockCount, true)));
 										//Add meta information of new file
 										metaList.getList().add(
-												new MetaInfoTriple(fileBlockCount, current, 
-														(last + 1)));
+												new MetaInfoTriple(fileBlockCount, current, i));
 										//Reset line count
 										lineCount=0;
 									}
@@ -364,11 +365,27 @@ public class InRamDBUtils implements DBImpl{
 							line = line + "," + blockSize;
 						}
 						//Current S finished, reset temp variables
-						outArrSO.write(line); outArrSO.newLine(); lineCount ++;
+						outArrSO.write(line); outArrSO.newLine(); lineCount++;
 						lineSet = new ArrayList<Long>();
 						current = p.S;
 						lineSet.add(p.O);
 						line = "";
+						/*Avoid too large file by cutting with _blockLineNb
+						 *(While only 1 entry in lineSet or just ran out lineSet)
+						 */
+						if(lineCount >= CTMServer._blockLineNb){
+							fileBlockCount++;
+							outArrSO.close();
+							outArrSO = new BufferedWriter(new OutputStreamWriter(
+										new FileOutputStream(outputFilePath 
+												+ CTMConstants.SOMatrixExt 
+												+ fileBlockCount, true)));
+							//Add meta information of new file
+							metaList.getList().add(
+									new MetaInfoTriple(fileBlockCount, current, 0));
+							//Reset line count
+							lineCount=0;
+						}
 					}
 				}
 			}
@@ -557,8 +574,8 @@ public class InRamDBUtils implements DBImpl{
 						}
 						lineSet.remove(0);
 						for (Long i : lineSet){
-							//If continuous 0 or 1
 							if(i - last != 0){
+								//If continuous 0 or 1
 								if(i - last == 1){
 									blockSize ++;
 								} else {
@@ -570,15 +587,15 @@ public class InRamDBUtils implements DBImpl{
 									//initialize "1" block
 									blockSize = 1;
 									//Avoid too large lines by cutting lines with _blockLineLength
-									if(line.length()>=CTMServer._blockLineLength){
+									if(line.length() >= CTMServer._blockLineLength){
 										//Remove the last virgule
 										line = line.substring(0, line.length()-1);
-										outArrOS.write(line); outArrOS.newLine(); lineCount ++;
+										outArrOS.write(line); outArrOS.newLine(); lineCount++;
 										//Always begin from 1 (line>=2), "-offset:[0/1]"
 										line = "-" + (last + 1) + ":[1]";
 									}
 									//Avoid too large file by cutting with _blockLineNb
-									if(lineCount>=CTMServer._blockLineNb){
+									if(lineCount >= CTMServer._blockLineNb){
 										fileBlockCount++;
 										outArrOS.close();
 										outArrOS = new BufferedWriter(new OutputStreamWriter(
@@ -587,8 +604,7 @@ public class InRamDBUtils implements DBImpl{
 															+ fileBlockCount, true)));
 										//Add meta information of new file
 										metaList.getList().add(
-												new MetaInfoTriple(fileBlockCount, current, 
-														(last + 1)));
+												new MetaInfoTriple(fileBlockCount, current, i));
 										//Reset line count
 										lineCount=0;
 									}
@@ -603,11 +619,27 @@ public class InRamDBUtils implements DBImpl{
 							line = line + "," + blockSize;
 						}
 						//Current S finished, reset temp variables
-						outArrOS.write(line); outArrOS.newLine(); lineCount ++;
+						outArrOS.write(line); outArrOS.newLine(); lineCount++;
 						lineSet = new ArrayList<Long>();
 						current = p.O;
 						lineSet.add(p.S);
 						line = "";
+						/*Avoid too large file by cutting with _blockLineNb
+						 *(While only 1 entry in lineSet or just ran out lineSet)
+						 */
+						if(lineCount >= CTMServer._blockLineNb){
+							fileBlockCount++;
+							outArrOS.close();
+							outArrOS = new BufferedWriter(new OutputStreamWriter(
+										new FileOutputStream(outputFilePath 
+												+ CTMConstants.OSMatrixExt 
+												+ fileBlockCount, true)));
+							//Add meta information of new file
+							metaList.getList().add(
+									new MetaInfoTriple(fileBlockCount, current, 0));
+							//Reset line count
+							lineCount=0;
+						}
 					}
 				}
 			}
@@ -639,10 +671,14 @@ public class InRamDBUtils implements DBImpl{
 	public void writeMeta(String outFilePath) throws IOException {
 		BufferedWriter fMeta = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
 				outFilePath + CTMConstants.MetadataExt, true), "UTF-8"));
-		// TODO Auto-generated method stub
+		for(MetaInfoTriple m : metaList.getList()){
+			fMeta.write(m.nFile + " " + m.id + " " + m.offset);
+			fMeta.newLine();
+		}
 		if (fMeta != null) {
 			fMeta.flush();
 			fMeta.close();
 		}
+		IOUtils.logLog("Metadata written to file");
 	}
 }
