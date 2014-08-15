@@ -18,7 +18,7 @@ import localIOUtils.IOUtils;
 import org.json.simple.parser.ParseException;
 
 import ctmRdf.CTMConstants;
-import ctmRdf.CTMServer;
+import ctmRdf.CTMJobAssigner;
 import dataCleaner.CTMPairLong;
 
 public class IndicatorGrouper {
@@ -44,7 +44,7 @@ public class IndicatorGrouper {
 		// USE random plan to group files of varying sizes into approximately EQUAL SIZED blocks 
 		if(forceRandom) {
 			IOUtils.logLog("Forced to use random plan...");
-			ArrayList<ArrayList<File>> groups = CTMServer.assignJobs(allPredFiles, true);
+			ArrayList<ArrayList<File>> groups = CTMJobAssigner.assignJobs(allPredFiles, true);
 			return groups;
 		}
 		// USE indicators

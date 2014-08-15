@@ -277,8 +277,6 @@ public class InRamDBUtils implements DBImpl{
 		else {
 			BufferedWriter outArrSO = null;
 			int fileBlockCount = 0;
-			/*DEBUG*/
-			System.out.println(CTMServer._blockLineNb);
 			if(soList.size()>0){
 				outArrSO = new BufferedWriter(new OutputStreamWriter(
 							new FileOutputStream(outputFilePath + CTMConstants.SOMatrixExt 

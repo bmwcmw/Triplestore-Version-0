@@ -103,6 +103,31 @@ public class IOUtils {
 	}
 	
 	/**
+	 * Get the extension of a file name
+	 * 
+	 * @param originalName
+	 * @return the extension (including the dot) or nothing (if the file doesn't have any extension)
+	 */
+	public static String getExtension(String originalName) {
+		int lastDot = originalName.lastIndexOf(".");
+		if ((lastDot == -1) || (lastDot == (originalName.length()-1))) {
+			return "";
+		} else {
+			return originalName.substring(lastDot, originalName.length());
+		}
+	}
+	
+	/**
+	 * Returns a filename without extension
+	 * 
+	 * @param name
+	 * @return filename
+	 */
+	public static String filenameWithoutExt(String name){
+		return name.replaceFirst("[.][^.]+$", "");
+	}
+	
+	/**
 	 * Returns an ArrayList of all files in a specified folder
 	 * @return list of File if no error, otherwise null
 	 * @param foldername
@@ -201,15 +226,5 @@ public class IOUtils {
 			throws IOException {
 		byte[] encoded = Files.readAllBytes(Paths.get(filePath));
 		return new String(encoded, encoding);
-	}
-	
-	/**
-	 * Returns a filename without extension
-	 * 
-	 * @param name
-	 * @return filename
-	 */
-	public static String filenameWithoutExt(String name){
-		return name.replaceFirst("[.][^.]+$", "");
 	}
 }
