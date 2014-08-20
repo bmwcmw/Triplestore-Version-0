@@ -318,6 +318,7 @@ public class InRamDBUtils implements DBImpl{
 						}
 						lineSet.remove(0);
 						//For a line set of S
+						int lineS = 0;
 						for (Long i : lineSet){
 							if(i - last != 0){
 								//If continuous 0 or 1
@@ -338,6 +339,8 @@ public class InRamDBUtils implements DBImpl{
 										outArrSO.write(line); outArrSO.newLine(); lineCount++;
 										//Always begin from 1 (line>=2), "-offset:[0/1]"
 										line = "-" + (last + 1) + ":[1]";
+										//Line counter for current S ++
+										lineS++;
 									}
 									//Avoid too large file by cutting with _blockLineNb
 									if(lineCount >= CTMServer._blockLineNb){
@@ -349,13 +352,16 @@ public class InRamDBUtils implements DBImpl{
 															+ fileBlockCount, true)));
 										//Add meta information of new file
 										metaList.getList().add(
-												new MetaInfoQuadruple(fileBlockCount, current, i));
+												new MetaInfoQuadruple(fileBlockCount, current, i,
+														lineS));
 										//Reset line count
-										lineCount=0;
+										lineCount = 0;
 									}
 								}
 								last = i;
 							}
+							//Reset the counter of current S
+							lineS = 0;
 						}
 						//Get last entry
 						line = line + blockSize;
@@ -381,7 +387,7 @@ public class InRamDBUtils implements DBImpl{
 												+ fileBlockCount, true)));
 							//Add meta information of new file
 							metaList.getList().add(
-									new MetaInfoQuadruple(fileBlockCount, current, 0));
+									new MetaInfoQuadruple(fileBlockCount, current, 0, 0));
 							//Reset line count
 							lineCount=0;
 						}
@@ -573,6 +579,7 @@ public class InRamDBUtils implements DBImpl{
 						}
 						lineSet.remove(0);
 						//For a line set of O
+						int lineO = 0;
 						for (Long i : lineSet){
 							if(i - last != 0){
 								//If continuous 0 or 1
@@ -593,6 +600,8 @@ public class InRamDBUtils implements DBImpl{
 										outArrOS.write(line); outArrOS.newLine(); lineCount++;
 										//Always begin from 1 (line>=2), "-offset:[0/1]"
 										line = "-" + (last + 1) + ":[1]";
+										//Line counter for current O ++
+										lineO ++;
 									}
 									//Avoid too large file by cutting with _blockLineNb
 									if(lineCount >= CTMServer._blockLineNb){
@@ -604,13 +613,16 @@ public class InRamDBUtils implements DBImpl{
 															+ fileBlockCount, true)));
 										//Add meta information of new file
 										metaList.getList().add(
-												new MetaInfoQuadruple(fileBlockCount, current, i));
+												new MetaInfoQuadruple(fileBlockCount, current, i,
+														lineO));
 										//Reset line count
-										lineCount=0;
+										lineCount = 0;
 									}
 								}
 								last = i;
 							}
+							//Reset the counter of current O
+							lineO = 0;
 						}
 						//Get last entry
 						line = line + blockSize;
@@ -636,7 +648,7 @@ public class InRamDBUtils implements DBImpl{
 												+ fileBlockCount, true)));
 							//Add meta information of new file
 							metaList.getList().add(
-									new MetaInfoQuadruple(fileBlockCount, current, 0));
+									new MetaInfoQuadruple(fileBlockCount, current, 0, 0));
 							//Reset line count
 							lineCount=0;
 						}
