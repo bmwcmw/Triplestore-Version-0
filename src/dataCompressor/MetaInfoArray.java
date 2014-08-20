@@ -9,22 +9,22 @@ import java.util.ArrayList;
  */
 public class MetaInfoArray {
 
-	private ArrayList<MetaInfoTriple> list;
+	private ArrayList<MetaInfoQuadruple> list;
 	
 	public MetaInfoArray(){
-		list = new ArrayList<MetaInfoTriple>();
+		list = new ArrayList<MetaInfoQuadruple>();
 	}
 	
-	public ArrayList<MetaInfoTriple> getList(){
+	public ArrayList<MetaInfoQuadruple> getList(){
 		return list;
 	}
 	
-	public void add(MetaInfoTriple m){
+	public void add(MetaInfoQuadruple m){
 		list.add(m);
 	}
 	
 	public void empty(){
-		list = new ArrayList<MetaInfoTriple>();
+		list = new ArrayList<MetaInfoQuadruple>();
 	}
 	
 }

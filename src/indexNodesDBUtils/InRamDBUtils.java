@@ -22,7 +22,7 @@ import ctmRdf.CTMServer;
 
 import dataCleaner.CTMPairStr;
 import dataCompressor.MetaInfoArray;
-import dataCompressor.MetaInfoTriple;
+import dataCompressor.MetaInfoQuadruple;
 import dataCompressor.SOLongPair;
 import dataReader.PairReader;
 
@@ -284,7 +284,7 @@ public class InRamDBUtils implements DBImpl{
 				//Begin from the first subject(first row)
 				Long current = soList.get(0).S;
 				//Add first element to metainfo list
-				metaList.getList().add(new MetaInfoTriple(fileBlockCount,current,0));
+				metaList.getList().add(new MetaInfoQuadruple(fileBlockCount,current,0,0));
 				//Temporary set of objects of one subject
 				List<Long> lineSet = new ArrayList<Long>();
 				line = "";
@@ -317,6 +317,7 @@ public class InRamDBUtils implements DBImpl{
 							line += last + ",";
 						}
 						lineSet.remove(0);
+						//For a line set of S
 						for (Long i : lineSet){
 							if(i - last != 0){
 								//If continuous 0 or 1
@@ -348,7 +349,7 @@ public class InRamDBUtils implements DBImpl{
 															+ fileBlockCount, true)));
 										//Add meta information of new file
 										metaList.getList().add(
-												new MetaInfoTriple(fileBlockCount, current, i));
+												new MetaInfoQuadruple(fileBlockCount, current, i));
 										//Reset line count
 										lineCount=0;
 									}
@@ -380,7 +381,7 @@ public class InRamDBUtils implements DBImpl{
 												+ fileBlockCount, true)));
 							//Add meta information of new file
 							metaList.getList().add(
-									new MetaInfoTriple(fileBlockCount, current, 0));
+									new MetaInfoQuadruple(fileBlockCount, current, 0));
 							//Reset line count
 							lineCount=0;
 						}
@@ -538,7 +539,7 @@ public class InRamDBUtils implements DBImpl{
 				//Begin from the first object(first row)
 				Long current = soList.get(0).O;
 				//Add first element to metainfo list
-				metaList.getList().add(new MetaInfoTriple(fileBlockCount,current,0));
+				metaList.getList().add(new MetaInfoQuadruple(fileBlockCount,current,0,0));
 				//Temporary set of objects of one subject
 				List<Long> lineSet = new ArrayList<Long>();
 				line = "";
@@ -571,6 +572,7 @@ public class InRamDBUtils implements DBImpl{
 							line += last + ",";
 						}
 						lineSet.remove(0);
+						//For a line set of O
 						for (Long i : lineSet){
 							if(i - last != 0){
 								//If continuous 0 or 1
@@ -602,7 +604,7 @@ public class InRamDBUtils implements DBImpl{
 															+ fileBlockCount, true)));
 										//Add meta information of new file
 										metaList.getList().add(
-												new MetaInfoTriple(fileBlockCount, current, i));
+												new MetaInfoQuadruple(fileBlockCount, current, i));
 										//Reset line count
 										lineCount=0;
 									}
@@ -634,7 +636,7 @@ public class InRamDBUtils implements DBImpl{
 												+ fileBlockCount, true)));
 							//Add meta information of new file
 							metaList.getList().add(
-									new MetaInfoTriple(fileBlockCount, current, 0));
+									new MetaInfoQuadruple(fileBlockCount, current, 0));
 							//Reset line count
 							lineCount=0;
 						}
@@ -669,8 +671,8 @@ public class InRamDBUtils implements DBImpl{
 	public void writeMeta(String outFilePath) throws IOException {
 		BufferedWriter fMeta = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
 				outFilePath + CTMConstants.MetadataExt, true), "UTF-8"));
-		for(MetaInfoTriple m : metaList.getList()){
-			fMeta.write(m.nFile + " " + m.id + " " + m.offset);
+		for(MetaInfoQuadruple m : metaList.getList()){
+			fMeta.write(m.nFile + " " + m.id + " " + m.offsetID + " " + m.offsetLine);
 			fMeta.newLine();
 		}
 		if (fMeta != null) {
