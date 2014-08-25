@@ -1,4 +1,4 @@
-package ctmSPARQL;
+package ctmNode;
 
 /**
  * Data structure for the meta information in one block (block mode) :
