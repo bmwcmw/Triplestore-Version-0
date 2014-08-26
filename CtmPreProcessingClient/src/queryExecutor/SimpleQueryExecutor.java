@@ -23,6 +23,7 @@ import org.json.simple.JSONObject;
 
 import com.google.common.collect.Sets;
 
+import queryExecutor.ExecutorImpl.MODE;
 import queryObjects.LongPattern;
 import queryObjects.ParsedQuery;
 import queryObjects.QueryPatternResult;
@@ -43,44 +44,46 @@ import queryUtils.QueryUtils.VarType;
  * @author CEDAR
  *
  */
-public class SimpleQueryExecutor {
+public class SimpleQueryExecutor implements ExecutorImpl {
 	
-	public static enum MODE{
-		LOCALFS, HDFS, CEDAR
-	}
+	private MODE mode = MODE.HDFS;
 	
-	private static MODE mode = MODE.HDFS;
+	private String localPath = null;
 	
-	public static void setMode(MODE toSet){
+	private DBImpl dbu;
+	
+	@Override
+	public void setMode(MODE toSet){
 		mode = toSet;
 	}
 	
-	public static MODE getMode(){
+	@Override
+	public MODE getMode(){
 		return mode;
 	}
-	
-	private static String localPath = null;
-	
-	public static void setLocalPath(String path){
+
+	@Override
+	public void setLocalPath(String path){
 		localPath = path;
 	}
-	
-	public static String getLocalPath(){
+
+	@Override
+	public String getLocalPath(){
 		return localPath;
 	}
-	
-	private static DBImpl dbu;
-	
-	public static void setDBU(DBImpl toSet){
+
+	@Override
+	public void setDBU(DBImpl toSet){
 		dbu = toSet;
 	}
-	
-	public static DBImpl getDBU(){
+
+	@Override
+	public DBImpl getDBU(){
 		return dbu;
 	}
-	
-	public static QueryPatternResult fetchFromDest(String dest, StringPattern pat)
-			throws Exception{
+
+	@Override
+	public QueryPatternResult fetchFromDest(String dest, StringPattern pat) throws Exception {
 		switch(mode){
 			case LOCALFS:
 				return fetchFromLocalFS(dest, pat);
@@ -93,8 +96,7 @@ public class SimpleQueryExecutor {
 		}
 	}
 	
-	private static QueryPatternResult fetchFromLocalFS(String pred, StringPattern pat) 
-			throws Exception {
+	private QueryPatternResult fetchFromLocalFS(String pred, StringPattern pat) throws Exception {
 		QueryPatternResult result = null;
 		
 		IOUtils.logLog("Predicate term : "+pred);
@@ -236,12 +238,12 @@ public class SimpleQueryExecutor {
 		return result;
 	}
 	
-	private static QueryPatternResult fetchFromHDFS(String dest, StringPattern pat){
+	private QueryPatternResult fetchFromHDFS(String dest, StringPattern pat){
 		QueryPatternResult result = new QueryPatternResult(pat, null);
 		return result;
 	}
 	
-	private static QueryPatternResult fetchFromCEDAR(String dest, StringPattern pat){
+	private QueryPatternResult fetchFromCEDAR(String dest, StringPattern pat){
 		QueryPatternResult result = new QueryPatternResult(pat, null);
 		return result;
 	}
@@ -253,8 +255,7 @@ public class SimpleQueryExecutor {
 	 * @return The result set
 	 * @throws Exception
 	 */
-	public static QueryResult execute(ParsedQuery parsed, JSONArray dstInfo) 
-			throws Exception{
+	public QueryResult execute(ParsedQuery parsed, JSONArray dstInfo) throws Exception{
 		/* If we use Local FS, we must specify the path of local files. */
 		if(mode == MODE.LOCALFS && localPath == null){
 			throw new Exception("ERROR : Local source folder not set " +
@@ -276,7 +277,7 @@ public class SimpleQueryExecutor {
 		HashMap<Integer, SubQueryPatternSet> patterns = parsed.getPatterns();
 		SubQueryPatternSet subset;
 		QueryResult result = null;
-		/* Naif version : execute from 0 to 3 variable(s) */
+		/* Naive version : execute from 0 to 3 variable(s) */
 		for(int i=0; i<=3; i++){
 			if((subset = patterns.get(i)) != null){
 				HashMap<Integer, StringPattern> subpatterns = subset.getAll();
@@ -293,7 +294,7 @@ public class SimpleQueryExecutor {
 						 * Remove all before ":", then ":" to "-"
 						 */
 						String destPred = pat.getP().replaceAll(".*:", "").replace(":", "-");
-						QueryPatternResult thisRes = SimpleQueryExecutor.fetchFromDest(destPred, pat);
+						QueryPatternResult thisRes = fetchFromDest(destPred, pat);
 					}
 				}
 			}

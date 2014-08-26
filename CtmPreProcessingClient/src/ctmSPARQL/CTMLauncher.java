@@ -12,10 +12,11 @@ import queryUtils.InvalidPatternException;
 public class CTMLauncher {
 
 	public static void main(String[] args) throws Exception {
-		SimpleQueryExecutor.setMode(SimpleQueryExecutor.MODE.LOCALFS);
-		SimpleQueryExecutor.setLocalPath(System.getProperty("user.dir") + 
+		SimpleQueryExecutor exe = new SimpleQueryExecutor();
+		exe.setMode(SimpleQueryExecutor.MODE.LOCALFS);
+		exe.setLocalPath(System.getProperty("user.dir") + 
 				File.separator + "_compressedFake");
-		SimpleQueryExecutor.setDBU(new InRamDBUtils());
+		exe.setDBU(new InRamDBUtils());
 		
 //		String query = 
 //				"SELECT ?X, ?Y, ?Z"
@@ -35,7 +36,7 @@ public class CTMLauncher {
 				"?X hasFriend Jill}";
 		
 		ParsedQuery planed = SimpleQueryPlanner.plan(query);
-		SimpleQueryExecutor.execute(planed, null);
+		exe.execute(planed, null);
 		
 //		MatrixLineParser.parseMatrixLine("4:[1]1,1,1,2,2");
 		
