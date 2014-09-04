@@ -2,8 +2,10 @@ package dbUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 /**
+ * <p>Database utility for ONE predicate.</p>
  * This implementation allows to store and fetch triple data, not only for the BitMat compression 
  * but also to prepare the execution of SPARQL queries (loading data into databases inside different 
  * environments, etc). 
@@ -17,11 +19,27 @@ import java.sql.SQLException;
 public interface DBImpl {
 
 	/**
-	 * Returns the number of SO pairs
-	 * @return
+	 * Cleans all the things
 	 */
-	public Long fetchSOSize();
+	public void cleanAll();
 
+	/**
+	 * Closes the connection
+	 * @throws SQLException
+	 */
+	public void closeAll() throws Exception;
+	
+	
+
+	/* * * * * * *
+	 * * Index * *
+	 * * * * * * */
+	/**
+	 * Loads the index from an index file
+	 * @param path
+	 */
+	public void loadIndexFromFile(String path) throws IOException, ParseException;
+	
 	/**
 	 * Fetches current number of nodes
 	 * @return Current index-node table's size
@@ -44,33 +62,40 @@ public interface DBImpl {
      * @throws SQLException
      */
 	public String fetchNodeById(Long index) throws Exception;
-
+	
+	
+	
+	
+	/* * * * * * *
+	 * * Matrix  *
+	 * * * * * * */
 	/**
-	 * Cleans all the things
-	 */
-	public void cleanAll();
-
-	/**
-	 * Closes the connection
-	 * @throws SQLException
-	 */
-	public void closeAll() throws Exception;
-
-	/**
-	 * Loads the index from a compressed index file
+	 * Loads the matrix from a compressed matrix file
 	 * @param path
 	 */
-	public void loadIndexFromFile(String path) throws IOException;
-
+	public void loadMatrixFromFile(String path) throws IOException, ParseException;
+	
 	/**
-	 * Loads the matrix from a compressed index file
+	 * Returns the number of SO pairs
+	 * @return
+	 */
+	public Long fetchSOSize();
+	
+	
+	
+	/* * * * * * *
+	 * Metadata  *
+	 * * * * * * */
+	/**
+	 * Detects and loads meta-data of ONE compressed predicate files (block mode)
 	 * @param path
 	 */
-	public void loadMatrixFromFile(String path) throws IOException;
+	public void loadMetaFromFile(String path) throws IOException, ParseException;
 
 	/**
-	 * Loads the size of loaded database
+	 * Loads the current predicate's number of files appear in the meta list
 	 * @param path
 	 */
-	public Long fetchLoadedSize();
+	public int fetchLoadedMetaSize();
+	
 }

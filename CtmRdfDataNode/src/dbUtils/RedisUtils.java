@@ -19,6 +19,7 @@ public class RedisUtils implements DBImpl{
 	private final int DBINDEX1 = 1; //Index to Node
 	private final int DBINDEX2 = 2; //Node to Index
 	private final int DBSO = 3;
+	private final int DBMETA = 4;
 	
 	private Jedis jedis = null;
 	private Pipeline pipeline = null;
@@ -33,38 +34,6 @@ public class RedisUtils implements DBImpl{
 	}
 	
 	public void connect(){
-	}
-
-	@Override
-	public Long fetchSOSize() {
-		//jedis.connect();
-		jedis.select(DBSO);
-		Long size = jedis.dbSize();
-		//jedis.close();
-		return size;
-	}
-
-	@Override
-	public Long fetchIndexSize() {
-		//jedis.connect();
-		jedis.select(DBINDEX1);
-		Long size = jedis.dbSize();
-		//jedis.close();
-		return size;
-	}
-
-	@Override
-	public Long fetchIdByNode(String node) {
-		jedis.select(DBINDEX2);
-		String index = jedis.get(node);
-		return (index==null)?null:Long.valueOf(index);
-	}
-
-	@Override
-	public String fetchNodeById(Long index) {
-		jedis.select(DBINDEX1);
-		String node = jedis.get(index.toString());
-		return (node==null)?null:node;
 	}
 
 	@Override
@@ -86,6 +55,11 @@ public class RedisUtils implements DBImpl{
 			jedis.quit();
 	}
 
+
+	
+	/* * * * * * *
+	 * * Index * *
+	 * * * * * * */
 	@Override
 	public void loadIndexFromFile(String path) {
 		// TODO direct bulk load https://github.com/ldodds/redis-load
@@ -112,20 +86,88 @@ public class RedisUtils implements DBImpl{
 			pipeline.syncAndReturnAll();
 			jedis.close();
 		}
-		IOUtils.logLog("Successfully loaded. Current size of key-value pair(s) : " + fetchLoadedSize());
+		IOUtils.logLog("Successfully loaded. Current size of index entries : " + 
+				fetchIndexSize());
 	}
 
 	@Override
-	public Long fetchLoadedSize() {
-		jedis.connect();
-		long size = jedis.dbSize();
-		jedis.close();
+	public Long fetchIndexSize() {
+		//jedis.connect();
+		jedis.select(DBINDEX1);
+		Long size = jedis.dbSize();
+		//jedis.close();
 		return size;
 	}
 
 	@Override
+	public Long fetchIdByNode(String node) {
+		jedis.select(DBINDEX2);
+		String index = jedis.get(node);
+		return (index==null)?null:Long.valueOf(index);
+	}
+
+	@Override
+	public String fetchNodeById(Long index) {
+		jedis.select(DBINDEX1);
+		String node = jedis.get(index.toString());
+		return (node==null)?null:node;
+	}
+	
+	
+	
+	/* * * * * * *
+	 * * Matrix  *
+	 * * * * * * */
+	@Override
 	public void loadMatrixFromFile(String path) throws IOException {
 		// TODO load matrix files
+	}
+	
+	@Override
+	public Long fetchSOSize() {
+		//jedis.connect();
+		jedis.select(DBSO);
+		Long size = jedis.dbSize();
+		//jedis.close();
+		return size;
+	}
+	
+	public static int safeLongToInt(long l) {
+	    if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
+	        throw new IllegalArgumentException
+	            (l + " cannot be cast to int without changing its value.");
+	    }
+	    return (int) l;
+	}
+	
+	
+	
+	/* * * * * * *
+	 * Metadata  *
+	 * * * * * * */
+	@Override
+	public void loadMetaFromFile(String path) throws IOException,
+			ParseException {
+		try {
+			jedis.connect();
+			jedis.select(DBMETA);
+			pipeline = jedis.pipelined();
+			//TODO
+		} finally {
+			pipeline.syncAndReturnAll();
+			jedis.close();
+		}
+		IOUtils.logLog("Successfully loaded. Current size of meta entries: " + 
+				fetchLoadedMetaSize());
+		
+	}
+	
+	@Override
+	public int fetchLoadedMetaSize() {
+		jedis.connect();
+		int size = safeLongToInt(jedis.dbSize());
+		jedis.close();
+		return size;
 	}
 	
 }

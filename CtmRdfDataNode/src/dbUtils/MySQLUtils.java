@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 
 public class MySQLUtils implements DBImpl{
 
@@ -21,10 +22,18 @@ public class MySQLUtils implements DBImpl{
 	}
 
 	@Override
-	public Long fetchSOSize() {
+	public void cleanAll() {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
+
+	@Override
+	public void closeAll() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 
 	@Override
 	public Long fetchIndexSize() throws Exception {
@@ -45,22 +54,12 @@ public class MySQLUtils implements DBImpl{
 	}
 
 	@Override
-	public void cleanAll() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void closeAll() throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void loadIndexFromFile(String path) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
+	
+
 
 	@Override
 	public void loadMatrixFromFile(String path) throws IOException {
@@ -69,9 +68,24 @@ public class MySQLUtils implements DBImpl{
 	}
 
 	@Override
-	public Long fetchLoadedSize() {
+	public Long fetchSOSize() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	
+
+	@Override
+	public void loadMetaFromFile(String path) throws IOException,
+			ParseException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int fetchLoadedMetaSize() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 

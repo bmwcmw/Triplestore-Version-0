@@ -1,4 +1,4 @@
-package ctmNode;
+package metaLoader;
 
 /**
  * Data structure for the meta information in one block (block mode) :
