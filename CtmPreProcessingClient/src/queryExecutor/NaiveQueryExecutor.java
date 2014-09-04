@@ -1,15 +1,7 @@
 package queryExecutor;
 
 import indexNodesDBUtils.DBImpl;
-import indexNodesDBUtils.InRamDBUtils;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,11 +11,6 @@ import java.util.Set;
 import localIOUtils.IOUtils;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import com.google.common.collect.Sets;
-
-import queryExecutor.ExecutorImpl.MODE;
 import queryObjects.LongPattern;
 import queryObjects.ParsedQuery;
 import queryObjects.QueryPatternResult;
@@ -31,7 +18,6 @@ import queryObjects.QueryResult;
 import queryObjects.StringPattern;
 import queryObjects.SubQueryPatternSet;
 import queryRewriter.SimpleQueryTranslator;
-import queryUtils.QueryUtils.VarType;
 
 /**
  * This is the query executor which performs processed SPARQL query by asking 
@@ -44,7 +30,7 @@ import queryUtils.QueryUtils.VarType;
  * @author CEDAR
  *
  */
-public class SimpleQueryExecutor implements ExecutorImpl {
+public class NaiveQueryExecutor implements ExecutorImpl {
 	
 	private MODE mode = MODE.HDFS;
 	
