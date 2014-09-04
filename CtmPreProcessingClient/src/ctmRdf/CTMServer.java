@@ -56,19 +56,9 @@ public class CTMServer {
 
 	// TODO possibility to add arguments while launching the program
 	// TODO possibility to use configuration file
-	private final static String _workingDir = System.getProperty("user.dir");
-	private static Map<String, String> _ctlParams;
 	private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-
-	public static int _nbThreads;
-	private static int _compressMode;
-	private static boolean _writeprecompare;
-	public static int _blockLineNb;
-	public static int _blockLineLength;
-	private static int _precompareMode;
-	private static int _compareMode;
-	private static int _distributeMode;
-	private static int _indicatorMode;
+	
+	public static CTMServerConfig myConfig;
 
 	/**
 	 * Main method of the client program
@@ -79,48 +69,7 @@ public class CTMServer {
 		System.out.println("---------------------------------------");
 		System.out.println("|--------         CTM         --------|");
 		System.out.println("---------------------------------------");
-
-		// XXX SETUP : Logs on/off
-		IOUtils.setLogging(true, false);
-		
-		// XXX SETUP : Compressor mode, perhaps needs external DB support
-		CTMServer._compressMode = CTMConstants.CTMCOMPRESS_INRAM;
-		// XXX SETUP : Compressor writes sorted S/O files of each predicate or 
-		// 			   not (InRam only)
-		CTMServer._writeprecompare = true;
-		// XXX SETUP : Set the first to 0 if we want to disable the block mode. Then the second one 
-		//			   will be automatically disabled.
-		CTMServer._blockLineNb = 10000;
-		CTMServer._blockLineLength = 32768;
-		
-		// XXX SETUP : Pre-Comparator mode, perhaps needs PERL executable in PATH
-		CTMServer._precompareMode = CTMConstants.CTMPRECOMPARE_JAVA;
-		
-		// XXX SETUP : Comparator mode, perhaps needs PERL/GNU executable in PATH
-		CTMServer._compareMode = CTMConstants.CTMCOMPARE_JAVA_INRAM;
-		
-		// XXX SETUP : Distributor mode, to various distributed environments
-		CTMServer._distributeMode = CTMConstants.CTMDISTRIBUTE_HDFS;
-		
-		// XXX SETUP : Use only S/O or S and O for indicator in the distribution
-		CTMServer._indicatorMode = CTMConstants.CTMINDICATORSO;
-		
-		// XXX SETUP : Global in/out paths
-		CTMServer._ctlParams = new HashMap<String, String>();
-		CTMServer._ctlParams.put("rdfPath", _workingDir + File.separator + ".." 
-				+ File.separator + "CtmDataSet" + File.separator + "__rdf");
-		CTMServer._ctlParams.put("n3Path", _workingDir + File.separator + ".." 
-				+ File.separator + "CtmDataSet" + File.separator + "__n3(260G)");
-		CTMServer._ctlParams.put("invalidPath", _workingDir + File.separator + "_invalidTriple");
-		CTMServer._ctlParams.put("psPath", _workingDir + File.separator + "_ps");
-		CTMServer._ctlParams.put("posPath", _workingDir + File.separator + "_pos");
-		CTMServer._ctlParams.put("nsPath", _workingDir + File.separator + "_ns");
-		CTMServer._ctlParams.put("compressedPath", _workingDir + File.separator + "_compressed");
-		CTMServer._ctlParams.put("comparePath", _workingDir + File.separator + "_compare");
-		CTMServer._ctlParams.put("indicatorPath", _workingDir + File.separator + "_indicator");
-
-		for (String key : CTMServer._ctlParams.keySet())
-			IOUtils.logLog("Using parameter : " + key + " - " + CTMServer._ctlParams.get(key));
+		myConfig = CTMServerConfig.getInstance();
 
 		System.out.println("---------------------------------------");
 		
@@ -187,26 +136,26 @@ public class CTMServer {
 		switch (programInd) {
 			case CTMConstants.CTMEMPTY:
 				IOUtils.logLog("\nCleaning all except rdf and n3 files");
-				if (_ctlParams != null) {
-					invalidPath = _ctlParams.get("invalidPath");
+				if (myConfig._ctlParams != null) {
+					invalidPath = myConfig._ctlParams.get("invalidPath");
 					IOUtils.deleteDirectory(new File(invalidPath));
 					IOUtils.checkOrCreateFolder(invalidPath);
-					psPath = _ctlParams.get("psPath");
+					psPath = myConfig._ctlParams.get("psPath");
 					IOUtils.deleteDirectory(new File(psPath));
 					IOUtils.checkOrCreateFolder(psPath);
-					posPath = _ctlParams.get("posPath");
+					posPath = myConfig._ctlParams.get("posPath");
 					IOUtils.deleteDirectory(new File(posPath));
 					IOUtils.checkOrCreateFolder(posPath);
-					nsPath = _ctlParams.get("nsPath");
+					nsPath = myConfig._ctlParams.get("nsPath");
 					IOUtils.deleteDirectory(new File(nsPath));
 					IOUtils.checkOrCreateFolder(nsPath);
-					comparePath = _ctlParams.get("comparePath");
+					comparePath = myConfig._ctlParams.get("comparePath");
 					IOUtils.deleteDirectory(new File(comparePath));
 					IOUtils.checkOrCreateFolder(comparePath);
-					compressedPath = _ctlParams.get("compressedPath");
+					compressedPath = myConfig._ctlParams.get("compressedPath");
 					IOUtils.deleteDirectory(new File(compressedPath));
 					IOUtils.checkOrCreateFolder(compressedPath);
-					indicatorPath = _ctlParams.get("indicatorPath");
+					indicatorPath = myConfig._ctlParams.get("indicatorPath");
 					IOUtils.deleteDirectory(new File(indicatorPath));
 					IOUtils.checkOrCreateFolder(indicatorPath);
 				}
@@ -228,7 +177,7 @@ public class CTMServer {
 				setNbThreads();
 				startTime = System.currentTimeMillis();
 				CTMServer.ps(programInd);
-				IOUtils.logLog(CTMServer._nbThreads+" threads terminated");
+				IOUtils.logLog(myConfig._nbThreads+" threads terminated");
 				endTime = System.currentTimeMillis();
 				duration = endTime - startTime;
 				IOUtils.logLog("---------------------------------------");
@@ -240,7 +189,7 @@ public class CTMServer {
 				System.out.println("Do you want to merge each predicate into single file RIGHT NOW?");
 				System.out.println("(Not necessary for compression/distribution, and use SHELL script "
 						+ "if you want to perform this faster) (yN)");
-				psPath = _ctlParams.get("psPath");
+				psPath = myConfig._ctlParams.get("psPath");
 				IOUtils.checkOrCreateFolder(psPath);
 				if(in.readLine().equals("y")){
 					//Merge results of each thread
@@ -289,7 +238,7 @@ public class CTMServer {
 				setNbThreads();
 				startTime = System.currentTimeMillis();
 				CTMServer.pos(programInd);
-				IOUtils.logLog(CTMServer._nbThreads+" threads terminated");
+				IOUtils.logLog(myConfig._nbThreads+" threads terminated");
 				endTime = System.currentTimeMillis();
 				duration = endTime - startTime;
 				IOUtils.logLog("---------------------------------------");
@@ -302,7 +251,7 @@ public class CTMServer {
 				setNbThreads();
 				startTime = System.currentTimeMillis();
 				CTMServer.compress(programInd);
-				IOUtils.logLog(CTMServer._nbThreads+" threads terminated");
+				IOUtils.logLog(myConfig._nbThreads+" threads terminated");
 				endTime = System.currentTimeMillis();
 				duration = endTime - startTime;
 				IOUtils.logLog("---------------------------------------");
@@ -315,7 +264,7 @@ public class CTMServer {
 				setNbThreads();
 				startTime = System.currentTimeMillis();
 				CTMServer.precompare();
-				IOUtils.logLog(CTMServer._nbThreads+" threads terminated");
+				IOUtils.logLog(myConfig._nbThreads+" threads terminated");
 				endTime = System.currentTimeMillis();
 				duration = endTime - startTime;
 				IOUtils.logLog("---------------------------------------");
@@ -328,7 +277,7 @@ public class CTMServer {
 				setNbThreads();
 				startTime = System.currentTimeMillis();
 				CTMServer.compare();
-				IOUtils.logLog(CTMServer._nbThreads+" threads terminated");
+				IOUtils.logLog(myConfig._nbThreads+" threads terminated");
 				endTime = System.currentTimeMillis();
 				duration = endTime - startTime;
 				IOUtils.logLog("---------------------------------------");
@@ -341,7 +290,7 @@ public class CTMServer {
 				setNbThreads();
 				startTime = System.currentTimeMillis();
 				CTMServer.distribute(programInd);
-				IOUtils.logLog(CTMServer._nbThreads+" threads terminated");
+				IOUtils.logLog(myConfig._nbThreads+" threads terminated");
 				endTime = System.currentTimeMillis();
 				duration = endTime - startTime;
 				IOUtils.logLog("---------------------------------------");
@@ -362,9 +311,9 @@ public class CTMServer {
 	 * @return 0 if OK
 	 */
 	static int convert(int programInd){
-		String n3Path = _ctlParams.get("n3Path");
+		String n3Path = myConfig._ctlParams.get("n3Path");
 		IOUtils.checkOrCreateFolder(n3Path);
-		String rdfPath = _ctlParams.get("rdfPath");
+		String rdfPath = myConfig._ctlParams.get("rdfPath");
 		IOUtils.logLog("\nConverting RDF/OWL/WML to N3 : ");
 		IOUtils.logLog("Input : " + rdfPath);
 		IOUtils.logLog("Output : " + n3Path);
@@ -385,8 +334,8 @@ public class CTMServer {
 		}
 		
 		//Create and execute threads with assigned sub task
-		ExecutorService executor = Executors.newFixedThreadPool(CTMServer._nbThreads);
-        for (int i = 0; i < CTMServer._nbThreads; i++) {
+		ExecutorService executor = Executors.newFixedThreadPool(myConfig._nbThreads);
+        for (int i = 0; i < myConfig._nbThreads; i++) {
             Runnable thread = new CTMThread(String.valueOf(i), 
             		programInd, inputLists.get(i), 
             		n3Path + File.separator + String.valueOf(i));
@@ -404,13 +353,13 @@ public class CTMServer {
 	 * @return 0 if OK
 	 */
 	static int ps(int programInd){
-		String n3Path = _ctlParams.get("n3Path");
+		String n3Path = myConfig._ctlParams.get("n3Path");
 		IOUtils.checkOrCreateFolder(n3Path);
-		String psPath = _ctlParams.get("psPath");
+		String psPath = myConfig._ctlParams.get("psPath");
 		IOUtils.checkOrCreateFolder(psPath);
-		String nsPath = _ctlParams.get("nsPath");
+		String nsPath = myConfig._ctlParams.get("nsPath");
 		IOUtils.checkOrCreateFolder(nsPath);
-		String invalidPath = _ctlParams.get("invalidPath");
+		String invalidPath = myConfig._ctlParams.get("invalidPath");
 		IOUtils.checkOrCreateFolder(invalidPath);
 		IOUtils.logLog("\nPartitionning N3 : ");
 		IOUtils.logLog("Input : " + n3Path);
@@ -423,8 +372,8 @@ public class CTMServer {
 		ArrayList<ArrayList<File>> inputLists = CTMJobAssigner.assignJobs(listOfFiles, false);
 		
 		//Create and execute threads with assigned sub task
-		ExecutorService executor = Executors.newFixedThreadPool(CTMServer._nbThreads);
-        for (int i = 0; i < CTMServer._nbThreads; i++) {
+		ExecutorService executor = Executors.newFixedThreadPool(myConfig._nbThreads);
+        for (int i = 0; i < myConfig._nbThreads; i++) {
             Runnable thread = new CTMThread(String.valueOf(i), 
             		programInd, inputLists.get(i), 
             		psPath + File.separator + String.valueOf(i),
@@ -444,9 +393,9 @@ public class CTMServer {
 	 * @return 0 if OK
 	 */
 	static int pos(int programInd){
-		String psPath = _ctlParams.get("psPath");
+		String psPath = myConfig._ctlParams.get("psPath");
 		IOUtils.checkOrCreateFolder(psPath);
-		String posPath = _ctlParams.get("posPath");
+		String posPath = myConfig._ctlParams.get("posPath");
 		IOUtils.checkOrCreateFolder(posPath);
 		IOUtils.logLog("\nPartitionning N3 : ");
 		IOUtils.logLog("Input : " + psPath);
@@ -457,8 +406,8 @@ public class CTMServer {
 		ArrayList<ArrayList<File>> inputLists = CTMJobAssigner.assignJobs(listOfFiles, false);
 		
 		//Create and execute threads with assigned sub task
-		ExecutorService executor = Executors.newFixedThreadPool(CTMServer._nbThreads);
-        for (int i = 0; i < CTMServer._nbThreads; i++) {
+		ExecutorService executor = Executors.newFixedThreadPool(myConfig._nbThreads);
+        for (int i = 0; i < myConfig._nbThreads; i++) {
             Runnable thread = new CTMThread(String.valueOf(i), programInd, inputLists.get(i), 
             		posPath);
             executor.execute(thread);
@@ -475,29 +424,29 @@ public class CTMServer {
 	 * @return 0 if OK
 	 */
 	static int compress(int programInd){
-		String psPath = _ctlParams.get("psPath");
+		String psPath = myConfig._ctlParams.get("psPath");
 		IOUtils.checkOrCreateFolder(psPath);
-		String compressedPath = _ctlParams.get("compressedPath");
+		String compressedPath = myConfig._ctlParams.get("compressedPath");
 		IOUtils.checkOrCreateFolder(compressedPath);
 		String comparePath = null;
-		if(_writeprecompare){
-			comparePath = _ctlParams.get("comparePath");
+		if(myConfig._writeprecompare){
+			comparePath = myConfig._ctlParams.get("comparePath");
 			IOUtils.checkOrCreateFolder(comparePath);
 		}
 		IOUtils.logLog("\nCompressing PS files : ");
 		IOUtils.logLog("Input : " + psPath);
 		IOUtils.logLog("Output : " + compressedPath);
-		IOUtils.logLog("Writting sorted S/O files : "+_writeprecompare);
+		IOUtils.logLog("Writting sorted S/O files : " + myConfig._writeprecompare);
 
 		File folder = new File(psPath);
 		ArrayList<File> listOfFiles = new ArrayList<File>(Arrays.asList(folder.listFiles()));
 		ArrayList<ArrayList<File>> inputLists = CTMJobAssigner.assignJobs(listOfFiles, false);
 		
 		//Create and execute threads with assigned sub task
-		ExecutorService executor = Executors.newFixedThreadPool(CTMServer._nbThreads);
+		ExecutorService executor = Executors.newFixedThreadPool(myConfig._nbThreads);
 		try{
 			DBImpl dbu = null;
-			switch(_compressMode){
+			switch(myConfig._compressMode){
 				case CTMConstants.CTMCOMPRESS_INRAM : 
 					dbu = new InRamDBUtils();
 					break;
@@ -520,9 +469,9 @@ public class CTMServer {
 					dbu = new RedisUtils();
 					break;
 				default : 
-					IOUtils.logLog("Compression mode error :"+_compressMode);
+					IOUtils.logLog("Compression mode error :" + myConfig._compressMode);
 			}
-	        for (int i = 0; i < CTMServer._nbThreads; i++) {
+	        for (int i = 0; i < myConfig._nbThreads; i++) {
 	            Runnable thread = new CTMThread(String.valueOf(i), programInd, inputLists.get(i), 
 	            		compressedPath, dbu, comparePath);
 	            executor.execute(thread);
@@ -544,9 +493,9 @@ public class CTMServer {
 	 * @return 0 if OK
 	 */
 	static int precompare(){
-		String psPath = _ctlParams.get("psPath");
+		String psPath = myConfig._ctlParams.get("psPath");
 		IOUtils.checkOrCreateFolder(psPath);
-		String comparePath = _ctlParams.get("comparePath");
+		String comparePath = myConfig._ctlParams.get("comparePath");
 		IOUtils.checkOrCreateFolder(comparePath);
 		IOUtils.logLog("\nProcessing PS files : ");
 		IOUtils.logLog("Input : " + psPath);
@@ -557,9 +506,9 @@ public class CTMServer {
 		ArrayList<ArrayList<File>> inputLists = CTMJobAssigner.assignJobs(listOfFiles, false);
 		
 		//Create and execute threads with assigned sub task
-		ExecutorService executor = Executors.newFixedThreadPool(CTMServer._nbThreads);
-        for (int i = 0; i < CTMServer._nbThreads; i++) {
-            Runnable thread = new CTMThread(String.valueOf(i), _precompareMode, inputLists.get(i), 
+		ExecutorService executor = Executors.newFixedThreadPool(myConfig._nbThreads);
+        for (int i = 0; i < myConfig._nbThreads; i++) {
+            Runnable thread = new CTMThread(String.valueOf(i), myConfig._precompareMode, inputLists.get(i), 
             		comparePath);
             executor.execute(thread);
         }
@@ -575,9 +524,9 @@ public class CTMServer {
 	 * @return 0 if OK
 	 */
 	static int compare(){
-		String comparePath = _ctlParams.get("comparePath");
+		String comparePath = myConfig._ctlParams.get("comparePath");
 		IOUtils.checkOrCreateFolder(comparePath);
-		String indicatorPath = _ctlParams.get("indicatorPath");
+		String indicatorPath = myConfig._ctlParams.get("indicatorPath");
 		IOUtils.checkOrCreateFolder(indicatorPath);
 		IOUtils.logLog("\nComparing PS files : ");
 		IOUtils.logLog("Input : " + comparePath);
@@ -647,9 +596,9 @@ public class CTMServer {
 		}
 		LinkedList<LinkedList<FilePair>> inputLists = CTMJobAssigner.assignJobs(toComparePairs, false);
 		//Create and execute threads with assigned sub task
-		ExecutorService executor = Executors.newFixedThreadPool(CTMServer._nbThreads);
-        for (int i = 0; i < CTMServer._nbThreads; i++) {
-            Runnable thread = new CTMThread(String.valueOf(i), _compareMode, inputLists.get(i), 
+		ExecutorService executor = Executors.newFixedThreadPool(myConfig._nbThreads);
+        for (int i = 0; i < myConfig._nbThreads; i++) {
+            Runnable thread = new CTMThread(String.valueOf(i), myConfig._compareMode, inputLists.get(i), 
             		indicatorPath);
             executor.execute(thread);
         }
@@ -667,10 +616,10 @@ public class CTMServer {
 	 * @throws Exception 
 	 */
 	static int distribute(int programInd) throws Exception{	
-		String indicatorPath = _ctlParams.get("indicatorPath");
+		String indicatorPath = myConfig._ctlParams.get("indicatorPath");
 		
 		/* Check compressed files */
-		String compressedPath = _ctlParams.get("compressedPath");
+		String compressedPath = myConfig._ctlParams.get("compressedPath");
 		File folder = new File(compressedPath);
 		File[] listOfFiles = folder.listFiles();
 		
@@ -711,7 +660,7 @@ public class CTMServer {
 		ArrayList<ArrayList<File>> groups = 
 				IndicatorGrouper.groupBySimilarities(indicatorPath
 						, compressedPath, noRepNames, false
-						, CTMServer._indicatorMode, CTMServer._nbThreads);
+						, myConfig._indicatorMode, myConfig._nbThreads);
 
 //		/* Contact DN and get the number of CNs with their available space */
 //		String ipDN = "134.214.142.58";
@@ -784,14 +733,14 @@ public class CTMServer {
 	static void setNbThreads() throws IOException{
 		try{
 		    System.out.println("How many threads (>0) ?");
-		    CTMServer._nbThreads = Integer.valueOf(in.readLine());
+		    myConfig._nbThreads = Integer.valueOf(in.readLine());
 		} catch (NumberFormatException e) {
 		    System.out.println("Input error, using 4 threads...");
-		    CTMServer._nbThreads = 4;
+		    myConfig._nbThreads = 4;
 		} finally {
-		    if(CTMServer._nbThreads<=0){
+		    if(myConfig._nbThreads<=0){
 			    System.out.println("Input error, using 4 threads...");
-			    CTMServer._nbThreads = 4;
+			    myConfig._nbThreads = 4;
 		    }
 		}
 	}

@@ -3,17 +3,15 @@ package ctmSPARQL;
 import java.io.File;
 
 import indexNodesDBUtils.InRamDBUtils;
-import queryExecutor.MatrixLineParser;
 import queryExecutor.NaiveQueryExecutor;
 import queryObjects.ParsedQuery;
 import queryPlanner.SimpleQueryPlanner;
-import queryUtils.InvalidPatternException;
 
 public class CTMLauncher {
 
 	public static void main(String[] args) throws Exception {
 		NaiveQueryExecutor exe = new NaiveQueryExecutor();
-		exe.setMode(SimpleQueryExecutor.MODE.LOCALFS);
+		exe.setMode(NaiveQueryExecutor.MODE.LOCALFS);
 		exe.setLocalPath(System.getProperty("user.dir") + 
 				File.separator + "_compressedFake");
 		exe.setDBU(new InRamDBUtils());
