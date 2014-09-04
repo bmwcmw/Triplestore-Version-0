@@ -6,6 +6,11 @@ import java.util.Map;
 
 import localIOUtils.IOUtils;
 
+/**
+ * Initial configuration settings
+ * @author CEDAR
+ *
+ */
 public class CTMServerConfig {
 	private static CTMServerConfig config = null;
 	

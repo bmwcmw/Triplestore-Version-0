@@ -18,7 +18,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import ctmRdf.CTMConstants;
-import ctmRdf.CTMServer;
+import ctmRdf.CTMServerConfig;
 
 import dataCleaner.RDFPairStr;
 import dataCompressor.MetaInfoArray;
@@ -29,6 +29,7 @@ import dataReader.PairReader;
 public class InRamDBUtils implements DBImpl{
 	private BiMap<Long, String> nodes;
 	private ArrayList<SOLongPair> soList = new ArrayList<SOLongPair>();
+	private CTMServerConfig myConfig = CTMServerConfig.getInstance();
 	
 	/*
 	 * For every predicate, we store for matrix SO and OS (using SOArrayPair) a list of 
@@ -126,13 +127,13 @@ public class InRamDBUtils implements DBImpl{
 	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) 
 			throws IOException {
 		writeMatS(inFileName, outputFilePath, comparePath);
-		if(CTMServer._blockLineNb>0){
+		if(myConfig._blockLineNb>0){
 			writeMeta(outputFilePath + CTMConstants.SOMatrixExt);
 			metaList.empty();
 		}
 		writeMatO(inFileName, outputFilePath, comparePath);
 		writeIndex(outputFilePath);
-		if(CTMServer._blockLineNb>0){
+		if(myConfig._blockLineNb>0){
 			writeMeta(outputFilePath + CTMConstants.OSMatrixExt);
 			metaList.empty();
 		}
@@ -180,7 +181,7 @@ public class InRamDBUtils implements DBImpl{
 		}
 		
 		/* If block mode disabled */
-		if(CTMServer._blockLineNb==0){
+		if(myConfig._blockLineNb==0){
 			BufferedWriter outArrSO = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(outputFilePath + CTMConstants.SOMatrixExt, true)));
 			if(soList.size()>0){
@@ -333,7 +334,7 @@ public class InRamDBUtils implements DBImpl{
 									//initialize "1" block
 									blockSize = 1;
 									//Avoid too large lines by cutting lines with _blockLineLength
-									if(line.length() >= CTMServer._blockLineLength){
+									if(line.length() >= myConfig._blockLineLength){
 										//Remove the last virgule
 										line = line.substring(0, line.length()-1);
 										outArrSO.write(line); outArrSO.newLine(); lineCount++;
@@ -343,7 +344,7 @@ public class InRamDBUtils implements DBImpl{
 										lineS++;
 									}
 									//Avoid too large file by cutting with _blockLineNb
-									if(lineCount >= CTMServer._blockLineNb){
+									if(lineCount >= myConfig._blockLineNb){
 										fileBlockCount++;
 										outArrSO.close();
 										outArrSO = new BufferedWriter(new OutputStreamWriter(
@@ -378,7 +379,7 @@ public class InRamDBUtils implements DBImpl{
 						/*Avoid too large file by cutting with _blockLineNb
 						 *(While only 1 entry in lineSet or just ran out lineSet)
 						 */
-						if(lineCount >= CTMServer._blockLineNb){
+						if(lineCount >= myConfig._blockLineNb){
 							fileBlockCount++;
 							outArrSO.close();
 							outArrSO = new BufferedWriter(new OutputStreamWriter(
@@ -441,7 +442,7 @@ public class InRamDBUtils implements DBImpl{
 		}
 
 		/* If block mode disabled */
-		if(CTMServer._blockLineNb==0){
+		if(myConfig._blockLineNb==0){
 			BufferedWriter outArrOS = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(outputFilePath + CTMConstants.OSMatrixExt, true)));
 			if(soList.size()>0){
@@ -594,7 +595,7 @@ public class InRamDBUtils implements DBImpl{
 									//initialize "1" block
 									blockSize = 1;
 									//Avoid too large lines by cutting lines with _blockLineLength
-									if(line.length() >= CTMServer._blockLineLength){
+									if(line.length() >= myConfig._blockLineLength){
 										//Remove the last virgule
 										line = line.substring(0, line.length()-1);
 										outArrOS.write(line); outArrOS.newLine(); lineCount++;
@@ -604,7 +605,7 @@ public class InRamDBUtils implements DBImpl{
 										lineO ++;
 									}
 									//Avoid too large file by cutting with _blockLineNb
-									if(lineCount >= CTMServer._blockLineNb){
+									if(lineCount >= myConfig._blockLineNb){
 										fileBlockCount++;
 										outArrOS.close();
 										outArrOS = new BufferedWriter(new OutputStreamWriter(
@@ -639,7 +640,7 @@ public class InRamDBUtils implements DBImpl{
 						/*Avoid too large file by cutting with _blockLineNb
 						 *(While only 1 entry in lineSet or just ran out lineSet)
 						 */
-						if(lineCount >= CTMServer._blockLineNb){
+						if(lineCount >= myConfig._blockLineNb){
 							fileBlockCount++;
 							outArrOS.close();
 							outArrOS = new BufferedWriter(new OutputStreamWriter(

@@ -10,6 +10,8 @@ import localIOUtils.IOUtils;
 import dataComparator.FilePair;
 
 public class CTMJobAssigner {
+	
+	private static CTMServerConfig myConfig;
 
 	/**
 	 * <p>Split all source files into specified number of groups, then for example 
@@ -23,11 +25,12 @@ public class CTMJobAssigner {
 	 */
 	public static ArrayList<ArrayList<File>> assignJobs(ArrayList<File> allFiles
 			, boolean averageSize){
+		myConfig = CTMServerConfig.getInstance();
 		ArrayList<ArrayList<File>> outputLists = new ArrayList<ArrayList<File>>();
 		if(!averageSize){ //Random plan only according to the number of files
 			//Distribute all input files to threads, as average as possible
-			int partitionSize = allFiles.size()/CTMServer._nbThreads;
-			int remainder = allFiles.size()%CTMServer._nbThreads;
+			int partitionSize = allFiles.size()/myConfig._nbThreads;
+			int remainder = allFiles.size()%myConfig._nbThreads;
 			int i = 0;
 			if(remainder > 0){
 				partitionSize++;
@@ -62,7 +65,7 @@ public class CTMJobAssigner {
 			for(File f : allFiles){
 				sizeAll += f.length();
 			}
-			double expected = sizeAll / CTMServer._nbThreads;
+			double expected = sizeAll / myConfig._nbThreads;
 			
 			/* Sort the files decreasing in size. */
 			Collections.sort(allFiles, new Comparator<File>() {
@@ -75,7 +78,7 @@ public class CTMJobAssigner {
 			/* Creates groups */
 			double tempsize = expected;
 			int currentGroup = 0;
-			while(allFiles.size() > 0 && currentGroup < CTMServer._nbThreads){
+			while(allFiles.size() > 0 && currentGroup < myConfig._nbThreads){
 				/* for each group, while the remaining space in your group is 
 				 * bigger than the first element of the list take the first element 
 				 * of the list and move it to the group
@@ -96,7 +99,7 @@ public class CTMJobAssigner {
 				}
 			}
 			/* This shouldn't happen */
-			if((currentGroup == CTMServer._nbThreads) && (allFiles.size()>0)){
+			if((currentGroup == myConfig._nbThreads) && (allFiles.size()>0)){
 				IOUtils.logLog("Error : ???");
 				return null;
 			}
@@ -118,11 +121,12 @@ public class CTMJobAssigner {
 	 */
 	public static LinkedList<LinkedList<FilePair>> assignJobs(LinkedList<FilePair> allPairs, 
 			boolean averageSize){
+		myConfig = CTMServerConfig.getInstance();
 		LinkedList<LinkedList<FilePair>> inputLists = new LinkedList<LinkedList<FilePair>>();
 		if(!averageSize){ //Random plan only according to the number of files
 			//Distribute all input files to threads, as average as possible
-			int partitionSize = allPairs.size()/CTMServer._nbThreads;
-			int remainder = allPairs.size()%CTMServer._nbThreads;
+			int partitionSize = allPairs.size()/myConfig._nbThreads;
+			int remainder = allPairs.size()%myConfig._nbThreads;
 			int i = 0;
 			if(remainder > 0){
 				partitionSize++;
