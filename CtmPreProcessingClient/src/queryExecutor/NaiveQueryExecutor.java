@@ -11,6 +11,8 @@ import java.util.Set;
 import localIOUtils.IOUtils;
 
 import org.json.simple.JSONArray;
+
+import ctmRdf.CTMConstants;
 import queryObjects.LongPattern;
 import queryObjects.ParsedQuery;
 import queryObjects.QueryPatternResult;
@@ -87,9 +89,9 @@ public class NaiveQueryExecutor implements ExecutorImpl {
 		
 		IOUtils.logLog("Predicate term : "+pred);
 		/* Paths of specified predicate */
-		String indPath = localPath + File.separator + pred + ".index";
-		String matSOPath = localPath + File.separator + pred + ".matrixSO";
-		String matOSPath = localPath + File.separator + pred + ".matrixOS";
+		String indPath = localPath + File.separator + pred + CTMConstants.IndexExt;
+		String matSOPath = localPath + File.separator + pred + CTMConstants.SOMatrixExt;
+		String matOSPath = localPath + File.separator + pred + CTMConstants.OSMatrixExt;
 		
 		dbu.loadIndexFromFile(indPath);
 		LongPattern intPat = SimpleQueryTranslator.toCompressed(dbu, pat);
@@ -242,13 +244,13 @@ public class NaiveQueryExecutor implements ExecutorImpl {
 	 * @throws Exception
 	 */
 	public QueryResult execute(ParsedQuery parsed, JSONArray dstInfo) throws Exception{
-		/* If we use Local FS, we must specify the path of local files. */
+		/* Check the path of local files if using Local FS */
 		if(mode == MODE.LOCALFS && localPath == null){
 			throw new Exception("ERROR : Local source folder not set " +
 					"while using local file system mode.");
 		}
 		
-		/* If we use distributed systems, we must specify the connection 
+		/* If we use distributed systems, we must specify the connection
 		 * information */
 		if((mode == MODE.HDFS||mode==MODE.CEDAR) && dstInfo == null){
 			throw new Exception("ERROR : Destination information null " +

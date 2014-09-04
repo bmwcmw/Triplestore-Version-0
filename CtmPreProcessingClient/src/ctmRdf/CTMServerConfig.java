@@ -60,7 +60,7 @@ public class CTMServerConfig {
 		_ctlParams.put("rdfPath", _workingDir + File.separator + ".." 
 				+ File.separator + "CtmDataSet" + File.separator + "__rdf");
 		_ctlParams.put("n3Path", _workingDir + File.separator + ".." 
-				+ File.separator + "CtmDataSet" + File.separator + "__n3(260G)");
+				+ File.separator + "CtmDataSet" + File.separator + "__n3(26M)");
 		_ctlParams.put("invalidPath", _workingDir + File.separator + "_invalidTriple");
 		_ctlParams.put("psPath", _workingDir + File.separator + "_ps");
 		_ctlParams.put("posPath", _workingDir + File.separator + "_pos");

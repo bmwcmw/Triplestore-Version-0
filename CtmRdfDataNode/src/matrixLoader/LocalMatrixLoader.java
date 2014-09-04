@@ -1,9 +1,8 @@
 package matrixLoader;
 
 /**
- * For all predicates stores in current node
- * @author CMWT420
- *
+ * Loads matrix files to a specific database.
+ * @author CEDAR
  */
 public class LocalMatrixLoader {
 

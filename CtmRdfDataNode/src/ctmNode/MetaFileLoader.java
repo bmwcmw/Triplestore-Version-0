@@ -16,7 +16,7 @@ import localIOUtils.IOUtils;
 /**
  * Try to load meta information file of compressed predicate (block mode).
  * 
- * @author CMWT420
+ * @author CEDAR
  * 
  */
 public class MetaFileLoader {

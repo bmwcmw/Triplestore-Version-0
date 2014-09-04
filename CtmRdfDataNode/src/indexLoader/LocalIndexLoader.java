@@ -1,9 +1,8 @@
 package indexLoader;
 
 /**
- * For all predicates stores in current node
- * @author CMWT420
- *
+ * Loads index files to a specific database.
+ * @author CEDAR
  */
 public class LocalIndexLoader {
 

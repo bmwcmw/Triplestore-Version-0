@@ -1,9 +1,8 @@
 package metaLoader;
 
 /**
- * For all predicates stores in current node
- * @author CMWT420
- *
+ * In block mode, loads metadata files to a specific database(normally inRam).
+ * @author CEDAR
  */
 public class LocalMetaLoader {
 

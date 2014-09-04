@@ -1,6 +1,6 @@
 package ctmNode;
 
-public class A {
+public class RequestListener {
 
 	/**
 	 * @param args

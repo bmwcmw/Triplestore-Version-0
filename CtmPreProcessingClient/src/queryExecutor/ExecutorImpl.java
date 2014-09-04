@@ -17,22 +17,56 @@ import queryObjects.StringPattern;
  */
 public interface ExecutorImpl {
 	
+	/**
+	 * Acccessing modes of the executor
+	 */
 	public static enum MODE{
 		LOCALFS, HDFS, CEDAR
 	}
 	
+	/**
+	 * Sets the accessing mode
+	 * @param toSet
+	 */
 	public void setMode(MODE toSet);
 	
+	/**
+	 * Gets the current accessing mode
+	 * @return MODE
+	 */
 	public MODE getMode();
 	
+	/**
+	 * Sets the local path for the local mode
+	 * @param path
+	 */
 	public void setLocalPath(String path);
 	
+	/**
+	 * Gets the local path for the local mode
+	 * @return String path
+	 */
 	public String getLocalPath();
 	
+	/**
+	 * Sets the DB Util
+	 * @param toSet
+	 */
 	public void setDBU(DBImpl toSet);
 	
+	/**
+	 * Gets the current DB Util
+	 * @return DBU
+	 */
 	public DBImpl getDBU();
 	
+	/**
+	 * Fetches the result of a pattern from the destination
+	 * @param dest Destination
+	 * @param pat Query pattern
+	 * @return QueryPatternResult
+	 * @throws Exception
+	 */
 	public QueryPatternResult fetchFromDest(String dest, StringPattern pat) throws Exception;
 
 }
