@@ -58,7 +58,7 @@ public class CTMServer {
 	// TODO possibility to use configuration file
 	private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 	
-	public static CTMServerConfig myConfig;
+	private static CTMServerConfig myConfig;
 
 	/**
 	 * Main method of the client program

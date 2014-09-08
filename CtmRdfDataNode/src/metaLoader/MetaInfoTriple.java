@@ -3,7 +3,7 @@ package metaLoader;
 /**
  * Data structure for the meta information in one block (block mode) :
  * <br>
- * - File ID (last number)
+ * - First occured S/O's ID
  * <br>
  * - Offset (ID) of O/S (0 or last O/S of last file)
  * <br>
@@ -12,12 +12,12 @@ package metaLoader;
  *
  */
 public class MetaInfoTriple {
-	public final int nFile;
+	public final Long id;
 	public final Long offsetID;
 	public final int offsetLine;
 	
-	public MetaInfoTriple(int n, long o, int ol){
-		nFile = n;
+	public MetaInfoTriple(long i, long o, int ol){
+		id = i;
 		offsetID = o;
 		offsetLine = ol;
 	}

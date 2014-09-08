@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A list containing pairs of Object
+ * A list containing pairs of objects(key, value)
  * @author CEDAR
  */
 public class BiList<K, V> {

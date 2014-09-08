@@ -281,7 +281,7 @@ public class InRamDBUtils implements DBImpl{
 			if(soList.size()>0){
 				outArrSO = new BufferedWriter(new OutputStreamWriter(
 							new FileOutputStream(outputFilePath + CTMConstants.SOMatrixExt 
-									+ fileBlockCount, true)));
+									+ "." + fileBlockCount, true)));
 				//Begin from the first subject(first row)
 				Long current = soList.get(0).S;
 				//Add first element to metainfo list
@@ -350,7 +350,7 @@ public class InRamDBUtils implements DBImpl{
 										outArrSO = new BufferedWriter(new OutputStreamWriter(
 													new FileOutputStream(outputFilePath 
 															+ CTMConstants.SOMatrixExt 
-															+ fileBlockCount, true)));
+															+ "." + fileBlockCount, true)));
 										//Add meta information of new file
 										metaList.getList().add(
 												new MetaInfoQuadruple(fileBlockCount, current, i,
@@ -385,7 +385,7 @@ public class InRamDBUtils implements DBImpl{
 							outArrSO = new BufferedWriter(new OutputStreamWriter(
 										new FileOutputStream(outputFilePath 
 												+ CTMConstants.SOMatrixExt 
-												+ fileBlockCount, true)));
+												+ "." + fileBlockCount, true)));
 							//Add meta information of new file
 							metaList.getList().add(
 									new MetaInfoQuadruple(fileBlockCount, current, 0, 0));
@@ -542,7 +542,7 @@ public class InRamDBUtils implements DBImpl{
 			if(soList.size()>0){
 				outArrOS = new BufferedWriter(new OutputStreamWriter(
 							new FileOutputStream(outputFilePath + CTMConstants.OSMatrixExt 
-									+ fileBlockCount, true)));
+									+ "." + fileBlockCount, true)));
 				//Begin from the first object(first row)
 				Long current = soList.get(0).O;
 				//Add first element to metainfo list
@@ -611,7 +611,7 @@ public class InRamDBUtils implements DBImpl{
 										outArrOS = new BufferedWriter(new OutputStreamWriter(
 													new FileOutputStream(outputFilePath 
 															+ CTMConstants.OSMatrixExt 
-															+ fileBlockCount, true)));
+															+ "." + fileBlockCount, true)));
 										//Add meta information of new file
 										metaList.getList().add(
 												new MetaInfoQuadruple(fileBlockCount, current, i,
@@ -646,7 +646,7 @@ public class InRamDBUtils implements DBImpl{
 							outArrOS = new BufferedWriter(new OutputStreamWriter(
 										new FileOutputStream(outputFilePath 
 												+ CTMConstants.OSMatrixExt 
-												+ fileBlockCount, true)));
+												+ "." + fileBlockCount, true)));
 							//Add meta information of new file
 							metaList.getList().add(
 									new MetaInfoQuadruple(fileBlockCount, current, 0, 0));

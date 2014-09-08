@@ -39,7 +39,8 @@ public class IOUtils {
 	}
 	
 	/**
-	 * Once setLoggingFile(true) is set, it prints the message not only in the console but also in a log file.
+	 * Once setLoggingFile(true) is set, it prints the message not only in the console but also in 
+	 * a log file.
 	 * @param msg : message to print
 	 */
 	public static void logLog(Object msg){
@@ -48,11 +49,14 @@ public class IOUtils {
 		}
 		if(_loggingFile){
 			_logFileName = WORKINGDIR + File.separator 
-					+ new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()) + ".log";
+					+ new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()) 
+					+ ".log";
 			PrintWriter out = null;
 			try {
 				out = new PrintWriter(new BufferedWriter(new FileWriter(_logFileName, true)));
-				out.println(new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()) + " " + msg);
+				out.println(
+						new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()) 
+						+ " " + msg);
 			} catch (IOException e) {
 				System.out.println("UNABLE TO WRITE INTO LOG FILE");
 			} finally {

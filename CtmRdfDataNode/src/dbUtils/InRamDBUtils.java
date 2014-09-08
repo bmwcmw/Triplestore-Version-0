@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import queryObjects.BiList;
@@ -16,24 +17,24 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import ctmRdf.CTMConstants;
-
 import dataCleaner.RDFPairStr;
 import dataCompressor.SOLongPair;
 import dataReader.PairReader;
 
 public class InRamDBUtils implements DBImpl{
-	private BiList<Long, MetaInfoTriple> metalist;
+	private HashMap<String, BiList<Integer, MetaInfoTriple>> metaList;
 	private BiMap<Long, String> nodes;
 	private ArrayList<SOLongPair> soList = new ArrayList<SOLongPair>();
 	
 	public InRamDBUtils(){
-		nodes = HashBiMap.create();
+		cleanAll();
 	}
 	
 	@Override
 	public void cleanAll(){
 		nodes = HashBiMap.create();
 		soList = new ArrayList<SOLongPair>();
+		metaList = new HashMap<String, BiList<Integer, MetaInfoTriple>>();
 	}
 
 	@Override
@@ -117,15 +118,21 @@ public class InRamDBUtils implements DBImpl{
 	 */
 	@Override
 	public void loadMetaFromFile(String folderPath) throws IOException, ParseException {
+		IOUtils.logLog("Loading " + folderPath);
 		File folder = new File(folderPath);
 		File[] listOfFiles = folder.listFiles();
 		BufferedReader reader = null;
 		if (listOfFiles != null) {
-			BiList<Long, MetaInfoTriple> b = new BiList<Long, MetaInfoTriple>();
 			for (File f : listOfFiles) {
 				if(f.isFile() && 
 						IOUtils.getExtension(f.getName()).equals(CTMConstants.MetadataExt)){
 					//System.out.println(f.getName());
+					String elementName = IOUtils.filenameWithoutExt(f.getName());
+					IOUtils.logLog(elementName);
+					if(!metaList.containsKey(elementName)){
+						metaList.put(elementName, new BiList<Integer, MetaInfoTriple>());
+					}
+					BiList<Integer, MetaInfoTriple> b = metaList.get(elementName);
 					reader = new BufferedReader(new FileReader(f));
 					String line;
 					int lineNb = 0;
@@ -156,27 +163,26 @@ public class InRamDBUtils implements DBImpl{
 						}
 						String soOffsetLineStr = itr.nextToken();
 						int soOffsetLine = Integer.valueOf(soOffsetLineStr);
-//						System.out.println("In file " + f.getName() + " " + fId + " " + soId + " " 
-//								+ soOffsetID + " " + soOffsetLine);
-						b.add(soId, new MetaInfoTriple(fId, soOffsetID, soOffsetLine));
-						
+						IOUtils.logLog("File " + elementName + "." + fId + " begins from ID " + soId 
+								+ ", offset " + soOffsetID + " = line " + soOffsetLine 
+								+ " of current ID");
+						b.add(fId, new MetaInfoTriple(soId, soOffsetID, soOffsetLine));
 						lineNb++;
 					}
 					if (reader != null) reader.close();
 				}
 			}
-			metalist = b;
 		} else {
 			// Handle the case where dir is not really a directory.
 			// Checking dir.isDirectory() above would not be sufficient
 			// to avoid race conditions with another process that deletes
 			// directories.
-			throw new IOException("Nothing in the folder");
+			throw new IOException("Nothing in the folder.");
 		}
 	}
 
 	@Override
 	public int fetchLoadedMetaSize() {
-		return metalist.size();
+		return metaList.size();
 	}
 }
