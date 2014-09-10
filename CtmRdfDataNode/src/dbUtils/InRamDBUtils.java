@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
 import queryObjects.BiList;
@@ -184,5 +185,26 @@ public class InRamDBUtils implements DBImpl{
 	@Override
 	public int fetchLoadedMetaSize() {
 		return metaList.size();
+	}
+
+	@Override
+	public Entry<String, Integer> getFileLineNumber(String predName, String matName, Long lineId, 
+			Long colId) {
+		if(metaList == null){
+			IOUtils.logLog("Metalist is NULL. This shouldn't happen.");
+			System.exit(-1);
+		} else {
+			if(metaList.size()>0){
+				BiList<Integer, MetaInfoTriple> b = metaList.get(predName + "." +matName);
+				if(b != null){
+					//TODO
+				} else {
+					IOUtils.logLog("Couldn't find data for " + predName + "." +matName);
+				}
+			} else {
+				IOUtils.logLog("Metalist is empty.");
+			}
+		}
+		return null;
 	}
 }

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
+import java.util.Map.Entry;
 
 public class MySQLUtils implements DBImpl{
 
@@ -86,6 +87,13 @@ public class MySQLUtils implements DBImpl{
 	public int fetchLoadedMetaSize() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public Entry<String, Integer> getFileLineNumber(String predName,
+			String matName, Long lineId, Long colId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

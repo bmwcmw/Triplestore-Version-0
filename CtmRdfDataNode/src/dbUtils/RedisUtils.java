@@ -3,6 +3,7 @@ package dbUtils;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.Map.Entry;
 
 import localIOUtils.IOUtils;
 import redis.clients.jedis.Jedis;
@@ -168,6 +169,13 @@ public class RedisUtils implements DBImpl{
 		int size = safeLongToInt(jedis.dbSize());
 		jedis.close();
 		return size;
+	}
+
+	@Override
+	public Entry<String, Integer> getFileLineNumber(String predName,
+			String matName, Long lineId, Long colId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

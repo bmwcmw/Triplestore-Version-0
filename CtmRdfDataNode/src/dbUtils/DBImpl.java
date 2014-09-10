@@ -3,6 +3,7 @@ package dbUtils;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.Map.Entry;
 
 /**
  * <p>Database utility for ONE predicate.</p>
@@ -94,8 +95,18 @@ public interface DBImpl {
 
 	/**
 	 * Loads the current predicate's number of files appear in the meta list
-	 * @param path
 	 */
 	public int fetchLoadedMetaSize();
+	
+	/**
+	 * Returns the filename and the line number of a asked lineId(S/O) and colId(O/S) in a specific
+	 * predicate's matrix
+	 * @param predName
+	 * @param matName
+	 * @param lineId
+	 * @param colId
+	 */
+	public Entry<String, Integer> getFileLineNumber(String predName, String matName, Long lineId, 
+			Long colId);
 	
 }

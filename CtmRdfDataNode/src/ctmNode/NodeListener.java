@@ -30,6 +30,8 @@ public class NodeListener {
 				"CtmPreProcessingClient" + File.separator + "_compressed";
 		dbu.loadMetaFromFile(loadPath);
 		System.out.println(dbu.fetchLoadedMetaSize());
+		
+		dbu.getFileLineNumber("a", "SO", (long)0, (long)1);
 	}
 
 }
