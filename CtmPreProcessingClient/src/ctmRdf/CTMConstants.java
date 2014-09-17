@@ -43,6 +43,10 @@ public class CTMConstants {
 	public final static String SOMatrixExt = ".SO";
 	public final static String OSMatrixExt = ".OS";
 	public final static String IndexExt = ".index";
+	public final static String SOIndexExt = ".indexSO";
+	public final static String OSIndexExt = ".indexOS";
+	public final static String SOSortedExt = ".sortedSO";
+	public final static String OSSortedExt = ".sortedOS";
 	public final static String MetadataExt = ".MD";
 	public final static String SArrayExt = ".S";
 	public final static String OArrayExt = ".O";
