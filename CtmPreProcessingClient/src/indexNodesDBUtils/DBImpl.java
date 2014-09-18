@@ -6,9 +6,8 @@ import java.sql.SQLException;
 import dataCompressor.SOLongPair;
 
 /**
- * This implementation allows to store and fetch triple data, not only for the BitMat compression 
- * but also to prepare the execution of SPARQL queries (load data into databases inside different 
- * environments, etc). 
+ * This implementation allows to store and fetch triple data for the BitMat compression. Basically 
+ * the databases comport as Key-Value stores.
  * @author Cedar
  *
  */

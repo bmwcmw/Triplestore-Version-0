@@ -1,5 +1,7 @@
 package indexNodesDBUtils;
 
+import indexNodesDBUtils.DBImpl;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,8 +31,7 @@ import dataCompressor.SOLongPair;
 import dataReader.PairReader;
 
 public class InRamDBUtils2 implements DBImpl{
-	private HashMap<Long, String> nodesLongStr;
-	private HashMap<String, Long> nodesStrLong;
+	private HashMap<Long, String> idNode;
 	private ArrayList<SOLongPair> soList = new ArrayList<SOLongPair>();
 	private CTMServerConfig myConfig = CTMServerConfig.getInstance();
 	
