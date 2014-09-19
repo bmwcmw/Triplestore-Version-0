@@ -1,4 +1,4 @@
-package indexNodesDBUtils;
+package dataCompressorUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;

@@ -1,6 +1,5 @@
 package ctmRdf;
 
-import indexNodesDBUtils.DBImpl;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import localIOUtils.IOUtils;
 import dataComparator.FilePair;
+import dataCompressorUtils.DBImpl;
 import dataDistributor.CEDAR.DestInfo;
 import dataManagement.DataManager;
 

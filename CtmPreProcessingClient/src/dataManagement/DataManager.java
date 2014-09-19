@@ -1,6 +1,5 @@
 package dataManagement;
 
-import indexNodesDBUtils.DBImpl;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -29,6 +28,7 @@ import dataComparator.InRamComparator;
 import dataComparator.JavaComparator;
 import dataCompressor.DgapCompressor;
 import dataCompressor.SOLongPair;
+import dataCompressorUtils.DBImpl;
 import dataDistributor.CEDAR.DestInfo;
 import dataDistributor.CEDAR.FileSenderCN;
 import dataDistributor.SSH.SSHCommandExecutor;

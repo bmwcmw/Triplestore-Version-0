@@ -1,6 +1,4 @@
-package indexNodesDBUtils;
-
-import indexNodesDBUtils.DBImpl;
+package dataCompressorUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,10 +9,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import localIOUtils.IOUtils;
 
@@ -30,8 +26,8 @@ import dataCompressor.MetaInfoQuadruple;
 import dataCompressor.SOLongPair;
 import dataReader.PairReader;
 
-public class InRamDBUtils2 implements DBImpl{
-	private HashMap<Long, String> idNode;
+public class InRamDBUtils implements DBImpl{
+	private BiMap<Long, String> nodes;
 	private ArrayList<SOLongPair> soList = new ArrayList<SOLongPair>();
 	private CTMServerConfig myConfig = CTMServerConfig.getInstance();
 	
@@ -41,7 +37,7 @@ public class InRamDBUtils2 implements DBImpl{
 	 */
 	private MetaInfoArray metaList = new MetaInfoArray();
 	
-	public InRamDBUtils2(){
+	public InRamDBUtils(){
 		nodes = HashBiMap.create();
 	}
 	

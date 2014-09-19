@@ -1,6 +1,5 @@
 package queryExecutor;
 
-import indexNodesDBUtils.DBImpl;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +12,7 @@ import localIOUtils.IOUtils;
 import org.json.simple.JSONArray;
 
 import ctmRdf.CTMConstants;
+import dataCompressorUtils.DBImpl;
 import queryObjects.LongPattern;
 import queryObjects.ParsedQuery;
 import queryObjects.QueryPatternResult;

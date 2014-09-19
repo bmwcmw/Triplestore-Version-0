@@ -1,8 +1,8 @@
 package queryRewriter;
 
+import dataCompressorUtils.DBImpl;
 import queryObjects.LongPattern;
 import queryObjects.StringPattern;
-import indexNodesDBUtils.DBImpl;
 
 /**
  * This is the query rewriter which translates queries to convenient format, in order

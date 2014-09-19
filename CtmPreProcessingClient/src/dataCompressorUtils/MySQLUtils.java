@@ -1,13 +1,25 @@
-package indexNodesDBUtils;
+package dataCompressorUtils;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import dataCompressor.SOLongPair;
 
-public class MongoDBUtils implements DBImpl{
+public class MySQLUtils implements DBImpl{
+
+	protected String _tablename;
+	protected Statement _st;
+	protected ResultSet _rs;
+	protected Connection _conn = null;
     
-	public MongoDBUtils() {
+	public MySQLUtils() throws SQLException, ClassNotFoundException{
 		//TODO
+		_conn = DriverManager.getConnection(DBConstants.MySQLurl, "root", "");
+		_st = _conn.createStatement();
 	}
 
 	@Override
@@ -23,24 +35,24 @@ public class MongoDBUtils implements DBImpl{
 	}
 
 	@Override
-	public Long fetchIndexSize() {
+	public Long fetchIndexSize() throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void insertNode(String node) {
+	public void insertNode(String node) throws SQLException {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public Long fetchIdByNode(String node) {
+	public Long fetchIdByNode(String node) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String fetchNodeById(Long index) {
+	public String fetchNodeById(Long index) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -52,9 +64,10 @@ public class MongoDBUtils implements DBImpl{
 	}
 
 	@Override
-	public void closeAll() {
-		// TODO Auto-generated method stub
-		
+	public void closeAll() throws SQLException {
+		if(_rs!=null) _rs.close();
+		if(_st!=null) _st.close();
+		if(_conn!=null) _conn.close();
 	}
 
 	@Override
@@ -68,7 +81,7 @@ public class MongoDBUtils implements DBImpl{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) 
 			throws IOException {

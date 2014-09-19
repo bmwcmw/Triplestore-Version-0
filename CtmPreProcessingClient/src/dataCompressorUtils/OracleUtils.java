@@ -1,4 +1,4 @@
-package indexNodesDBUtils;
+package dataCompressorUtils;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -10,28 +10,24 @@ import java.sql.Statement;
 import dataCompressor.SOLongPair;
 
 /**
- * Postgres
+ * Oracle
  * @author Cedar
  */
 /*
-CREATE TABLE indexnodes (
-	    id        serial PRIMARY KEY,
-	    data       varchar(128) NOT NULL UNIQUE
-);
-TRUNCATE TABLE indexnodes;
-*/
-public class PostgreSQLUtils implements DBImpl{
+ * See notes
+ */
+public class OracleUtils implements DBImpl{
 
 	protected String _tablename;
 	protected Statement _st;
 	protected ResultSet _rs;
 	protected Connection _conn = null;
     
-	public PostgreSQLUtils() throws SQLException, ClassNotFoundException{
-		this(DBConstants.PostgreSQLurl, "postgres", "postgres");
+	public OracleUtils() throws SQLException, ClassNotFoundException{
+		this(DBConstants.Oracleurl, "root", "");
 	}
     
-	public PostgreSQLUtils(String url, String user, String pwd) throws SQLException, ClassNotFoundException{
+	public OracleUtils(String url, String user, String pwd) throws SQLException, ClassNotFoundException{
 		_conn = DriverManager.getConnection(url, user, pwd);
 		_st = _conn.createStatement();
 	}

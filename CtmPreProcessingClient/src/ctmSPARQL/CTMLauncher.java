@@ -2,7 +2,8 @@ package ctmSPARQL;
 
 import java.io.File;
 
-import indexNodesDBUtils.InRamDBUtils;
+import dataCompressorUtils.InRamDBUtils;
+
 import queryExecutor.NaiveQueryExecutor;
 import queryObjects.ParsedQuery;
 import queryPlanner.SimpleQueryPlanner;

@@ -1,13 +1,5 @@
 package ctmRdf;
 
-import indexNodesDBUtils.DBImpl;
-import indexNodesDBUtils.InRamDBUtils;
-import indexNodesDBUtils.MonetDBUtils;
-import indexNodesDBUtils.MongoDBUtils;
-import indexNodesDBUtils.MySQLUtils;
-import indexNodesDBUtils.OracleUtils;
-import indexNodesDBUtils.PostgreSQLUtils;
-import indexNodesDBUtils.RedisUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -43,6 +35,14 @@ import commandRunner.FormatConverter;
 import dataCleaner.RDFPairLong;
 import dataCleaner.RDFPairStr;
 import dataComparator.FilePair;
+import dataCompressorUtils.DBImpl;
+import dataCompressorUtils.InRamDBUtils;
+import dataCompressorUtils.MonetDBUtils;
+import dataCompressorUtils.MongoDBUtils;
+import dataCompressorUtils.MySQLUtils;
+import dataCompressorUtils.OracleUtils;
+import dataCompressorUtils.PostgreSQLUtils;
+import dataCompressorUtils.RedisUtils;
 import dataDistributor.IndicatorGrouper;
 import dataDistributor.CEDAR.ConnectorDN;
 import dataDistributor.CEDAR.DestInfo;

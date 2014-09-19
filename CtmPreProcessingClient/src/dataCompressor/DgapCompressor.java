@@ -1,8 +1,9 @@
 package dataCompressor;
 
-import indexNodesDBUtils.DBImpl;
 
 import java.io.File;
+
+import dataCompressorUtils.DBImpl;
 
 import localIOUtils.IOUtils;
 
