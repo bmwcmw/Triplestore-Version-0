@@ -11,6 +11,7 @@ public class InRamDBUtils2Test {
 		
 		String outputPath = _workingDir + File.separator + "_compressed2";
 		InRamDBUtils2 dbu = new InRamDBUtils2(inputFilePath, outputPath);
+		dbu.compress();
 	}
 
 }
