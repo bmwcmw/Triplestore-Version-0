@@ -10,6 +10,7 @@ tmp/
 CtmDataSet/
 CtmPreProcessingClient/_compare/
 CtmPreProcessingClient/_compressed/
+CtmPreProcessingClient/_compressed2/
 CtmPreProcessingClient/_indicator/
 CtmPreProcessingClient/_invalidTriple/
 CtmPreProcessingClient/_ns/

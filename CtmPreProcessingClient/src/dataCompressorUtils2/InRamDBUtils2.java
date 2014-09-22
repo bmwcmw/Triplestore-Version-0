@@ -45,45 +45,42 @@ public class InRamDBUtils2 {
 	 * @throws Exception
 	 */
 	public InRamDBUtils2(String toProcessFilePath, String outputPath) throws Exception{
-		InputFileNameWithoutPred = IOUtils.filenameWithoutExt(toProcessFilePath);
-		switch(IOUtils.getExtension(toProcessFilePath)) {
-			case CTMConstants.SOSortedExt :
+		mainInputFile = new File(toProcessFilePath);
+		if(!mainInputFile.exists())
+			throw new Exception("Main input file error : must be " 
+					+ CTMConstants.SOSortedExt + " or " + CTMConstants.OSSortedExt 
+					+ ", here is " + toProcessFilePath);
+
+		InputFileNameWithoutPred = IOUtils.filenameWithoutExt(new File(toProcessFilePath).getName());
+		String mainFileFolderPath = mainInputFile.getParent() + File.separator;
+		if (IOUtils.getExtension(toProcessFilePath).equals(CTMConstants.SOSortedExt)) {
 				MyMode = ModeSO;
-				mainInputFile = new File(
-						InputFileNameWithoutPred + CTMConstants.SOSortedExt);
-				auxInputFile = new File(
-						InputFileNameWithoutPred + CTMConstants.OSSortedExt);
-				if(!mainInputFile.exists() || !auxInputFile.exists())
-					throw new Exception("Input file error : must have both " 
-							+ CTMConstants.SOSortedExt + " and " + CTMConstants.OSSortedExt);
-				break;
-			case CTMConstants.OSSortedExt : 
+				String auxFilePath = mainFileFolderPath + 
+						InputFileNameWithoutPred + CTMConstants.OSSortedExt;
+				auxInputFile = new File(auxFilePath);
+				if(!auxInputFile.exists())
+					throw new Exception("Aux input file does not exist : " + auxFilePath);
+		} else if (IOUtils.getExtension(toProcessFilePath).equals(CTMConstants.OSSortedExt)) {
 				MyMode = ModeOS;
-				mainInputFile = new File(
-						InputFileNameWithoutPred + CTMConstants.OSSortedExt);
-				auxInputFile = new File(
-						InputFileNameWithoutPred + CTMConstants.SOSortedExt);
-				if(!mainInputFile.exists() || !auxInputFile.exists())
-					throw new Exception("Input file error : must have both " 
-							+ CTMConstants.SOSortedExt + " and " + CTMConstants.OSSortedExt);
-				break; 
-			default :
+				String auxFilePath = mainFileFolderPath + 
+						InputFileNameWithoutPred + CTMConstants.SOSortedExt;
+				auxInputFile = new File(auxFilePath);
+				if(!auxInputFile.exists())
+					throw new Exception("Aux input file does not exist : " + auxFilePath);
+		} else {
 				throw new Exception("Input file type error : must be " + CTMConstants.SOSortedExt
-						+ " or " + CTMConstants.OSSortedExt);
+						+ " or " + CTMConstants.OSSortedExt + ", here is " 
+						+ IOUtils.getExtension(toProcessFilePath));
 		}
-		outPath = outputPath;
+		outPath = outputPath + File.separator + InputFileNameWithoutPred + File.separator;
+		File outPutFolder = new File(outPath);
+		if (!outPutFolder.exists())
+			outPutFolder.mkdir();
 		idNode = new HashMap<String, Integer>(100000,0.8f);
 	}
 
 	public int fetchIndexSize() {
 		return idNode.size();
-	}
-
-	public void insertNode(String node) {
-		if (fetchIdByNode(node) == null) {
-			int newid = idNode.size();
-			idNode.put(node, newid);
-		}
 	}
 
 	public Integer fetchIdByNode(String node) {
@@ -124,40 +121,42 @@ public class InRamDBUtils2 {
 			e.printStackTrace();
 			System.exit(-1);
 		}
-		IOUtils.logLog("File charged. Current size of key-value pair(s) : "
+		IOUtils.logLog("Aux index charged from file. Current size of key-value pair(s) : "
 				+ fetchIndexSize());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void compress() throws IOException {
-		writeMat();
+	public void compress(boolean writeIndex) throws IOException {
+		writeMat(writeIndex);
 		if (myConfig._blockLineNb > 0) {
 			writeMeta();
 		}
 	}
 	
-	private final void writeMat() throws IOException {
+	private final void writeMat(boolean writeIndex) throws IOException {
 		//mainInputFile, outPath
 		BufferedWriter outMatWriter;
-		BufferedWriter outIndWriter;
+		BufferedWriter outIndWriter = null;
 		int otherColumn;
-		if(MyMode == 0) {
+		if(MyMode == ModeSO) {
 //			outMatWriter = new BufferedWriter(new OutputStreamWriter(
 //					new FileOutputStream(outPath + InputFileNameWithoutPred 
 //							+ CTMConstants.SOMatrixExt, true)));
-			outIndWriter = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(outPath + InputFileNameWithoutPred 
-							+ CTMConstants.IndexSExt, true)));
+			if(writeIndex)
+				outIndWriter = new BufferedWriter(new OutputStreamWriter(
+						new FileOutputStream(outPath + InputFileNameWithoutPred 
+								+ CTMConstants.IndexSExt, true)));
 			otherColumn = ModeOS;
 		} else {
 //			outMatWriter = new BufferedWriter(new OutputStreamWriter(
 //					new FileOutputStream(outPath + InputFileNameWithoutPred 
 //							+ CTMConstants.OSMatrixExt, true)));
-			outIndWriter = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(outPath + InputFileNameWithoutPred 
-							+ CTMConstants.IndexOExt, true)));
+			if(writeIndex)
+				outIndWriter = new BufferedWriter(new OutputStreamWriter(
+						new FileOutputStream(outPath + InputFileNameWithoutPred 
+								+ CTMConstants.IndexOExt, true)));
 			otherColumn = ModeSO;
 		}
 		
@@ -170,15 +169,26 @@ public class InRamDBUtils2 {
 		pair = MyStringTokenizer.tokenize(CTMConstants.delimiter, lineFromMain);
 		String currentEntry = pair.get(MyMode);
 		int currentIndex = 0;
+		if(writeIndex) {
+			outIndWriter.write(currentIndex + " " + currentEntry);
+			outIndWriter.newLine();
+		}
 		int fileBlockCount = 0;
-		outMatWriter = new BufferedWriter(new OutputStreamWriter(
+		if(MyMode == ModeSO) {
+			outMatWriter = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(outPath + InputFileNameWithoutPred 
 							+ CTMConstants.SOMatrixExt + "." + fileBlockCount, true)));
+		} else {
+			outMatWriter = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(outPath + InputFileNameWithoutPred 
+							+ CTMConstants.OSMatrixExt + "." + fileBlockCount, true)));
+		}
 		// Begins from the first "main column": adds first element to metainfo list
 		metaList.getList().add(
 				new MetaInfoQuadruple(fileBlockCount, currentIndex, 0, 0));
 		// Temporary set of objects of one subject
 		List<Integer> lineSet = new ArrayList<Integer>();
+		lineSet.add(idNode.get(pair.get(otherColumn)));
 		//String lineSetOutStr = "";
 		StringBuilder lineSetOutBuilder = new StringBuilder();
 		lineSetOutBuilder.toString();
@@ -244,10 +254,17 @@ public class InRamDBUtils2 {
 							if (lineCount >= myConfig._blockLineNb) {
 								fileBlockCount++;
 								outMatWriter.close();
-								outMatWriter = new BufferedWriter(new OutputStreamWriter(
-										new FileOutputStream(outPath + InputFileNameWithoutPred 
-												+ CTMConstants.SOMatrixExt + "." + fileBlockCount,
-														true)));
+								if(MyMode == ModeSO) {
+									outMatWriter = new BufferedWriter(new OutputStreamWriter(
+											new FileOutputStream(outPath + InputFileNameWithoutPred 
+													+ CTMConstants.SOMatrixExt + "." 
+													+ fileBlockCount, true)));
+								} else {
+									outMatWriter = new BufferedWriter(new OutputStreamWriter(
+											new FileOutputStream(outPath + InputFileNameWithoutPred 
+													+ CTMConstants.OSMatrixExt + "." 
+													+ fileBlockCount, true)));
+								}
 								// Add meta information of new file
 								metaList.getList().add(new MetaInfoQuadruple(fileBlockCount,
 										currentIndex, i, lineMainCol));
@@ -272,9 +289,15 @@ public class InRamDBUtils2 {
 				lineCount++;
 				lineSet = new ArrayList<Integer>();
 				// Increases the id of "main column" if it does not equal to the current one
-				idNode.put(pair.get(MyMode), currentIndex);
+				//idNode.put(pair.get(MyMode), currentIndex);
 				currentEntry = pair.get(MyMode);
 				currentIndex++;
+
+				if(writeIndex) {
+					outIndWriter.write(currentIndex + " " + currentEntry);
+					outIndWriter.newLine();
+				}
+				
 				lineSet.add(idNode.get(pair.get(otherColumn)));
 				lineSetOutBuilder.setLength(0);
 				/*
@@ -284,9 +307,15 @@ public class InRamDBUtils2 {
 				if (lineCount >= myConfig._blockLineNb) {
 					fileBlockCount++;
 					outMatWriter.close();
-					outMatWriter = new BufferedWriter(new OutputStreamWriter(
-							new FileOutputStream(outPath + InputFileNameWithoutPred 
-									+ CTMConstants.SOMatrixExt + "." + fileBlockCount, true)));
+					if(MyMode == ModeSO) {
+						outMatWriter = new BufferedWriter(new OutputStreamWriter(
+								new FileOutputStream(outPath + InputFileNameWithoutPred 
+										+ CTMConstants.SOMatrixExt + "." + fileBlockCount, true)));
+					} else {
+						outMatWriter = new BufferedWriter(new OutputStreamWriter(
+								new FileOutputStream(outPath + InputFileNameWithoutPred 
+										+ CTMConstants.OSMatrixExt + "." + fileBlockCount, true)));
+					}
 					// Add meta information of new file
 					metaList.getList().add(
 							new MetaInfoQuadruple(fileBlockCount,
@@ -301,7 +330,15 @@ public class InRamDBUtils2 {
 			outMatWriter.close();
 		if (outIndWriter != null)
 			outIndWriter.close();
-		IOUtils.logLog("Matrix and main index written to file in block mode");
+
+		if(writeIndex) {
+			IOUtils.logLog("Main index file written in file. Current size of key-value pair(s) : "
+					+ currentIndex + "+/-1");
+			writeAuxIndex();
+			IOUtils.logLog("Matrix and main&aux index written to file in block mode");
+		} else {
+			IOUtils.logLog("Matrix only written to file in block mode");
+		}
 	}
 
 	/**
@@ -309,7 +346,9 @@ public class InRamDBUtils2 {
 	 * Writes the auxiliary index line by line if it does not exist yet.
 	 * </p>
 	 */
-	public final void writeAuxIndex() throws IOException {
+	private final void writeAuxIndex() throws IOException {
+		IOUtils.logLog("Begin writting aux index file. Current size of key-value pair(s) : "
+				+ fetchIndexSize());
 		String outAuxFileName;
 		if(MyMode == ModeSO) {
 			outAuxFileName = outPath + File.separator 
@@ -336,7 +375,7 @@ public class InRamDBUtils2 {
 	 * Writes the metadata of file blocks if block mode enabled.
 	 * </p>
 	 */
-	public void writeMeta() throws IOException {
+	private final void writeMeta() throws IOException {
 		String outMetaFileName;
 		if(MyMode == ModeSO) {
 			outMetaFileName = outPath + File.separator 
