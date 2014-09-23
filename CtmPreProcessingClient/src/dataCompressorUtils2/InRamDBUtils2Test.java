@@ -23,13 +23,13 @@ public class InRamDBUtils2Test {
 //		dbu2.compress(false);
 		
 		String inputFilePath = _workingDir + File.separator + ".." + File.separator + "CtmDataSet" 
-				+ File.separator + "_ps20G_sorted" + File.separator + "-emailAddress" + CTMConstants.SOSortedExt;
+				+ File.separator + "_ps20G_sorted" + File.separator + "-telephone" + CTMConstants.SOSortedExt;
 		InRamDBUtils2 dbu = new InRamDBUtils2(inputFilePath, outputPath);
 		dbu.loadAuxIndexFromFile();
 		dbu.compress(true);
 
 		String inputFilePath2 = _workingDir + File.separator + ".." + File.separator + "CtmDataSet" 
-				+ File.separator + "_ps20G_sorted" + File.separator + "-emailAddress" + CTMConstants.OSSortedExt;
+				+ File.separator + "_ps20G_sorted" + File.separator + "-telephone" + CTMConstants.OSSortedExt;
 		InRamDBUtils2 dbu2 = new InRamDBUtils2(inputFilePath2, outputPath);
 		dbu2.loadAuxIndexFromFile();
 		dbu2.compress(false);
