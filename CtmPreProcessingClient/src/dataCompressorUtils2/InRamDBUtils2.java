@@ -143,18 +143,12 @@ public class InRamDBUtils2 {
 		BufferedWriter outIndWriter = null;
 		int otherColumn;
 		if(MyMode == ModeSO) {
-//			outMatWriter = new BufferedWriter(new OutputStreamWriter(
-//					new FileOutputStream(outPath + InputFileNameWithoutPred 
-//							+ CTMConstants.SOMatrixExt, true)));
 			if(writeIndex)
 				outIndWriter = new BufferedWriter(new OutputStreamWriter(
 						new FileOutputStream(outPath + InputFileNameWithoutPred 
 								+ CTMConstants.IndexSExt, true)));
 			otherColumn = ModeOS;
 		} else {
-//			outMatWriter = new BufferedWriter(new OutputStreamWriter(
-//					new FileOutputStream(outPath + InputFileNameWithoutPred 
-//							+ CTMConstants.OSMatrixExt, true)));
 			if(writeIndex)
 				outIndWriter = new BufferedWriter(new OutputStreamWriter(
 						new FileOutputStream(outPath + InputFileNameWithoutPred 
