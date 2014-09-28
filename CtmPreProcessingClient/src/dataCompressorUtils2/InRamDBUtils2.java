@@ -126,7 +126,9 @@ public class InRamDBUtils2 {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Compresses the predicate split file.
+	 * @param writeIndex : opt to generate the index of auxiliary column or not.
+	 * @throws IOException
 	 */
 	public void compress(boolean writeIndex) throws IOException {
 		writeMat(writeIndex);
