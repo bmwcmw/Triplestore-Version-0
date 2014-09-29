@@ -74,8 +74,9 @@ public class InRamDBUtils2 {
 		}
 		outPath = outputPath + File.separator + InputFileNameWithoutPred + File.separator;
 		File outPutFolder = new File(outPath);
-		if (!outPutFolder.exists())
-			outPutFolder.mkdir();
+		if (!outPutFolder.exists()) {
+			System.out.println("MKDIR - outPath : " + outPutFolder.mkdir());
+		}
 		idNode = new HashMap<String, Integer>(100000,0.8f);
 	}
 
