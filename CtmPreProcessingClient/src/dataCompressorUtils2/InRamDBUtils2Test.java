@@ -4,10 +4,15 @@ public class InRamDBUtils2Test {
 	public final static String _workingDir = System.getProperty("user.dir");
 	
 	public static void main(String[] args) throws Exception {
+		System.setProperty("true","true");
+		System.out.println("Input file : " + args[0]);
+		System.out.println("Output path : " + args[1]);
 		InRamDBUtils2 dbu = new InRamDBUtils2(args[0], args[1]);
 		boolean auxIndex = Boolean.getBoolean(args[2]);
+		System.out.println("Output auxiliary index ? " + auxIndex);
 		dbu.loadAuxIndexFromFile();
 		dbu.compress(auxIndex);
+		
 		
 ////		CTMServerConfig myconfig = CTMServerConfig.getInstance();
 ////		myconfig._nbThreads = 16;

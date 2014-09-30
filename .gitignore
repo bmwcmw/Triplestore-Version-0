@@ -7,6 +7,7 @@
 .metadata
 bin/
 tmp/
+temp/
 CtmDataSet/
 CtmPreProcessingClient/_compare/
 CtmPreProcessingClient/_compressed/
