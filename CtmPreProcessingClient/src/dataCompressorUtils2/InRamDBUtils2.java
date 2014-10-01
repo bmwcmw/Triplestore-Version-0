@@ -193,6 +193,8 @@ public class InRamDBUtils2 {
 		int last;
 		int blockSize = 1;
 		int lineCount = 0;
+		// Temporary indicator of terms
+		int termCount = 0;
 		// For each pair the main sorted predicate file
 		while ((lineFromMain = mainReader.nextLine()) != null) {
 			pair = MyStringTokenizer.tokenize(CTMConstants.delimiter, lineFromMain);
@@ -231,6 +233,8 @@ public class InRamDBUtils2 {
 							lineSetOutBuilder.append(blockSize + ",");
 							// initialize "1" block
 							blockSize = 1;
+							// Increases the term counter
+							termCount++;
 							// Avoid too large lines by cutting lines
 							// with _blockLineLength
 							if (lineSetOutBuilder.length() >= myConfig._blockLineLength) {
@@ -247,8 +251,9 @@ public class InRamDBUtils2 {
 								lineMainCol++;
 							}
 							// Avoid too large file by cutting with
-							// _blockLineNb
-							if (lineCount >= myConfig._blockLineNb) {
+							// _blockLineNb or _blockTotalTerms
+							if ((lineCount >= myConfig._blockLineNb)
+									|| (termCount > myConfig._blockTotalTerms)) {
 								fileBlockCount++;
 								outMatWriter.close();
 								if(MyMode == ModeSO) {
@@ -265,8 +270,9 @@ public class InRamDBUtils2 {
 								// Add meta information of new file
 								metaList.getList().add(new MetaInfoQuadruple(fileBlockCount,
 										currentIndex, i, lineMainCol));
-								// Reset line count
+								// Reset line count and term count
 								lineCount = 0;
+								termCount = 0;
 							}
 						}
 						last = i;
@@ -317,8 +323,9 @@ public class InRamDBUtils2 {
 					metaList.getList().add(
 							new MetaInfoQuadruple(fileBlockCount,
 									currentIndex, 0, 0));
-					// Reset line count
+					// Reset line count and term count
 					lineCount = 0;
+					termCount = 0;
 				}
 				/* CONTINUE WHILE BLOCK */
 			}

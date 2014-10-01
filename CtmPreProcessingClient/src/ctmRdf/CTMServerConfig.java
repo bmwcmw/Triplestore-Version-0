@@ -23,6 +23,7 @@ public class CTMServerConfig {
 	public boolean _writeprecompare;
 	public int _blockLineNb;
 	public int _blockLineLength;
+	public int _blockTotalTerms;
 	public int _precompareMode;
 	public int _compareMode;
 	public int _distributeMode;
@@ -42,6 +43,7 @@ public class CTMServerConfig {
 		//			   will be automatically disabled.
 		_blockLineNb = 10000;
 		_blockLineLength = 32768;
+		_blockTotalTerms = 1024768;
 		
 		// XXX SETUP : Pre-Comparator mode, perhaps needs PERL executable in PATH
 		_precompareMode = CTMConstants.CTMPRECOMPARE_JAVA;
