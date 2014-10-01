@@ -8,11 +8,16 @@ import java.util.HashSet;
 import localIOUtils.IOUtils;
 import ctmRdf.CTMConstants;
 
-public class InRamDBUtils2Test {
+public class InRamDBUtils2Runner {
 	public final static String _workingDir = System.getProperty("user.dir");
 	
 	public static void main(String[] args) throws Exception {
-
+		if(args.length!=3){
+			System.out.println(" -[input file] -[output folder] "
+					+ "-[true/false : write auxiliary index or not]");
+			System.exit(-1);
+		}
+		
 		/* STANDARD */
 		System.setProperty("true","true");
 		System.out.println("Input file : " + args[0]);
