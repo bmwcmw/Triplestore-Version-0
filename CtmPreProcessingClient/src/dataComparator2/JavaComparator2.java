@@ -1,4 +1,4 @@
-package dataComparator;
+package dataComparator2;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,10 +15,22 @@ import localIOUtils.IOUtils;
  * @author Cedar
  *
  */
-public class JavaComparator {
+public class JavaComparator2 {
 
 	public final static int S = 0;
 	public final static int O = 1;
+	
+	public static void main(String[] args) {
+		if(args.length!=4){
+			System.out.println(" -[file 1 with sorted column] "
+					+ "-[file 2 with sorted column] "
+					+ "-[sorted column number] "
+					+ "-[output folder]");
+			System.exit(-1);
+		}
+		
+		//TODO
+	}
 	
 	public Long compareTwoPredicates(File f1, File f2)
 			throws IOException, ParseException, InterruptedException, ExecutionException {
