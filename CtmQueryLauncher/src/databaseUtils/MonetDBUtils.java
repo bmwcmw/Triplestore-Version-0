@@ -1,4 +1,4 @@
-package dataCompressorUtils;
+package databaseUtils;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -10,25 +10,28 @@ import java.sql.Statement;
 import dataCompressor.SOLongPair;
 
 /**
- * Oracle
- * @author Cedar
- */
+ * <p>MonetDB aims to use as much of the main memory available, as many cores as can be 
+ * practically deployed in parallel processing of queries, and trying to avoid going to 
+ * a slow disk.</p>
+**/
 /*
- * See notes
- */
-public class OracleUtils implements DBImpl{
+CREATE TABLE indexnodes (
+	    id        integer PRIMARY KEY AUTO_INCREMENT,
+	    data       varchar(128) NOT NULL UNIQUE
+);
+DELETE FROM indexnodes;
+DROP TABLE indexnodes;
+*/
+public class MonetDBUtils implements DBImpl{
 
 	protected String _tablename;
 	protected Statement _st;
 	protected ResultSet _rs;
 	protected Connection _conn = null;
-    
-	public OracleUtils() throws SQLException, ClassNotFoundException{
-		this(DBConstants.Oracleurl, "root", "");
-	}
-    
-	public OracleUtils(String url, String user, String pwd) throws SQLException, ClassNotFoundException{
-		_conn = DriverManager.getConnection(url, user, pwd);
+	
+	public MonetDBUtils() throws SQLException, ClassNotFoundException{
+		Class.forName("nl.cwi.monetdb.jdbc.MonetDriver");
+		_conn = DriverManager.getConnection(DBConstants.MonetDBurl, "monetdb", "monetdb");
 		_st = _conn.createStatement();
 	}
 	
@@ -41,8 +44,8 @@ public class OracleUtils implements DBImpl{
 
 	@Override
     public void insertNode(String node) throws SQLException{
-    	_rs = _st.executeQuery("INSERT INTO indexnodes(data) "
-    			+ "values ('" + node + "') RETURNING id;");
+    	_st.executeUpdate("INSERT INTO indexnodes(data) "
+    			+ "values ('" + node + "');");
     }
 
 	@Override
@@ -80,7 +83,7 @@ public class OracleUtils implements DBImpl{
 	}
 
 	@Override
-	public void closeAll() throws SQLException {
+	public void closeAll() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -92,16 +95,15 @@ public class OracleUtils implements DBImpl{
 	}
 
 	@Override
-	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) 
-			throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public Long fetchLoadedSize() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) 
+			throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
 }

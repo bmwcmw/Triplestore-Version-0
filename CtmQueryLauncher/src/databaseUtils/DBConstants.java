@@ -1,4 +1,4 @@
-package dataCompressorUtils;
+package databaseUtils;
 
 public class DBConstants {
 	public static final String MonetDBurl = "jdbc:monetdb://localhost/indexnodes";

@@ -12,7 +12,7 @@ import localIOUtils.IOUtils;
 import org.json.simple.JSONArray;
 
 import ctmRdf.CTMConstants;
-import dataCompressorUtils.DBImpl;
+import databaseUtils.DBImpl;
 import queryObjects.LongPattern;
 import queryObjects.ParsedQuery;
 import queryObjects.QueryPatternResult;

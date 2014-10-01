@@ -1,4 +1,4 @@
-package dataCompressorUtils;
+package databaseUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;

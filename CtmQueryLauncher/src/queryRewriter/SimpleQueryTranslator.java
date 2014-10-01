@@ -1,6 +1,6 @@
 package queryRewriter;
 
-import dataCompressorUtils.DBImpl;
+import databaseUtils.DBImpl;
 import queryObjects.LongPattern;
 import queryObjects.StringPattern;
 

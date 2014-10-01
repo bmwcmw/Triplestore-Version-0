@@ -1,4 +1,4 @@
-package dataCompressorUtils;
+package databaseUtils;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -10,28 +10,29 @@ import java.sql.Statement;
 import dataCompressor.SOLongPair;
 
 /**
- * <p>MonetDB aims to use as much of the main memory available, as many cores as can be 
- * practically deployed in parallel processing of queries, and trying to avoid going to 
- * a slow disk.</p>
-**/
+ * Postgres
+ * @author Cedar
+ */
 /*
 CREATE TABLE indexnodes (
-	    id        integer PRIMARY KEY AUTO_INCREMENT,
+	    id        serial PRIMARY KEY,
 	    data       varchar(128) NOT NULL UNIQUE
 );
-DELETE FROM indexnodes;
-DROP TABLE indexnodes;
+TRUNCATE TABLE indexnodes;
 */
-public class MonetDBUtils implements DBImpl{
+public class PostgreSQLUtils implements DBImpl{
 
 	protected String _tablename;
 	protected Statement _st;
 	protected ResultSet _rs;
 	protected Connection _conn = null;
-	
-	public MonetDBUtils() throws SQLException, ClassNotFoundException{
-		Class.forName("nl.cwi.monetdb.jdbc.MonetDriver");
-		_conn = DriverManager.getConnection(DBConstants.MonetDBurl, "monetdb", "monetdb");
+    
+	public PostgreSQLUtils() throws SQLException, ClassNotFoundException{
+		this(DBConstants.PostgreSQLurl, "postgres", "postgres");
+	}
+    
+	public PostgreSQLUtils(String url, String user, String pwd) throws SQLException, ClassNotFoundException{
+		_conn = DriverManager.getConnection(url, user, pwd);
 		_st = _conn.createStatement();
 	}
 	
@@ -44,8 +45,8 @@ public class MonetDBUtils implements DBImpl{
 
 	@Override
     public void insertNode(String node) throws SQLException{
-    	_st.executeUpdate("INSERT INTO indexnodes(data) "
-    			+ "values ('" + node + "');");
+    	_rs = _st.executeQuery("INSERT INTO indexnodes(data) "
+    			+ "values ('" + node + "') RETURNING id;");
     }
 
 	@Override
@@ -83,7 +84,7 @@ public class MonetDBUtils implements DBImpl{
 	}
 
 	@Override
-	public void closeAll() {
+	public void closeAll() throws SQLException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -95,15 +96,16 @@ public class MonetDBUtils implements DBImpl{
 	}
 
 	@Override
-	public Long fetchLoadedSize() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) 
 			throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public Long fetchLoadedSize() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

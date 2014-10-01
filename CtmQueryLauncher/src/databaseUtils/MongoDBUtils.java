@@ -1,25 +1,13 @@
-package dataCompressorUtils;
+package databaseUtils;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import dataCompressor.SOLongPair;
 
-public class MySQLUtils implements DBImpl{
-
-	protected String _tablename;
-	protected Statement _st;
-	protected ResultSet _rs;
-	protected Connection _conn = null;
+public class MongoDBUtils implements DBImpl{
     
-	public MySQLUtils() throws SQLException, ClassNotFoundException{
+	public MongoDBUtils() {
 		//TODO
-		_conn = DriverManager.getConnection(DBConstants.MySQLurl, "root", "");
-		_st = _conn.createStatement();
 	}
 
 	@Override
@@ -35,24 +23,24 @@ public class MySQLUtils implements DBImpl{
 	}
 
 	@Override
-	public Long fetchIndexSize() throws SQLException {
+	public Long fetchIndexSize() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void insertNode(String node) throws SQLException {
+	public void insertNode(String node) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public Long fetchIdByNode(String node) throws SQLException {
+	public Long fetchIdByNode(String node) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String fetchNodeById(Long index) throws SQLException {
+	public String fetchNodeById(Long index) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -64,10 +52,9 @@ public class MySQLUtils implements DBImpl{
 	}
 
 	@Override
-	public void closeAll() throws SQLException {
-		if(_rs!=null) _rs.close();
-		if(_st!=null) _st.close();
-		if(_conn!=null) _conn.close();
+	public void closeAll() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -81,7 +68,7 @@ public class MySQLUtils implements DBImpl{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
 	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) 
 			throws IOException {

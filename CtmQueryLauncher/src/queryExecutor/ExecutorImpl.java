@@ -1,6 +1,6 @@
 package queryExecutor;
 
-import dataCompressorUtils.DBImpl;
+import databaseUtils.DBImpl;
 import queryObjects.QueryPatternResult;
 import queryObjects.StringPattern;
 
