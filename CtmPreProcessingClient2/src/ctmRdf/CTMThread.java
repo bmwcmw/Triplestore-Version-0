@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 import localIOUtils.IOUtils;
 import dataComparator2.FilePair;
-import dataCompressorUtils.DBImpl;
+import dataCompressorUtils.DBImpl2;
 import dataDistributor.CEDAR.DestInfo;
 import dataManagement.DataManager;
 
@@ -27,7 +27,7 @@ public class CTMThread implements Runnable {
     private String invalidPath;
     private String nsPath;
     private String comparePath = null;
-    private DBImpl indexNodes = null;
+    private DBImpl2 indexNodes = null;
     private LinkedList<FilePair> comparePairs;
     private HashMap<File, DestInfo> toSend;
 
@@ -100,7 +100,7 @@ public class CTMThread implements Runnable {
      * @param dbu
      */
     public CTMThread(String tid, int task, ArrayList<File> inputList, String outputPath,
-    		DBImpl dbu, String writecomparePath){
+    		DBImpl2 dbu, String writecomparePath){
     	taskId = task;
 		threadId = tid;
 		dm = new DataManager(tid);
@@ -144,23 +144,11 @@ public class CTMThread implements Runnable {
 				case CTMConstants.CTMCOMPRESS:
 					dm.indexedCompress(inputFiles, outputFolder, indexNodes, comparePath);
 					break;
-				case CTMConstants.CTMPRECOMPARE_JAVA:
-					dm.prepareCompareJava(inputFiles, outputFolder);
-					break;
-				case CTMConstants.CTMPRECOMPARE_PERL:
-					dm.prepareComparePerl(inputFiles, outputFolder);
-					break;
 				case CTMConstants.CTMCOMPARE_JAVA:
 					dm.compareJava(comparePairs, outputFolder);
 					break;
-				case CTMConstants.CTMCOMPARE_JAVA_INRAM:
-					dm.compareJavaInRam(comparePairs, outputFolder);
-					break;
 				case CTMConstants.CTMCOMPARE_GNU:
 					dm.compareGnu(comparePairs, outputFolder);
-					break;
-				case CTMConstants.CTMCOMPARE_PERL:
-					dm.comparePerl(comparePairs, outputFolder);
 					break;
 				case CTMConstants.CTMDISTRIBUTE_CEDAR:
 					dm.distribute(toSend, taskId);
@@ -172,8 +160,6 @@ public class CTMThread implements Runnable {
 					break;
 			}
 			dm.closeAllWriters();
-			/* Don't forget to close DB utils */
-			if(indexNodes != null) indexNodes.closeAll();
 		} catch (Exception e) {
 			IOUtils.logLog("Error in thread " + threadId + " : " + e.getMessage());
 			e.printStackTrace();

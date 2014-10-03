@@ -23,12 +23,10 @@ import localIOUtils.IOUtils;
 import dataCleaner.RDFPairStr;
 import dataCleaner.RDFTriple;
 import dataCleaner.RDFPair;
-import dataComparator.InRamComparator;
-import dataComparator.JavaComparator;
 import dataComparator2.FilePair;
+import dataComparator2.JavaComparator2;
 import dataCompressor.DgapCompressor;
-import dataCompressor.SOLongPair;
-import dataCompressorUtils.DBImpl;
+import dataCompressorUtils.DBImpl2;
 import dataDistributor.CEDAR.DestInfo;
 import dataDistributor.CEDAR.FileSenderCN;
 import dataDistributor.SSH.SSHCommandExecutor;
@@ -195,21 +193,21 @@ public class DataManager {
 	 * @throws Exception 
 	 */
 	public int indexedCompress(ArrayList<File> psSrc, String outputPath, 
-			DBImpl dbu, String comparePath) throws Exception {
-	    String inFilePath;
+			DBImpl2 dbu, String comparePath) throws Exception {
+//	    String inFilePath;
     	String inFileName;
 	    for (File f : psSrc){
-	    	inFilePath = f.getAbsolutePath();
+//	    	inFilePath = f.getAbsolutePath();
 	    	inFileName = f.getName();
-	    	PairReader reader = new PairReader(inFilePath);
+//	    	PairReader reader = new PairReader(inFilePath);
 			IOUtils.logLog("Thread " + threadId + " Compression : "	+ inFileName);
-			RDFPair so = null;
-			while ((so = reader.next()) != null) {
-				// Predicate's index and pairs list
-				insertOrIgnorePredicateNodes(dbu, so);
-			}
-			DgapCompressor.writeCompressedFormat(inFileName, outputPath, dbu, comparePath);
-		    dbu.cleanAll();
+//			RDFPair so = null;
+//			while ((so = reader.next()) != null) {
+//				// Predicate's index and pairs list
+//				insertOrIgnorePredicateNodes(dbu, so);
+//			}
+			DgapCompressor.writeCompressedFormat(inFileName, outputPath, dbu);
+//		    dbu.cleanAll();
 	    }
 		IOUtils.logLog("Thread " + threadId + " Compression all done");
 		return 0;
@@ -271,30 +269,30 @@ public class DataManager {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	public void compareJavaInRam(LinkedList<FilePair> pairs, String outputPath) 
-			throws IOException, ParseException, InterruptedException, ExecutionException {
-	    FilePair fp = null;
-		int count = 0;
-		String outFileName = null;
-	    while(true){
-	    	try{
-	    		fp = pairs.getFirst();
-	    	} catch (NoSuchElementException e) {
-	    		break;
-	    	}
-			count++;
-			outFileName = outputPath + File.separator 
-					+ this.threadId + "_" + count;
-		    Long resultS = InRamComparator.compareTwoPredicates(fp.f1S, fp.f2S);
-		    Long resultO = InRamComparator.compareTwoPredicates(fp.f1O, fp.f2O);
-		    System.out.println(fp.f1S.getName()+" and "+fp.f2S.getName()+" have "+resultS+" common entries.");
-		    System.out.println(fp.f1O.getName()+" and "+fp.f2O.getName()+" have "+resultO+" common entries.");
-		    writeToBigFile(outFileName, IOUtils.filenameWithoutExt(fp.f1S.getName()) + " " 
-					+ IOUtils.filenameWithoutExt(fp.f2S.getName()) + " " + resultS + " " + resultO);
-		    pairs.removeFirst();
-	    }
-	    IOUtils.logLog("Thread " + threadId + " executed " + count + " comparisons.");
-	}
+//	public void compareJavaInRam(LinkedList<FilePair> pairs, String outputPath) 
+//			throws IOException, ParseException, InterruptedException, ExecutionException {
+//	    FilePair fp = null;
+//		int count = 0;
+//		String outFileName = null;
+//	    while(true){
+//	    	try{
+//	    		fp = pairs.getFirst();
+//	    	} catch (NoSuchElementException e) {
+//	    		break;
+//	    	}
+//			count++;
+//			outFileName = outputPath + File.separator 
+//					+ this.threadId + "_" + count;
+//		    Long resultS = InRamComparator.compareTwoPredicates(fp.f1S, fp.f2S);
+//		    Long resultO = InRamComparator.compareTwoPredicates(fp.f1O, fp.f2O);
+//		    System.out.println(fp.f1S.getName()+" and "+fp.f2S.getName()+" have "+resultS+" common entries.");
+//		    System.out.println(fp.f1O.getName()+" and "+fp.f2O.getName()+" have "+resultO+" common entries.");
+//		    writeToBigFile(outFileName, IOUtils.filenameWithoutExt(fp.f1S.getName()) + " " 
+//					+ IOUtils.filenameWithoutExt(fp.f2S.getName()) + " " + resultS + " " + resultO);
+//		    pairs.removeFirst();
+//	    }
+//	    IOUtils.logLog("Thread " + threadId + " executed " + count + " comparisons.");
+//	}
 	
 
 	/**
@@ -309,7 +307,7 @@ public class DataManager {
 	 */
 	public void compareJava(LinkedList<FilePair> pairs, String outputPath) 
 			throws IOException, ParseException, InterruptedException, ExecutionException {
-	    JavaComparator jc = new JavaComparator();
+	    JavaComparator2 jc = new JavaComparator2();
 	    FilePair fp = null;
 		int count = 0;
 		String outFileName = null;
@@ -430,18 +428,18 @@ public class DataManager {
 	 * @return index of the given node
 	 * @throws Exception 
 	 */
-	public void insertOrIgnorePredicateNodes(DBImpl dbu, RDFPair so) 
-			throws Exception {
-		//System.out.println("Inserting : "+so.getSubject().toString()+" "+so.getObject().toString());
-		String S = so.getSubject().toString();
-		String O = so.getObject().toString();
-		dbu.insertNode(S);
-		dbu.insertNode(O);
-		Long iS = dbu.fetchIdByNode(S);
-		Long iO = dbu.fetchIdByNode(O);
-		//System.out.println("Inserting : "+iS+" "+iO);
-		dbu.addSO(new SOLongPair(iS,iO));
-	}
+//	public void insertOrIgnorePredicateNodes(DBImpl dbu, RDFPair so) 
+//			throws Exception {
+//		//System.out.println("Inserting : "+so.getSubject().toString()+" "+so.getObject().toString());
+//		String S = so.getSubject().toString();
+//		String O = so.getObject().toString();
+//		dbu.insertNode(S);
+//		dbu.insertNode(O);
+//		Long iS = dbu.fetchIdByNode(S);
+//		Long iO = dbu.fetchIdByNode(O);
+//		//System.out.println("Inserting : "+iS+" "+iO);
+//		dbu.addSO(new SOLongPair(iS,iO));
+//	}
 	
 	/**
 	 * Writes a line to the specified predicate file, during the PS phase.

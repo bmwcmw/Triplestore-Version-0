@@ -3,7 +3,6 @@ package ctmRdf;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -19,33 +18,12 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.StringTokenizer;
-import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import commandRunner.FormatConverter;
-import dataCleaner.RDFPairLong;
-import dataCleaner.RDFPairStr;
 import dataComparator2.FilePair;
-import dataCompressorUtils.DBImpl;
-import dataCompressorUtils.InRamDBUtils;
-import dataCompressorUtils.MonetDBUtils;
-import dataCompressorUtils.MongoDBUtils;
-import dataCompressorUtils.MySQLUtils;
-import dataCompressorUtils.OracleUtils;
-import dataCompressorUtils.PostgreSQLUtils;
-import dataCompressorUtils.RedisUtils;
 import dataDistributor.IndicatorGrouper;
-import dataDistributor.CEDAR.ConnectorDN;
-import dataDistributor.CEDAR.DestInfo;
 import localIOUtils.IOUtils;
 
 /**
@@ -85,13 +63,13 @@ public class CTMServer {
 			System.out.println("\tRDF to N3 converter - " + CTMConstants.CTMCONVERTER);
 			System.out.println("\tN3 Reader/Partitionner(PS) - " + CTMConstants.CTMREADERPS);
 			System.out.println("\tPredicate Reader/Splitter(POS) - " + CTMConstants.CTMREADERPOS);
-			System.out.println("\tCompressor for PS files(with optional "
-					+ "Pre-Comparator for PS files) - "	+ CTMConstants.CTMCOMPRESS);
-			System.out.println("\tPre-Comparator for PS files - "
-					+ CTMConstants.CTMPRECOMPARE);
+			System.out.println("\tCompressor for PS files (external script)  - "
+					+ CTMConstants.CTMCOMPRESS);
+//			System.out.println("\tPre-Comparator for PS files - "
+//					+ CTMConstants.CTMPRECOMPARE);
 			System.out.println("\tComparator for S/O arrays - "
 					+ CTMConstants.CTMCOMPARE);
-			System.out.println("\tDistributor of compressed PS files - " 
+			System.out.println("\tDistributor of compressed files - " 
 					+ CTMConstants.CTMDISTRIBUTE);
 			System.out.println("\tExit - " + CTMConstants.CTMEXIT);
 			System.out.println("#");
@@ -159,7 +137,7 @@ public class CTMServer {
 					IOUtils.deleteDirectory(new File(indicatorPath));
 					IOUtils.checkOrCreateFolder(indicatorPath);
 				}
-				IOUtils.logLog("\nOK. ");
+				IOUtils.logLog("\nDONE. ");
 				break;
 			case CTMConstants.CTMCONVERTER:
 				setNbThreads();
@@ -260,19 +238,19 @@ public class CTMServer {
 				IOUtils.logLog("---------------------------------------"
 						+ "\n---------------------------------------");
 				break;
-			case CTMConstants.CTMPRECOMPARE:
-				setNbThreads();
-				startTime = System.currentTimeMillis();
-				CTMServer.precompare();
-				IOUtils.logLog(myConfig._nbThreads+" threads terminated");
-				endTime = System.currentTimeMillis();
-				duration = endTime - startTime;
-				IOUtils.logLog("---------------------------------------");
-				IOUtils.logLog("| Files for comparison prepared (Time elapsed : "
-						+ duration + " ms)");
-				IOUtils.logLog("---------------------------------------"
-						+ "\n---------------------------------------");
-				break;
+//			case CTMConstants.CTMPRECOMPARE:
+//				setNbThreads();
+//				startTime = System.currentTimeMillis();
+//				CTMServer.precompare();
+//				IOUtils.logLog(myConfig._nbThreads+" threads terminated");
+//				endTime = System.currentTimeMillis();
+//				duration = endTime - startTime;
+//				IOUtils.logLog("---------------------------------------");
+//				IOUtils.logLog("| Files for comparison prepared (Time elapsed : "
+//						+ duration + " ms)");
+//				IOUtils.logLog("---------------------------------------"
+//						+ "\n---------------------------------------");
+//				break;
 			case CTMConstants.CTMCOMPARE:
 				setNbThreads();
 				startTime = System.currentTimeMillis();
@@ -424,67 +402,50 @@ public class CTMServer {
 	 * @return 0 if OK
 	 */
 	static int compress(int programInd){
-		String psPath = myConfig._ctlParams.get("psPath");
-		IOUtils.checkOrCreateFolder(psPath);
-		String compressedPath = myConfig._ctlParams.get("compressedPath");
-		IOUtils.checkOrCreateFolder(compressedPath);
-		String comparePath = null;
-		if(myConfig._writeprecompare){
-			comparePath = myConfig._ctlParams.get("comparePath");
-			IOUtils.checkOrCreateFolder(comparePath);
-		}
-		IOUtils.logLog("\nCompressing PS files : ");
-		IOUtils.logLog("Input : " + psPath);
-		IOUtils.logLog("Output : " + compressedPath);
-		IOUtils.logLog("Writting sorted S/O files : " + myConfig._writeprecompare);
-
-		File folder = new File(psPath);
-		ArrayList<File> listOfFiles = new ArrayList<File>(Arrays.asList(folder.listFiles()));
-		ArrayList<ArrayList<File>> inputLists = CTMJobAssigner.assignJobs(listOfFiles, false);
-		
-		//Create and execute threads with assigned sub task
-		ExecutorService executor = Executors.newFixedThreadPool(myConfig._nbThreads);
-		try{
-			DBImpl dbu = null;
-			switch(myConfig._compressMode){
-				case CTMConstants.CTMCOMPRESS_INRAM : 
-					dbu = new InRamDBUtils();
-					break;
-				case CTMConstants.CTMCOMPRESS_MONET : 
-					dbu = new MonetDBUtils();
-					break;
-				case CTMConstants.CTMCOMPRESS_MONGO : 
-					dbu = new MongoDBUtils();
-					break;
-				case CTMConstants.CTMCOMPRESS_MYSQL : 
-					dbu = new MySQLUtils();
-					break;
-				case CTMConstants.CTMCOMPRESS_ORACLE : 
-					dbu = new OracleUtils();
-					break;
-				case CTMConstants.CTMCOMPRESS_POSTGRES : 
-					dbu = new PostgreSQLUtils();
-					break;
-				case CTMConstants.CTMCOMPRESS_REDIS : 
-					dbu = new RedisUtils();
-					break;
-				default : 
-					IOUtils.logLog("Compression mode error :" + myConfig._compressMode);
-			}
-	        for (int i = 0; i < myConfig._nbThreads; i++) {
-	            Runnable thread = new CTMThread(String.valueOf(i), programInd, inputLists.get(i), 
-	            		compressedPath, dbu, comparePath);
-	            executor.execute(thread);
-	        }
-	        executor.shutdown();
-	        while (!executor.isTerminated()) {
-	        }
-	        return 0;
-		} catch (Exception e) {
-			IOUtils.logLog("Error : ");
-			IOUtils.logLog(e.getMessage());
-			return -1;
-		}
+//		String psPath = myConfig._ctlParams.get("psPath");
+//		IOUtils.checkOrCreateFolder(psPath);
+//		String compressedPath = myConfig._ctlParams.get("compressedPath");
+//		IOUtils.checkOrCreateFolder(compressedPath);
+//		String comparePath = null;
+//		if(myConfig._writeprecompare){
+//			comparePath = myConfig._ctlParams.get("comparePath");
+//			IOUtils.checkOrCreateFolder(comparePath);
+//		}
+//		IOUtils.logLog("\nCompressing PS files : ");
+//		IOUtils.logLog("Input : " + psPath);
+//		IOUtils.logLog("Output : " + compressedPath);
+//		IOUtils.logLog("Writting sorted S/O files : " + myConfig._writeprecompare);
+//
+//		File folder = new File(psPath);
+//		ArrayList<File> listOfFiles = new ArrayList<File>(Arrays.asList(folder.listFiles()));
+//		ArrayList<ArrayList<File>> inputLists = CTMJobAssigner.assignJobs(listOfFiles, false);
+//		
+//		//Create and execute threads with assigned sub task
+//		ExecutorService executor = Executors.newFixedThreadPool(myConfig._nbThreads);
+//		try{
+//			InRamDBUtils2 dbu = null;
+//			switch(myConfig._compressMode){
+//				case CTMConstants.CTMCOMPRESS_INRAM : 
+//					dbu = new InRamDBUtils2();
+//					break;
+//				default : 
+//					IOUtils.logLog("Compression mode error :" + myConfig._compressMode);
+//			}
+//	        for (int i = 0; i < myConfig._nbThreads; i++) {
+//	            Runnable thread = new CTMThread(String.valueOf(i), programInd, inputLists.get(i), 
+//	            		compressedPath, dbu, comparePath);
+//	            executor.execute(thread);
+//	        }
+//	        executor.shutdown();
+//	        while (!executor.isTerminated()) {
+//	        }
+//	        return 0;
+//		} catch (Exception e) {
+//			IOUtils.logLog("Error : ");
+//			IOUtils.logLog(e.getMessage());
+//			return -1;
+//		}
+		return -1;
 	}
 	
 	/**
@@ -492,31 +453,31 @@ public class CTMServer {
 	 * @param programInd
 	 * @return 0 if OK
 	 */
-	static int precompare(){
-		String psPath = myConfig._ctlParams.get("psPath");
-		IOUtils.checkOrCreateFolder(psPath);
-		String comparePath = myConfig._ctlParams.get("comparePath");
-		IOUtils.checkOrCreateFolder(comparePath);
-		IOUtils.logLog("\nProcessing PS files : ");
-		IOUtils.logLog("Input : " + psPath);
-		IOUtils.logLog("Output : " + comparePath);
-		
-		File folder = new File(psPath);
-		ArrayList<File> listOfFiles = new ArrayList<File>(Arrays.asList(folder.listFiles()));
-		ArrayList<ArrayList<File>> inputLists = CTMJobAssigner.assignJobs(listOfFiles, false);
-		
-		//Create and execute threads with assigned sub task
-		ExecutorService executor = Executors.newFixedThreadPool(myConfig._nbThreads);
-        for (int i = 0; i < myConfig._nbThreads; i++) {
-            Runnable thread = new CTMThread(String.valueOf(i), myConfig._precompareMode, inputLists.get(i), 
-            		comparePath);
-            executor.execute(thread);
-        }
-        executor.shutdown();
-        while (!executor.isTerminated()) {
-        }
-		return 0;
-	}
+//	static int precompare(){
+//		String psPath = myConfig._ctlParams.get("psPath");
+//		IOUtils.checkOrCreateFolder(psPath);
+//		String comparePath = myConfig._ctlParams.get("comparePath");
+//		IOUtils.checkOrCreateFolder(comparePath);
+//		IOUtils.logLog("\nProcessing PS files : ");
+//		IOUtils.logLog("Input : " + psPath);
+//		IOUtils.logLog("Output : " + comparePath);
+//		
+//		File folder = new File(psPath);
+//		ArrayList<File> listOfFiles = new ArrayList<File>(Arrays.asList(folder.listFiles()));
+//		ArrayList<ArrayList<File>> inputLists = CTMJobAssigner.assignJobs(listOfFiles, false);
+//		
+//		//Create and execute threads with assigned sub task
+//		ExecutorService executor = Executors.newFixedThreadPool(myConfig._nbThreads);
+//        for (int i = 0; i < myConfig._nbThreads; i++) {
+//            Runnable thread = new CTMThread(String.valueOf(i), myConfig._precompareMode, inputLists.get(i), 
+//            		comparePath);
+//            executor.execute(thread);
+//        }
+//        executor.shutdown();
+//        while (!executor.isTerminated()) {
+//        }
+//		return 0;
+//	}
 	
 	/**
 	 * Internal function for comparison
@@ -543,9 +504,11 @@ public class CTMServer {
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				temp = listOfFiles[i];
-				if(!temp.getName().contains(".S") && !temp.getName().contains(".O")){
+				if(!temp.getName().contains(CTMConstants.SOSortedExt) 
+						&& !temp.getName().contains(CTMConstants.OSSortedExt)){
 					IOUtils.logLog("Input folder contains error : "
-							+ temp.getName() + " neither .S nor .O");
+							+ temp.getName() + " neither " + CTMConstants.SOSortedExt + " nor "
+							+ CTMConstants.OSSortedExt);
 					return -1;
 				}
 				tempName = IOUtils.filenameWithoutExt(temp.getName());

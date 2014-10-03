@@ -1,12 +1,4 @@
-package dataCompressorUtils2;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-
-import localIOUtils.IOUtils;
-import ctmRdf.CTMConstants;
+package dataCompressorUtils;
 
 public class InRamDBUtils2Runner {
 	public final static String _workingDir = System.getProperty("user.dir");

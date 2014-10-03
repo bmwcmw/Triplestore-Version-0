@@ -45,11 +45,11 @@ public class CTMServerConfig {
 		_blockLineLength = 32768;
 		_blockTotalTerms = 1024768;
 		
-		// XXX SETUP : Pre-Comparator mode, perhaps needs PERL executable in PATH
-		_precompareMode = CTMConstants.CTMPRECOMPARE_JAVA;
+//		// XXX SETUP : Pre-Comparator mode, perhaps needs PERL executable in PATH
+//		_precompareMode = CTMConstants.CTMPRECOMPARE_JAVA;
 		
 		// XXX SETUP : Comparator mode, perhaps needs PERL/GNU executable in PATH
-		_compareMode = CTMConstants.CTMCOMPARE_JAVA_INRAM;
+		_compareMode = CTMConstants.CTMCOMPARE_JAVA;
 		
 		// XXX SETUP : Distributor mode, to various distributed environments
 		_distributeMode = CTMConstants.CTMDISTRIBUTE_HDFS;

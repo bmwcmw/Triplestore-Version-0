@@ -1,4 +1,4 @@
-package dataCompressorUtils2;
+package dataCompressorUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,7 +19,7 @@ import dataCompressor.MetaInfoArray;
 import dataCompressor.MetaInfoQuadruple;
 import dataReader.PairReader;
 
-public class InRamDBUtils2 {
+public class InRamDBUtils2 extends DBImpl2 {
 	private final int ModeSO = 0;
 	private final int ModeOS = 1;
 	private int MyMode;
@@ -138,7 +138,8 @@ public class InRamDBUtils2 {
 		}
 	}
 	
-	private final void writeMat(boolean writeIndex) throws IOException {
+	@Override
+	protected final void writeMat(boolean writeIndex) throws IOException {
 		//mainInputFile, outPath
 		BufferedWriter outMatWriter;
 		BufferedWriter outIndWriter = null;
@@ -350,7 +351,8 @@ public class InRamDBUtils2 {
 	 * Writes the auxiliary index line by line if it does not exist yet.
 	 * </p>
 	 */
-	private final void writeAuxIndex() throws IOException {
+	@Override
+	protected final void writeAuxIndex() throws IOException {
 		IOUtils.logLog("Begin writting aux index file. Current size of key-value pair(s) : "
 				+ fetchIndexSize());
 		String outAuxFileName;
@@ -379,7 +381,8 @@ public class InRamDBUtils2 {
 	 * Writes the metadata of file blocks if block mode enabled.
 	 * </p>
 	 */
-	private final void writeMeta() throws IOException {
+	@Override
+	protected final void writeMeta() throws IOException {
 		String outMetaFileName;
 		if(MyMode == ModeSO) {
 			outMetaFileName = outPath + File.separator 

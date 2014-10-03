@@ -1,4 +1,4 @@
-package dataCompressorUtils2;
+package dataCompressorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
