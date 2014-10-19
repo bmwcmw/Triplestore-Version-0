@@ -30,7 +30,7 @@ import localIOUtils.IOUtils;
  * Preprocessor and predicate distribution calculator
  * @author CEDAR
  */
-public class CTMServer {
+public class CTMServer2 {
 
 	// TODO possibility to add arguments while launching the program
 	// TODO possibility to use configuration file
@@ -45,7 +45,7 @@ public class CTMServer {
 	 */
 	public static void main(String[] args) throws IOException {
 		System.out.println("---------------------------------------");
-		System.out.println("|--------         CTM         --------|");
+		System.out.println("|--------        CTM V2       --------|");
 		System.out.println("---------------------------------------");
 		myConfig = CTMServerConfig.getInstance();
 
@@ -81,7 +81,7 @@ public class CTMServer {
 					break;
 				} else {
 					startTime = System.currentTimeMillis();
-					result = CTMServer.processAllFiles(userCmd);
+					result = CTMServer2.processAllFiles(userCmd);
 					endTime = System.currentTimeMillis();
 					duration = endTime - startTime;
 					System.out.println("---------------------------------------");
@@ -142,7 +142,7 @@ public class CTMServer {
 			case CTMConstants.CTMCONVERTER:
 				setNbThreads();
 				startTime = System.currentTimeMillis();
-				CTMServer.convert(programInd);
+				CTMServer2.convert(programInd);
 				endTime = System.currentTimeMillis();
 				duration = endTime - startTime;
 				IOUtils.logLog("---------------------------------------");
@@ -154,7 +154,7 @@ public class CTMServer {
 			case CTMConstants.CTMREADERPS:
 				setNbThreads();
 				startTime = System.currentTimeMillis();
-				CTMServer.ps(programInd);
+				CTMServer2.ps(programInd);
 				IOUtils.logLog(myConfig._nbThreads+" threads terminated");
 				endTime = System.currentTimeMillis();
 				duration = endTime - startTime;
@@ -170,6 +170,8 @@ public class CTMServer {
 				psPath = myConfig._ctlParams.get("psPath");
 				IOUtils.checkOrCreateFolder(psPath);
 				if(in.readLine().equals("y")){
+
+					startTime = System.currentTimeMillis();
 					//Merge results of each thread
 					IOUtils.logLog("Begin merging");
 					final HashMap<String, ArrayList<File>> predicateFiles = 
@@ -206,6 +208,13 @@ public class CTMServer {
 											File[].class),
 									new File(finalFileName));
 					    }
+						
+						endTime = System.currentTimeMillis();
+						duration = endTime - startTime;
+						IOUtils.logLog("---------------------------------------");
+						IOUtils.logLog("| MERGE finished (Time elapsed : "	+ duration/1.5 + " ms)");
+						IOUtils.logLog("---------------------------------------"
+								+ "\n---------------------------------------");
 					} catch (Exception e) {
 						IOUtils.logLog(e.getMessage());
 						return -1;
@@ -215,7 +224,7 @@ public class CTMServer {
 			case CTMConstants.CTMREADERPOS:
 				setNbThreads();
 				startTime = System.currentTimeMillis();
-				CTMServer.pos(programInd);
+				CTMServer2.pos(programInd);
 				IOUtils.logLog(myConfig._nbThreads+" threads terminated");
 				endTime = System.currentTimeMillis();
 				duration = endTime - startTime;
@@ -228,7 +237,7 @@ public class CTMServer {
 			case CTMConstants.CTMCOMPRESS:
 				setNbThreads();
 				startTime = System.currentTimeMillis();
-				CTMServer.compress(programInd);
+				CTMServer2.compress(programInd);
 				IOUtils.logLog(myConfig._nbThreads+" threads terminated");
 				endTime = System.currentTimeMillis();
 				duration = endTime - startTime;
@@ -254,7 +263,7 @@ public class CTMServer {
 			case CTMConstants.CTMCOMPARE:
 				setNbThreads();
 				startTime = System.currentTimeMillis();
-				CTMServer.compare();
+				CTMServer2.compare();
 				IOUtils.logLog(myConfig._nbThreads+" threads terminated");
 				endTime = System.currentTimeMillis();
 				duration = endTime - startTime;
@@ -267,7 +276,7 @@ public class CTMServer {
 			case CTMConstants.CTMDISTRIBUTE:
 				setNbThreads();
 				startTime = System.currentTimeMillis();
-				CTMServer.distribute(programInd);
+				CTMServer2.distribute(programInd);
 				IOUtils.logLog(myConfig._nbThreads+" threads terminated");
 				endTime = System.currentTimeMillis();
 				duration = endTime - startTime;
@@ -485,7 +494,7 @@ public class CTMServer {
 	 * @return 0 if OK
 	 */
 	static int compare(){
-		String comparePath = myConfig._ctlParams.get("comparePath");
+		String comparePath = myConfig._ctlParams.get("compressedPath");
 		IOUtils.checkOrCreateFolder(comparePath);
 		String indicatorPath = myConfig._ctlParams.get("indicatorPath");
 		IOUtils.checkOrCreateFolder(indicatorPath);
@@ -550,18 +559,24 @@ public class CTMServer {
 			for(int j = i+1; j<uniqueName.size(); j++) {
 				System.out.println("\t"+j+" : "+uniqueName.get(j));
 				toComparePairs.add(new FilePair(
-						new File(comparePath + File.separator + uniqueName.get(i) + ".S"),
-						new File(comparePath + File.separator + uniqueName.get(i) + ".O"),
-						new File(comparePath + File.separator + uniqueName.get(j) + ".S"),
-						new File(comparePath + File.separator + uniqueName.get(j) + ".O")
+						new File(comparePath + File.separator + uniqueName.get(i) 
+								+ CTMConstants.SOSortedExt),
+						new File(comparePath + File.separator + uniqueName.get(i) 
+								+ CTMConstants.OSSortedExt),
+						new File(comparePath + File.separator + uniqueName.get(j) 
+								+ CTMConstants.SOSortedExt),
+						new File(comparePath + File.separator + uniqueName.get(j) 
+								+ CTMConstants.OSSortedExt)
 					));
 			}
 		}
-		LinkedList<LinkedList<FilePair>> inputLists = CTMJobAssigner.assignJobs(toComparePairs, false);
+		LinkedList<LinkedList<FilePair>> inputLists = 
+				CTMJobAssigner.assignJobs(toComparePairs, false);
 		//Create and execute threads with assigned sub task
 		ExecutorService executor = Executors.newFixedThreadPool(myConfig._nbThreads);
         for (int i = 0; i < myConfig._nbThreads; i++) {
-            Runnable thread = new CTMThread(String.valueOf(i), myConfig._compareMode, inputLists.get(i), 
+            Runnable thread = new CTMThread(String.valueOf(i), 
+            		myConfig._compareMode, inputLists.get(i), 
             		indicatorPath);
             executor.execute(thread);
         }

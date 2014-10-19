@@ -11,7 +11,7 @@ import localIOUtils.IOUtils;
 
 import org.json.simple.JSONArray;
 
-import ctmRdf.CTMConstants;
+import ctmSPARQL.CTMConstants;
 import databaseUtils.DBImpl;
 import queryObjects.LongPattern;
 import queryObjects.ParsedQuery;
@@ -32,7 +32,7 @@ import queryRewriter.SimpleQueryTranslator;
  * @author CEDAR
  *
  */
-public class NaiveQueryExecutor implements ExecutorImpl {
+public class NaiveQueryExecutor implements ExecutorImpl, ExecutorImplLocal {
 	
 	private MODE mode = MODE.HDFS;
 	

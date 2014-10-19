@@ -21,7 +21,7 @@ public interface ExecutorImpl {
 	 * Acccessing modes of the executor
 	 */
 	public static enum MODE{
-		LOCALFS, HDFS, CEDAR
+		LOCALFS, HDFS, CEDAR, STANDARD
 	}
 	
 	/**
@@ -35,18 +35,6 @@ public interface ExecutorImpl {
 	 * @return MODE
 	 */
 	public MODE getMode();
-	
-	/**
-	 * Sets the local path for the local mode
-	 * @param path
-	 */
-	public void setLocalPath(String path);
-	
-	/**
-	 * Gets the local path for the local mode
-	 * @return String path
-	 */
-	public String getLocalPath();
 	
 	/**
 	 * Sets the DB Util

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 
-import ctmRdf.CTMServerConfig;
 import dbUtils.DBImpl;
 import dbUtils.InRamDBUtils;
 
