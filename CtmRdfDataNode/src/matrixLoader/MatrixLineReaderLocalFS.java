@@ -32,6 +32,18 @@ public class MatrixLineReaderLocalFS {
 		return line;
 	}
 	
+	public static String headNLines(long id, File f) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				new FileInputStream(f)));
+		for (long i = 0; i < id; i++)
+			br.readLine();
+		//TODO
+		String line = br.readLine();//StringBuffer.append
+		if (br != null)
+			br.close();
+		return line;//StringBuffer ==> toString
+	}
+	
 
 	/**
 	 * Returns the Nth line of the file from the end.
