@@ -35,13 +35,19 @@ public class MatrixLineReaderLocalFS {
 	public static String headNLines(long id, File f) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				new FileInputStream(f)));
-		for (long i = 0; i < id; i++)
-			br.readLine();
-		//TODO
-		String line = br.readLine();//StringBuffer.append
+		String line = null;
+		String result = null;
+		StringBuffer sb = new StringBuffer();
+		for (long i = 0; i < id; i++){
+			line = br.readLine();
+			sb.append(line);
+		}
+		result = sb.toString();
+		sb.setLength(0);
+		
 		if (br != null)
 			br.close();
-		return line;//StringBuffer ==> toString
+		return result;
 	}
 	
 
