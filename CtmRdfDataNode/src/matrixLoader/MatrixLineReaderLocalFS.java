@@ -21,7 +21,7 @@ public class MatrixLineReaderLocalFS {
 	 * @return A string containing the wanted information
 	 * @throws IOException
 	 */
-	public static String headOneLine(long id, File f) throws IOException {
+	public static String upDownOneLine(long id, File f) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				new FileInputStream(f)));
 		for (long i = 0; i < id; i++)
@@ -32,7 +32,7 @@ public class MatrixLineReaderLocalFS {
 		return line;
 	}
 	
-	public static String headNLines(long id, File f) throws IOException {
+	public static String upDownNLines(long id, File f) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				new FileInputStream(f)));
 		String line = null;
@@ -57,11 +57,11 @@ public class MatrixLineReaderLocalFS {
 	 * @param lines : number of wanted line
 	 * @return wanted line in one string
 	 */
-	public static String tailOneLine(long lines, File file) {
+	public static String downUpOneLine(long lines, File file) {
 		lines = lines*2;
-	    java.io.RandomAccessFile fileHandler = null;
+	    RandomAccessFile fileHandler = null;
 	    try {
-	        fileHandler = new java.io.RandomAccessFile(file, "r");
+	        fileHandler = new RandomAccessFile(file, "r");
 	        long fileLength = fileHandler.length() - 1;
 	        StringBuilder sb = new StringBuilder();
 	        long line = 0;
@@ -128,7 +128,7 @@ public class MatrixLineReaderLocalFS {
 	 * @param lines : number of lines
 	 * @return lines in one string
 	 */
-	public static String tailNLines(long lines, File file) {
+	public static String downUpNLines(long lines, File file) {
 		lines = lines*2;
 	    RandomAccessFile fileHandler = null;
 	    try {

@@ -8,8 +8,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
-
+import queryObjects.BiList;
 import localIOUtils.IOUtils;
 import ctmRdf.CTMConstants;
 
@@ -20,10 +19,11 @@ import ctmRdf.CTMConstants;
 public class LocalMetaLoader {
 	public static enum MODE {S, O};
 	
-	public static TreeMap<Long, MetaInfoTriple> loadMetadataFromFile(File folder, MODE mode) 
+	//BiList<Long, MetaInfoTriple> b = new BiList<Long, MetaInfoTriple>();
+	public static BiList<Long, MetaInfoTriple> loadMetadataFromFile(File folder, MODE mode) 
 			throws IOException, ParseException {
 
-		TreeMap<Long, MetaInfoTriple> newMap = new TreeMap<Long, MetaInfoTriple>();
+		BiList<Long, MetaInfoTriple> bl = new BiList<Long, MetaInfoTriple>();
 		ArrayList<File> listOfFiles = new ArrayList<File>(Arrays.asList(folder.listFiles()));
 		
 		File md = null;
@@ -93,14 +93,14 @@ public class LocalMetaLoader {
 					offsetLine = itr.nextToken();
 				}
 			}
-			newMap.put(Long.parseLong(id), new MetaInfoTriple(Long.parseLong(fileExt),Long.parseLong(offsetId),Integer.parseInt(offsetLine)));
+			bl.add(Long.parseLong(id), new MetaInfoTriple(Long.parseLong(fileExt),Long.parseLong(offsetId),Integer.parseInt(offsetLine)));
 		}
 		
 		if(reader != null){
 			reader.close();
 		}
 		
-		return newMap;
+		return bl;
 	}
 
 }
