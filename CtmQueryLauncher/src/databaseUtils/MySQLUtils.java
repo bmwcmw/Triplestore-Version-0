@@ -1,13 +1,10 @@
 package databaseUtils;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import dataCompressor.SOLongPair;
 
 public class MySQLUtils implements DBImpl{
 
@@ -20,29 +17,6 @@ public class MySQLUtils implements DBImpl{
 		//TODO
 		_conn = DriverManager.getConnection(DBConstants.MySQLurl, "root", "");
 		_st = _conn.createStatement();
-	}
-
-	@Override
-	public void addSO(SOLongPair so) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Long fetchSOSize() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Long fetchIndexSize() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void insertNode(String node) throws SQLException {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -80,13 +54,6 @@ public class MySQLUtils implements DBImpl{
 	public Long fetchLoadedSize() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) 
-			throws IOException {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

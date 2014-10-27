@@ -8,7 +8,6 @@ import localIOUtils.IOUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 import dataCleaner.RDFPairStr;
-import dataCompressor.SOLongPair;
 import dataReader.PairReader;
 
 /**
@@ -19,7 +18,6 @@ public class RedisUtils implements DBImpl{
 	private final int DBLOAD = 0;
 	private final int DBINDEX1 = 1; //Index to Node
 	private final int DBINDEX2 = 2; //Node to Index
-	private final int DBSO = 3;
 	
 	private Jedis jedis = null;
 	private Pipeline pipeline = null;
@@ -31,72 +29,6 @@ public class RedisUtils implements DBImpl{
 	public RedisUtils(String url) throws SQLException, ClassNotFoundException{
 		jedis = new Jedis(url);
 		jedis.connect();
-	}
-	
-	public void connect(){
-	}
-
-	@Override
-	public void addSO(SOLongPair so) {
-		try {
-			//jedis.connect();
-			jedis.select(DBSO);
-			jedis.set(so.S.toString(), so.O.toString());
-		} catch (Exception e) {
-			IOUtils.logLog("Aborted while adding SO pair");
-			cleanDB();
-			IOUtils.logLog("DB cleaned");
-			e.printStackTrace();
-		} finally {
-			//jedis.close();
-		}
-	}
-
-	@Override
-	public Long fetchSOSize() {
-		//jedis.connect();
-		jedis.select(DBSO);
-		Long size = jedis.dbSize();
-		//jedis.close();
-		return size;
-	}
-
-	@Override
-	public Long fetchIndexSize() {
-		//jedis.connect();
-		jedis.select(DBINDEX1);
-		Long size = jedis.dbSize();
-		//jedis.close();
-		return size;
-	}
-
-	@Override
-	public void insertNode(String node) {
-		if(fetchIdByNode(node)==null){
-			try {
-				//jedis.connect();
-				jedis.select(DBINDEX1);
-				String index = String.valueOf(fetchIndexSize());
-				jedis.set(index, node);
-				jedis.select(DBINDEX2);
-				jedis.set(node, index);
-	//			pipeline = jedis.pipelined();
-	//			pipeline.select(DBINDEX1);
-	//			pipeline.set(String.valueOf(fetchIndexSize()), node);
-	//			pipeline.select(DBINDEX2);
-	//			pipeline.set(node, String.valueOf(fetchIndexSize()));
-			} catch (Exception e) {
-				IOUtils.logLog("Aborted while adding node");
-				cleanDB();
-				jedis.select(DBINDEX1);
-				cleanDB();
-				IOUtils.logLog("DB cleaned");
-				e.printStackTrace();
-			} finally {
-				//pipeline.syncAndReturnAll();
-				//jedis.close();
-			}
-		}
 	}
 
 	@Override
@@ -164,16 +96,9 @@ public class RedisUtils implements DBImpl{
 	@Override
 	public Long fetchLoadedSize() {
 		jedis.connect();
-		long size = jedis.dbSize();
+		Long size = jedis.dbSize();
 		jedis.close();
 		return size;
-	}
-
-	@Override
-	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) 
-			throws IOException {
-		// TODO Sort & Bulk load
-		
 	}
 	
 }

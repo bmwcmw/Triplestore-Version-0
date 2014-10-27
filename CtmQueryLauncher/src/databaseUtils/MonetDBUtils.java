@@ -1,13 +1,10 @@
 package databaseUtils;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import dataCompressor.SOLongPair;
 
 /**
  * <p>MonetDB aims to use as much of the main memory available, as many cores as can be 
@@ -34,19 +31,6 @@ public class MonetDBUtils implements DBImpl{
 		_conn = DriverManager.getConnection(DBConstants.MonetDBurl, "monetdb", "monetdb");
 		_st = _conn.createStatement();
 	}
-	
-	@Override
-    public Long fetchIndexSize() throws SQLException{
-    	_rs = _st.executeQuery("SELECT count(id) as nb FROM indexnodes");
-    	if ( _rs.next() ) return _rs.getLong("nb");
-    	else return null;
-    }
-
-	@Override
-    public void insertNode(String node) throws SQLException{
-    	_st.executeUpdate("INSERT INTO indexnodes(data) "
-    			+ "values ('" + node + "');");
-    }
 
 	@Override
 	public Long fetchIdByNode(String node) throws SQLException {
@@ -62,18 +46,6 @@ public class MonetDBUtils implements DBImpl{
     			+ "WHERE id = " + index);
 		if ( _rs.next() ) return _rs.getString("data");
     	else return null;
-	}
-
-	@Override
-	public void addSO(SOLongPair so) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Long fetchSOSize() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -99,11 +71,5 @@ public class MonetDBUtils implements DBImpl{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public void writePredToFile(String inFileName, String outputFilePath, String comparePath) 
-			throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
+	
 }
