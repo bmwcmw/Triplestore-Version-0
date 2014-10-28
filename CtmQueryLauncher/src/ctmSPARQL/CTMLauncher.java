@@ -3,17 +3,18 @@ package ctmSPARQL;
 import java.io.File;
 
 import databaseUtils.InRamDBUtils;
-import queryExecutor.NaiveQueryExecutor;
+import queryExecutor.LocalBasicQueryExecutor;
 import queryObjects.ParsedQuery;
 import queryPlanner.SimpleQueryPlanner;
 
 public class CTMLauncher {
 
 	public static void main(String[] args) throws Exception {
-		NaiveQueryExecutor exe = new NaiveQueryExecutor();
-		exe.setMode(NaiveQueryExecutor.MODE.LOCALFS);
-		exe.setLocalPath(System.getProperty("user.dir") + 
-				File.separator + "_compressedFake");
+		LocalBasicQueryExecutor exe = new LocalBasicQueryExecutor();
+		exe.setLocalPath(System.getProperty("user.dir") 
+				+ File.separator + ".." + File.separator + "CtmPreProcessingClient2"
+				+ File.separator + "_pos");
+		System.out.println(exe.getLocalPath());
 		exe.setDBU(new InRamDBUtils());
 		
 //		String query = 

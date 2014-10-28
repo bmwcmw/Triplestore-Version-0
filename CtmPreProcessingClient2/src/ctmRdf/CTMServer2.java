@@ -411,6 +411,7 @@ public class CTMServer2 {
 	 * @return 0 if OK
 	 */
 	static int compress(int programInd){
+		IOUtils.logLog("PLEASE USE EXTERNAL SOLUTION");
 //		String psPath = myConfig._ctlParams.get("psPath");
 //		IOUtils.checkOrCreateFolder(psPath);
 //		String compressedPath = myConfig._ctlParams.get("compressedPath");

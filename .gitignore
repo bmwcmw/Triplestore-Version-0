@@ -18,6 +18,14 @@ CtmPreProcessingClient/_invalidTriple/
 CtmPreProcessingClient/_ns/
 CtmPreProcessingClient/_pos/
 CtmPreProcessingClient/_ps/
+CtmPreProcessingClient2/_compare/
+CtmPreProcessingClient2/_compressed/
+CtmPreProcessingClient2/_compressed2/
+CtmPreProcessingClient2/_indicator/
+CtmPreProcessingClient2/_invalidTriple/
+CtmPreProcessingClient2/_ns/
+CtmPreProcessingClient2/_pos/
+CtmPreProcessingClient2/_ps/
 *.n3
 *.tmp
 *.bak

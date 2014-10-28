@@ -268,7 +268,7 @@ public class StrategicalExecutor2 implements ExecutorImpl {
 					if(pat.getType().toString().contains("P")){
 						IOUtils.logLog("Predicate is variable. Preparing broadcast.");
 						/* Predicate is a variable */
-						//TODO broadcast, where is all predicates' information?
+						//NO broadcast
 					} else {
 						IOUtils.logLog("Predicate is not variable. Preparing subqueries.");
 						/* Predicate is not a variable 

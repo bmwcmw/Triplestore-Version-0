@@ -26,7 +26,7 @@ public class NodeListener {
 		
 		DBImpl dbu = new InRamDBUtils();
 		String loadPath = myConfig._workingDir + File.separator + ".." + File.separator + 
-				"CtmPreProcessingClient" + File.separator + "_compressed";
+				"CtmPreProcessingClient2" + File.separator + "_compressed";
 		dbu.loadMetaFromFile(loadPath);
 		System.out.println(dbu.fetchLoadedMetaSize());
 		
