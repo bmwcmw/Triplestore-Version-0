@@ -1,4 +1,4 @@
-package databaseUtils;
+package localDBUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -99,6 +99,18 @@ public class RedisUtils implements DBImpl{
 		Long size = jedis.dbSize();
 		jedis.close();
 		return size;
+	}
+
+	@Override
+	public void put(Long k, String v) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void put(String k, String v) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

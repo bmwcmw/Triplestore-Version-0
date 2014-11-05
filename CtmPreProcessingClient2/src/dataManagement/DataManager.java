@@ -154,7 +154,7 @@ public class DataManager {
 				// POST : line = (Subject)
 				if ((inFileName.compareTo("a") == 0)
 						|| (inFileName.compareTo("rdf-type") == 0)) {
-					outFilePath = outputPath + File.separator + "rdf-type_"
+					outFilePath = outputPath + File.separator + CTMConstants.rdfTypeHeader
 						+ so.getObject().toString().replace(":", "-");
 					line = so.getSubject().toString();
 				}

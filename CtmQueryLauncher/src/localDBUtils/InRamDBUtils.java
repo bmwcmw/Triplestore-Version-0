@@ -1,7 +1,8 @@
-package databaseUtils;
+package localDBUtils;
 
 import java.io.IOException;
 import java.text.ParseException;
+
 import localIOUtils.IOUtils;
 
 import com.google.common.collect.BiMap;
@@ -56,10 +57,20 @@ public class InRamDBUtils implements DBImpl{
 		}
 		IOUtils.logLog("File charged. Current size of key-value pair(s) : " + fetchLoadedSize());
 	}
+	
+	public void put(Long k, String v){
+		nodes.put(k, v);
+	}
 
 	@Override
 	public Long fetchLoadedSize() {
 		return (long)nodes.size();
+	}
+
+	@Override
+	public void put(String k, String v) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

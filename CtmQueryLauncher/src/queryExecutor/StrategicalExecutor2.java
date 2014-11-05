@@ -7,12 +7,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import localDBUtils.DBImpl;
 import localIOUtils.IOUtils;
 
 import org.json.simple.JSONArray;
 
-import ctmSPARQL.CTMConstants;
-import databaseUtils.DBImpl;
+import ctmSPARQLLauncher.CTMConstants;
 import queryExecutor.ExecutorImpl.MODE;
 import queryObjects.LongPattern;
 import queryObjects.ParsedQuery;
@@ -44,6 +44,8 @@ public class StrategicalExecutor2 implements ExecutorImpl {
 	
 	private DBImpl dbu;
 	
+	private HashMap<String, DBImpl> dbuList;
+	
 	@Override
 	public void setMode(MODE toSet){
 		mode = toSet;
@@ -53,15 +55,10 @@ public class StrategicalExecutor2 implements ExecutorImpl {
 	public MODE getMode(){
 		return mode;
 	}
-
+	
 	@Override
-	public void setDBU(DBImpl toSet){
-		dbu = toSet;
-	}
-
-	@Override
-	public DBImpl getDBU(){
-		return dbu;
+	public void setDBUList(HashMap<String, DBImpl> list) {
+		dbuList = list;
 	}
 
 	@Override

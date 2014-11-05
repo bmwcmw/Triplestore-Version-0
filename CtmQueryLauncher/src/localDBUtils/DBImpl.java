@@ -1,4 +1,4 @@
-package databaseUtils;
+package localDBUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -48,6 +48,19 @@ public interface DBImpl {
 	 */
 	public void loadIndexFromFile(String path) throws IOException;
 	
+	/**
+	 * Puts a pair manually
+	 * @param k
+	 * @param v
+	 */
+	public void put(Long k, String v);
+	
+	/**
+	 * Puts a string pair manually
+	 * @param k
+	 * @param v
+	 */
+	public void put(String k, String v);
 
 	/**
 	 * Loads the size of loaded database

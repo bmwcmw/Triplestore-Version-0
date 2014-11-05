@@ -1,6 +1,8 @@
 package queryExecutor;
 
-import databaseUtils.DBImpl;
+import java.util.HashMap;
+
+import localDBUtils.DBImpl;
 import queryObjects.QueryPatternResult;
 import queryObjects.StringPattern;
 
@@ -31,22 +33,16 @@ public class StrategicalExecutor1 implements ExecutorImpl {
 	}
 
 	@Override
-	public void setDBU(DBImpl toSet) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public DBImpl getDBU() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public QueryPatternResult fetchFromDest(String dest, StringPattern pat)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void setDBUList(HashMap<String, DBImpl> list) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

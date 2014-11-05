@@ -1,6 +1,8 @@
 package queryExecutor;
 
-import databaseUtils.DBImpl;
+import java.util.HashMap;
+
+import localDBUtils.DBImpl;
 import queryObjects.QueryPatternResult;
 import queryObjects.StringPattern;
 
@@ -37,18 +39,6 @@ public interface ExecutorImpl {
 	public MODE getMode();
 	
 	/**
-	 * Sets the DB Util
-	 * @param toSet
-	 */
-	public void setDBU(DBImpl toSet);
-	
-	/**
-	 * Gets the current DB Util
-	 * @return DBU
-	 */
-	public DBImpl getDBU();
-	
-	/**
 	 * Fetches the result of a pattern from the destination
 	 * @param dest Destination
 	 * @param pat Query pattern
@@ -56,5 +46,11 @@ public interface ExecutorImpl {
 	 * @throws Exception
 	 */
 	public QueryPatternResult fetchFromDest(String dest, StringPattern pat) throws Exception;
+	
+	/**
+	 * Sets a list for all available predicates
+	 * @param list
+	 */
+	public void setDBUList(HashMap<String, DBImpl> list);
 
 }

@@ -61,4 +61,7 @@ public class CTMConstants {
 	/* Others */
 	public final static char delimiter = ' ';
 	
+	/* Type */
+	public final static String rdfTypeHeader = "rdf-type_";
+	
 }

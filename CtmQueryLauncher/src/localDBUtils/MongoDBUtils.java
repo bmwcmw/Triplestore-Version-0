@@ -1,4 +1,4 @@
-package databaseUtils;
+package localDBUtils;
 
 public class MongoDBUtils implements DBImpl{
     
@@ -40,6 +40,18 @@ public class MongoDBUtils implements DBImpl{
 	public Long fetchLoadedSize() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void put(Long k, String v) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void put(String k, String v) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

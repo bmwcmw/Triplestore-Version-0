@@ -55,7 +55,7 @@ public class ParsedQuery {
 		/*
 		 * Size = number of variables, Content = variables in current pattern
 		 */
-		BiList varList = new BiList();
+		BiList<VarType, String> varList = new BiList<VarType, String>();
 
 		if (QueryUtils.isVariable(p.getS())){
 			varList.add(VarType.S, p.getS());
@@ -78,6 +78,7 @@ public class ParsedQuery {
 		 * For all variables
 		 */
 		for(int i=0; i<varList.size(); i++){
+			@SuppressWarnings("rawtypes")
 			BiListPair tempVar = varList.get(i);
 			QueryVariable tempKey = new QueryVariable((VarType)tempVar.elem1(), (String)tempVar.elem2());
 			if(!variables.containsKey(tempKey))

@@ -1,4 +1,4 @@
-package databaseUtils;
+package localDBUtils;
 
 public class DBConstants {
 	public static final String MonetDBurl = "jdbc:monetdb://localhost/indexnodes";
