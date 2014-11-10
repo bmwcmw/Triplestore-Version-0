@@ -1,10 +1,12 @@
 package queryPlanner;
 
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
 import queryObjects.ParsedQuery;
 import queryObjects.StringPattern;
+import queryObjects.SubQueryPatternSet;
 import queryUtils.InvalidPatternException;
 
 /**
@@ -42,6 +44,17 @@ public class SimpleQueryPlanner {
 		for(String str : forWhere){
 			parsed.putPattern(new StringPattern(str));
 		}
+		
+		/* DEBUG */
+		System.out.println("PARSED------------");
+		for(String sel : parsed.getSelect()){
+			System.out.print(sel + "\t");
+		}
+		System.out.println("\n------------------");
+		for(Entry<Integer, SubQueryPatternSet> pat : parsed.getPatterns().entrySet()){
+			System.out.print(pat.toString());
+		}
+		System.out.println("PARSED------------");
 		
 		return parsed;
 	}

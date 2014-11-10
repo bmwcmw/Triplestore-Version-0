@@ -1,6 +1,7 @@
 package queryObjects;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 /**
  * This is used to store a graph of SPARQL queries with all sub-queries categorized
@@ -46,6 +47,14 @@ public class SubQueryPatternSet {
 	  */
 	 public StringPattern get(Integer i){
 		 return set.get(i);
+	 }
+	 
+	 public String toString(){
+		 String temp = "";
+		 for(Entry<Integer, StringPattern> entry : set.entrySet()){
+			 temp += entry.getValue().toString() + "\n";
+		 }
+		 return temp;
 	 }
 	 
 //	 /**

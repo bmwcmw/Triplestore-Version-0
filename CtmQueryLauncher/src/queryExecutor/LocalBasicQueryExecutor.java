@@ -1,12 +1,8 @@
 package queryExecutor;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map.Entry;
-import java.util.Set;
-
 import localDBUtils.DBImpl;
 import localDBUtils.InRamDBUtilsPOS;
 import localIOUtils.IOUtils;
@@ -14,13 +10,11 @@ import localIOUtils.IOUtils;
 import org.json.simple.JSONArray;
 
 import ctmSPARQLLauncher.CTMConstants;
-import queryObjects.LongPattern;
 import queryObjects.ParsedQuery;
 import queryObjects.QueryPatternResult;
 import queryObjects.QueryResult;
 import queryObjects.StringPattern;
 import queryObjects.SubQueryPatternSet;
-import queryRewriter.SimpleQueryTranslator;
 
 /**
  * This is the query executor which performs processed SPARQL query by asking 
@@ -83,7 +77,9 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 		String dbuName = null;
 		InRamDBUtilsPOS dbu;
 		
-		boolean isType = pred.equals(CTMConstants.rdfTypeHeader) 
+		boolean isType = pred.equals(
+				CTMConstants.rdfTypeHeader.substring(
+						0, CTMConstants.rdfTypeHeader.length()-1)) 
 				|| pred.equals("a");
 		
 		/* Here P is never variable */
@@ -138,7 +134,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 						resList.add(arrP);
 						resList.add(arrO);
 						/* DEBUG */
-						System.out.println(resList);
+						//System.out.println(resList);
 						result = new QueryPatternResult(pat, resList);
 					} else {
 						/* If this non-variable pattern isn't not satisfied, return 
@@ -183,7 +179,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 						resList.add(arrP);
 						resList.add(arrO);
 						/* DEBUG */
-						System.out.println(resList);
+						//System.out.println(resList);
 						result = new QueryPatternResult(pat, resList);
 					} else {
 						/* If this non-variable pattern isn't not satisfied, return 
@@ -211,7 +207,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 					ArrayList<String> arrSubject = dbu.getArr1();
 					if(arrSubject.size()>0){
 						/* If this non-variable pattern is satisfied, return a list 
-						 * containing 3 sub-lists (with size=1,1,1) where S, P and O
+						 * containing 3 sub-lists (with size=n,1,1) where S, P and O
 						 * strings are the only values separately stored in each list 
 						 */
 						ArrayList<ArrayList<String>> resList = 
@@ -225,7 +221,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 						resList.add(arrP);
 						resList.add(arrO);
 						/* DEBUG */
-						System.out.println(resList);
+						//System.out.println(resList);
 						result = new QueryPatternResult(pat, resList);
 					} else {
 						/* If this non-variable pattern isn't not satisfied, return 
@@ -254,7 +250,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 					}
 					if(toAdd.size()>0){
 						/* If this non-variable pattern is satisfied, return a list 
-						 * containing 3 sub-lists (with size=1,1,1) where S, P and O
+						 * containing 3 sub-lists (with size=n,1,1) where S, P and O
 						 * strings are the only values separately stored in each list 
 						 */
 						ArrayList<ArrayList<String>> resList = 
@@ -268,7 +264,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 						resList.add(arrP);
 						resList.add(arrO);
 						/* DEBUG */
-						System.out.println(resList);
+						//System.out.println(resList);
 						result = new QueryPatternResult(pat, resList);
 					} else {
 						/* If this non-variable pattern isn't not satisfied, return 
@@ -298,7 +294,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 					}
 					if(toAdd.size()>0){
 						/* If this non-variable pattern is satisfied, return a list 
-						 * containing 3 sub-lists (with size=1,1,1) where S, P and O
+						 * containing 3 sub-lists (with size=1,1,n) where S, P and O
 						 * strings are the only values separately stored in each list 
 						 */
 						ArrayList<ArrayList<String>> resList = 
@@ -312,7 +308,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 						resList.add(arrP);
 						resList.add(arrO);
 						/* DEBUG */
-						System.out.println(resList);
+						//System.out.println(resList);
 						result = new QueryPatternResult(pat, resList);
 					} else {
 						/* If this non-variable pattern isn't not satisfied, return 
@@ -341,7 +337,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 					}
 					if(toAdd.size()>0){
 						/* If this non-variable pattern is satisfied, return a list 
-						 * containing 3 sub-lists (with size=1,1,1) where S, P and O
+						 * containing 3 sub-lists (with size=1,1,n) where S, P and O
 						 * strings are the only values separately stored in each list 
 						 */
 						ArrayList<ArrayList<String>> resList = 
@@ -355,7 +351,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 						resList.add(arrP);
 						resList.add(arrO);
 						/* DEBUG */
-						System.out.println(resList);
+						//System.out.println(resList);
 						result = new QueryPatternResult(pat, resList);
 					} else {
 						/* If this non-variable pattern isn't not satisfied, return 
@@ -381,7 +377,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 					}
 					if(toAddS.size()>0){
 						/* If this non-variable pattern is satisfied, return a list 
-						 * containing 3 sub-lists (with size=1,1,1) where S, P and O
+						 * containing 3 sub-lists (with size=n,1,n) where S, P and O
 						 * strings are the only values separately stored in each list 
 						 */
 						ArrayList<ArrayList<String>> resList = 
@@ -394,7 +390,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 						resList.add(arrP);
 						resList.add(arrO);
 						/* DEBUG */
-						System.out.println(resList);
+						//System.out.println(resList);
 						result = new QueryPatternResult(pat, resList);
 					} else {
 						/* If this non-variable pattern isn't not satisfied, return 
@@ -417,7 +413,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 					ArrayList<String> arrObject = dbu.getArr2();
 					if(arrSubject.size()>0){
 						/* If this non-variable pattern is satisfied, return a list 
-						 * containing 3 sub-lists (with size=1,1,1) where S, P and O
+						 * containing 3 sub-lists (with size=n,1,n) where S, P and O
 						 * strings are the only values separately stored in each list 
 						 */
 						ArrayList<ArrayList<String>> resList = 
@@ -430,7 +426,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 						resList.add(arrP);
 						resList.add(arrO);
 						/* DEBUG */
-						System.out.println(resList);
+						//System.out.println(resList);
 						result = new QueryPatternResult(pat, resList);
 					} else {
 						/* If this non-variable pattern isn't not satisfied, return 
@@ -473,7 +469,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 		
 		HashMap<Integer, SubQueryPatternSet> patterns = parsed.getPatterns();
 		SubQueryPatternSet subset;
-		QueryResult result = null;
+		QueryResult result = new QueryResult(parsed.getSelect());
 		
 		/* Naive version : execute from 0 to 3 variable(s) */
 		for(int i=0; i<=3; i++){
@@ -494,7 +490,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 						 */
 						String destPred = pat.getP().replaceAll(".*:", "").replace(":", "-");
 						QueryPatternResult thisRes = fetchFromDest(destPred, pat);
-						
+						result.appendPatternResult(thisRes);						
 					}
 				}
 			}

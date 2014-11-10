@@ -38,7 +38,7 @@ public class InRamDBLoaderPOS implements DBLoaderImpl {
 								dbu.put(str, "");
 							}
 							resultList.put(f.getName(), dbu);
-							IOUtils.logLog("File " + f.getName() 
+							IOUtils.logLog("File(T) " + f.getName() 
 									+ " charged. Current size of table : " 
 									+ dbu.fetchLoadedSize());
 						} catch (IOException e) {
@@ -57,7 +57,7 @@ public class InRamDBLoaderPOS implements DBLoaderImpl {
 										pair.getObject());
 							}
 							resultList.put(f.getName(), dbu);
-							IOUtils.logLog("File " + f.getName() 
+							IOUtils.logLog("File(NT) " + f.getName() 
 									+ " charged. Current size of table : " 
 									+ dbu.fetchLoadedSize());
 						} catch (IOException e) {
@@ -74,7 +74,7 @@ public class InRamDBLoaderPOS implements DBLoaderImpl {
 			default:
 				break;
 		}
-		return null;
+		return resultList;
 	}
 
 }

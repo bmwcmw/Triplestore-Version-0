@@ -18,8 +18,8 @@ public class QueryResult {
 	
 	private ArrayList<ArrayList<String>> resultSet;
 	
-	public QueryResult(){
-		selectedVariables = new ArrayList<String>();
+	public QueryResult(ArrayList<String> select){
+		selectedVariables = select;
 		resultSet = new ArrayList<ArrayList<String>>();
 	}
 	
@@ -48,12 +48,23 @@ public class QueryResult {
 				listToJoin1 = patRes.getResultSet().get(2);
 				var = patRes.getPattern().getS();
 				int indexOfVar = selectedVariables.indexOf(var);
+				int removed = 0;
 				if(indexOfVar > -1){
+					//For existing variable
 					for(int i=0;i<listToJoin1.size();i++){
-						if(resultSet.get(indexOfVar).contains(o))
+						if(!resultSet.get(indexOfVar).contains(listToJoin1.get(i))){
+							for(int j=0;j<resultSet.size();j++){
+								resultSet.get(j).remove(i-removed);
+							}
+							removed++;
+						} else {
+							
+						}
 					}
 				} else {
-					
+					//When the result set contains an unknown variable
+					//THIS SHOULD NOT HAPPEN
+					return false;
 				}
 				break;
 			case O : 
@@ -71,6 +82,13 @@ public class QueryResult {
 	
 	public void outputToFile(String localDestFileName){
 		
+	}
+	
+	public void outputToTerminal(){
+		for(int i=0;i<selectedVariables.size();i++){
+			System.out.print(selectedVariables.get(i)+"\t");
+		}
+		System.out.println("--------------------------------");
 	}
 	
 }
