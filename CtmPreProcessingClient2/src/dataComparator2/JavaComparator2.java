@@ -3,8 +3,6 @@ package dataComparator2;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.concurrent.ExecutionException;
-
 import ctmRdf.CTMConstants;
 
 import dataCleaner.RDFPairStr;
@@ -20,7 +18,7 @@ import localIOUtils.IOUtils;
  */
 public class JavaComparator2 {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, ParseException {
 		if(args.length!=4){
 			System.out.println(" -[file 1 with sorted column] "
 					+ "-[file 2 with sorted column] "
@@ -29,7 +27,10 @@ public class JavaComparator2 {
 			System.exit(-1);
 		}
 		
-		//TODO
+//		File f1 = new File(System.getProperty("user.dir") + File.separator + "2.sortedSO");
+//		File f2 = new File(System.getProperty("user.dir") + File.separator + "2.sortedOS");
+//		JavaComparator2 jc2 = new JavaComparator2();
+//		System.out.println(jc2.compareTwoPredicates(f1,f2));
 	}
 	
 	public Long compareTwoPredicates(File f1, File f2) throws IOException, ParseException {
@@ -50,7 +51,7 @@ public class JavaComparator2 {
 				if ((entry1 == null) || (entry2 == null)) {
 					return common;
 				}
-				//System.out.println(entry1+" "+entry2);
+				System.out.println(entry1+" "+entry2);
 				if (entry1.getSubject().compareTo(entry2.getSubject()) < 0){
 					while ((temp1 = reader1.nextStr()) != null) {
 						if(!temp1.getSubject().equals(entry1.getSubject())) break;
@@ -80,7 +81,7 @@ public class JavaComparator2 {
 				if ((entry1 == null) || (entry2 == null)) {
 					return common;
 				}
-				//System.out.println(entry1+" "+entry2);
+				System.out.println(entry1+" "+entry2);
 				if (entry1.getObject().compareTo(entry2.getObject()) < 0){
 					while ((temp1 = reader1.nextStr()) != null) {
 						if(!temp1.getObject().equals(entry1.getObject())) break;

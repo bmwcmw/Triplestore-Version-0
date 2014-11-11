@@ -9,28 +9,6 @@ import java.util.List;
  */
 public class BiList<K, V> {
 	
-	/**
-	 * Internal class for pairs
-	 * @author Cedar
-	 */
-	public class BiListPair{
-		private K O1;
-		private V O2;
-		
-		public BiListPair(K o1, V o2){
-			O1 = o1;
-			O2 = o2;
-		}
-		
-		public K elem1(){
-			return O1;
-		}
-		
-		public V elem2(){
-			return O2;
-		}
-	}
-	
 	private List<K> list1;
 	private List<V> list2;
 	
@@ -54,8 +32,8 @@ public class BiList<K, V> {
 	 * @param i
 	 * @return BiListPair
 	 */
-	public BiListPair get(int i){
-		BiListPair resp = new BiListPair(list1.get(i), list2.get(i));
+	public BiPair<K,V> get(int i){
+		BiPair<K,V> resp = new BiPair(list1.get(i), list2.get(i));
 		return resp;
 	}
 	

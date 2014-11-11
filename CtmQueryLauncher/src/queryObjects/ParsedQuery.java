@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
-import queryObjects.BiList.BiListPair;
 import queryUtils.QueryUtils;
 import queryUtils.QueryUtils.VarType;
 
@@ -79,7 +78,7 @@ public class ParsedQuery {
 		 */
 		for(int i=0; i<varList.size(); i++){
 			@SuppressWarnings("rawtypes")
-			BiListPair tempVar = varList.get(i);
+			BiPair tempVar = varList.get(i);
 			QueryVariable tempKey = new QueryVariable((VarType)tempVar.elem1(), (String)tempVar.elem2());
 			if(!variables.containsKey(tempKey))
 				variables.put(tempKey, new HashSet<Integer>());
