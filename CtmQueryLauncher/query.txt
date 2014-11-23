@@ -14,4 +14,42 @@ if column ?x's size>0, JOIN MODE==>
 if column ?x's size=0, INSERT MODE==>COPY COL without length check
 Do same for ?y
 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Query 1 : one variable in one query pattern, big result set(~500M)
+//7211114
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX ub: <http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#> SELECT ?X WHERE {?X rdf:type ub:Student}
+
+//Query 2 : one variable in two query patterns 
+//5144504 //577
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX ub: <http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#>
+SELECT ?X
+WHERE
+{?X rdf:type ub:Professor .
+  ?X ub:memberOf <http://www.Department0.University3466.edu>}
+
+//Query 3 : two variables in four query patterns : one graph
+//5144504 14139711 ?-ignored 0
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX ub: <http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#>
+SELECT ?X, ?Y
+WHERE
+{?X rdf:type ub:Professor .
+  ?Y rdf:type ub:Department .
+  ?X ub:worksFor ?Y .
+  ?Y ub:subOrganizationOf <http://www.University0.edu>}
+
+//Query 4 : two variables in four query patterns : two graphs
+//5144504 14139711 ?-ignored 0
+//7211114
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX ub: <http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#>
+SELECT ?X, ?Y, ?Z
+WHERE
+{?X rdf:type ub:Professor .
+  ?Y rdf:type ub:Department .
+  ?X ub:worksFor ?Y .
+  ?Y ub:subOrganizationOf <http://www.University0.edu> .
+  ?Z rdf:type ub:Student
+}
 
