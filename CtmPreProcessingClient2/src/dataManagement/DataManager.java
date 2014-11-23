@@ -322,8 +322,8 @@ public class DataManager {
 					+ this.threadId + "_" + count;
 		    Long resultS = jc.compareTwoPredicates(fp.f1S, fp.f2S);
 		    Long resultO = jc.compareTwoPredicates(fp.f1O, fp.f2O);
-		    System.out.println(fp.f1S.getName()+" and "+fp.f2S.getName()+" have "+resultS+" common entries.");
-		    System.out.println(fp.f1O.getName()+" and "+fp.f2O.getName()+" have "+resultO+" common entries.");
+//		    System.out.println(fp.f1S.getName()+" and "+fp.f2S.getName()+" have "+resultS+" common entries.");
+//		    System.out.println(fp.f1O.getName()+" and "+fp.f2O.getName()+" have "+resultO+" common entries.");
 		    writeToBigFile(outFileName, IOUtils.filenameWithoutExt(fp.f1S.getName()) + " " 
 					+ IOUtils.filenameWithoutExt(fp.f2S.getName()) + " " + resultS + " " + resultO);
 		    pairs.removeFirst();
