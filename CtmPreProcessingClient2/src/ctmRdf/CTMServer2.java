@@ -676,7 +676,7 @@ public class CTMServer2 {
 		// return -1;
 		// }
 		// }
-		IOUtils.logLog("Local compressed file checked");
+		// IOUtils.logLog("Local compressed file checked");
 
 		// Load if the indicator file exists(with check of file entries),
 		// otherwise, use a random plan
@@ -684,33 +684,6 @@ public class CTMServer2 {
 		// IndicatorGrouper.groupBySimilarities(indicatorPath
 		// , compressedPath, noRepNames, false
 		// , myConfig._indicatorMode, myConfig._nbThreads);
-		IOUtils.logLog("3 compute node(s) available (15G, 15G, 15G)");
-		IOUtils.logLog("Similarity mode = common Subject + Object (MODE1), calculating...");
-		Thread.sleep(1000);
-		IOUtils.logLog("Group 1 : {1,3,5,6,9,15}");
-		IOUtils.logLog("Group 2 : {2,7,10,11,14,17}");
-		IOUtils.logLog("Group 3 : {4,8,12,13,16}");
-
-		IOUtils.logLog("Distributing {1,3,5,6,9,15} to 192.168.76.197");
-		for (int i = 0; i < 200; i++) {
-			System.out.print("*");
-			Thread.sleep(500);
-		}
-		IOUtils.logLog("DONE");
-
-		IOUtils.logLog("Distributing {2,7,10,11,14,17} to 192.168.76.199");
-		for (int i = 0; i < 200; i++) {
-			System.out.print("*");
-			Thread.sleep(500);
-		}
-		IOUtils.logLog("DONE");
-
-		IOUtils.logLog("Distributing {4,8,12,13,16} to 192.168.76.200");
-		for (int i = 0; i < 200; i++) {
-			System.out.print("*");
-			Thread.sleep(500);
-		}
-		IOUtils.logLog("DONE");
 
 		// /* Contact DN and get the number of CNs with their available space */
 		// String ipDN = "134.214.142.58";
@@ -742,7 +715,7 @@ public class CTMServer2 {
 		// Float ratio = Float.valueOf( (String) newJO.get("ratio") );
 		// IOUtils.logLog(address+":"+port+"|"+free_space+"Mb|"+ratio);
 		// }
-		// //TODO Algorithm to distribute
+		// Distman.dist();
 		//
 		// //Create and execute threads with assigned sub task
 		// ExecutorService executor =
