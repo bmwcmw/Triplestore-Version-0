@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import ctmSPARQLLauncher.CTMConstants;
+import ctmRdf.CTMConstants;
 import dataCleaner.RDFPairStr;
 import dataReader.PairReader;
 import localDBUtils.DBImpl;
@@ -28,6 +28,7 @@ public class InRamDBLoaderPOS implements DBLoaderImpl {
 		ArrayList<File> listOfFiles = new ArrayList<File>(Arrays.asList(folder.listFiles()));
 		switch(mode){
 			case POS : 
+				//ConcurrentHashMap Collections
 				for(File f : listOfFiles){
 					if(f.getName().startsWith(CTMConstants.rdfTypeHeader)) {
 						try {

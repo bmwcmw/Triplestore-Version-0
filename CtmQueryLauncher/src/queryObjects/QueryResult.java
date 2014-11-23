@@ -14,23 +14,20 @@ import queryUtils.QueryUtils.VarType;
  */
 public class QueryResult {
 	
-	private ArrayList<String> selectedVariables;
+	private ParsedQuery query;
 	
 	private ArrayList<ArrayList<String>> resultSet;
 	
-	public QueryResult(ArrayList<String> select){
-		selectedVariables = select;
+	public QueryResult(ParsedQuery q){
+		query = q;
 		resultSet = new ArrayList<ArrayList<String>>();
-	}
-	
-	public QueryResult(ArrayList<String> select,
-			ArrayList<ArrayList<String>> result){
-		selectedVariables = select;
-		resultSet = result;
+		for(int i=0;i<q.getSelect().size();i++){
+			resultSet.add(new ArrayList<String>());
+		}
 	}
 	
 	public boolean addEntryToList(String var, String elem){
-		int indexV = selectedVariables.indexOf(var);
+		int indexV = query.getSelect().indexOf(var);
 		if(indexV > -1){
 			resultSet.get(indexV).add(elem);
 			return true;
@@ -47,19 +44,25 @@ public class QueryResult {
 			case S : 
 				listToJoin1 = patRes.getResultSet().get(2);
 				var = patRes.getPattern().getS();
-				int indexOfVar = selectedVariables.indexOf(var);
+				int indexOfVar = query.getSelect().indexOf(var);
 				int removed = 0;
 				if(indexOfVar > -1){
 					//For existing variable
-					for(int i=0;i<listToJoin1.size();i++){
-						if(!resultSet.get(indexOfVar).contains(listToJoin1.get(i))){
-							for(int j=0;j<resultSet.size();j++){
-								resultSet.get(j).remove(i-removed);
+					if(resultSet.get(indexOfVar).size()>0){
+						for(int i=0;i<listToJoin1.size();i++){
+							if(!resultSet.get(indexOfVar).contains(listToJoin1.get(i))){
+								for(int j=0;j<resultSet.size();j++){
+									System.out.println(j + " " + resultSet.get(j).size() + " "
+											+ (i-removed));
+									resultSet.get(j).remove(i-removed);
+								}
+								removed++;
+							} else {
+								
 							}
-							removed++;
-						} else {
-							
 						}
+					} else {
+						resultSet.get(indexOfVar).addAll(listToJoin1);
 					}
 				} else {
 					//When the result set contains an unknown variable
@@ -77,7 +80,7 @@ public class QueryResult {
 				break;
 			default : IOUtils.logLog("Mode " + typeOfPat + " not supported.");
 		}
-		return false;
+		return true;
 	}
 	
 	public void outputToFile(String localDestFileName){
@@ -85,8 +88,8 @@ public class QueryResult {
 	}
 	
 	public void outputToTerminal(){
-		for(int i=0;i<selectedVariables.size();i++){
-			System.out.print(selectedVariables.get(i)+"\t");
+		for(int i=0;i<query.getSelect().size();i++){
+			System.out.print(query.getSelect().get(i)+"\t");
 		}
 		System.out.println("--------------------------------");
 	}

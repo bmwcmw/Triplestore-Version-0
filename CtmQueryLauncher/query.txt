@@ -1,8 +1,17 @@
 ?x ?y ?z ?m ?n
 
+?x in Graph 1
 ?x isStu Univ1
-if column ?x's size>0, JOIN MODE==>By col ?x, remove all col
+if column ?x's size>0, JOIN MODE==>
+==> if at least one variable in Graph 1 not complete, do nothing
+==> if all complete, eliminate by col ?x, remove all columns, check size of other lists of the same graph
 if column ?x's size=0, INSERT MODE==>COPY COL without length check
 
 ?x isProf ?y
+if column ?x's size>0, JOIN MODE==>
+==> if at least one variable in Graph 1 not complete, do nothing
+==> if all complete, eliminate by col ?x, remove all columns, check size of other lists of the same graph
+if column ?x's size=0, INSERT MODE==>COPY COL without length check
+Do same for ?y
+
 

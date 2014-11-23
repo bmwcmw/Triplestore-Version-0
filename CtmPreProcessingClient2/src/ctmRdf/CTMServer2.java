@@ -495,7 +495,7 @@ public class CTMServer2 {
 	 * @return 0 if OK
 	 */
 	static int compare(){
-		String comparePath = myConfig._ctlParams.get("compressedPath");
+		String comparePath = myConfig._ctlParams.get("psPath");
 		IOUtils.checkOrCreateFolder(comparePath);
 		String indicatorPath = myConfig._ctlParams.get("indicatorPath");
 		IOUtils.checkOrCreateFolder(indicatorPath);
@@ -514,7 +514,7 @@ public class CTMServer2 {
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				temp = listOfFiles[i];
-				if(!temp.getName().contains(CTMConstants.SOSortedExt) 
+				if(!temp.getName().contains(CTMConstants.SOSortedExt)
 						&& !temp.getName().contains(CTMConstants.OSSortedExt)){
 					IOUtils.logLog("Input folder contains error : "
 							+ temp.getName() + " neither " + CTMConstants.SOSortedExt + " nor "

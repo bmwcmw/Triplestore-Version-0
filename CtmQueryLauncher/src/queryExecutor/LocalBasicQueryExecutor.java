@@ -9,7 +9,7 @@ import localIOUtils.IOUtils;
 
 import org.json.simple.JSONArray;
 
-import ctmSPARQLLauncher.CTMConstants;
+import ctmRdf.CTMConstants;
 import queryObjects.ParsedQuery;
 import queryObjects.QueryPatternResult;
 import queryObjects.QueryResult;
@@ -448,12 +448,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 	 * @return The result set
 	 * @throws Exception
 	 */
-	public QueryResult execute(ParsedQuery parsed, JSONArray dstInfo) throws Exception{
-		/* Check the path of local files if using Local FS */
-		if(mode == MODE.LOCALFS && localPath == null){
-			throw new Exception("ERROR : Local source folder not set " +
-					"while using local file system mode.");
-		}
+	public QueryResult execute(ParsedQuery parsed, JSONArray dstInfo) {
 		
 //		/* If we use distributed systems, we must specify the connection
 //		 * information */
@@ -466,35 +461,53 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 //		for (Object o : dstInfo){
 //			JSONObject newJO = (JSONObject) o;
 //		}
-		
+		long begin, end;
+		begin = System.currentTimeMillis();
 		HashMap<Integer, SubQueryPatternSet> patterns = parsed.getPatterns();
 		SubQueryPatternSet subset;
-		QueryResult result = new QueryResult(parsed.getSelect());
-		
-		/* Naive version : execute from 0 to 3 variable(s) */
-		for(int i=0; i<=3; i++){
-			if((subset = patterns.get(i)) != null){
-				HashMap<Integer, StringPattern> subpatterns = subset.getAll();
-				for(Entry<Integer, StringPattern> ent : subpatterns.entrySet()){
-					StringPattern pat = ent.getValue();
-					if(pat.getType().toString().contains("P")){
-						IOUtils.logLog("Predicate is variable. "
-								+ "Broadcast not supported yet.");
-						/* Predicate is a variable */
-						//NO broadcast
-					} else {
-						IOUtils.logLog("Predicate is not variable. Preparing subqueries.");
-						/* Predicate is not a variable 
-						 * Convert predicate to filename : 
-						 * Remove all before ":", then ":" to "-"
-						 */
-						String destPred = pat.getP().replaceAll(".*:", "").replace(":", "-");
-						QueryPatternResult thisRes = fetchFromDest(destPred, pat);
-						result.appendPatternResult(thisRes);						
+		QueryResult result = new QueryResult(parsed);
+		try{
+			/* Check the path of local files if using Local FS */
+			if(mode == MODE.LOCALFS && localPath == null){
+				throw new Exception("ERROR : Local source folder not set " +
+						"while using local file system mode.");
+			}
+			
+			/* Naive version : execute from 0 to 3 variable(s) */
+			for(int i=0; i<=3; i++){
+				if((subset = patterns.get(i)) != null){
+					HashMap<Integer, StringPattern> subpatterns = subset.getAll();
+					for(Entry<Integer, StringPattern> ent : subpatterns.entrySet()){
+						StringPattern pat = ent.getValue();
+						if(pat.getType().toString().contains("P")){
+							IOUtils.logLog("Predicate is variable. "
+									+ "Broadcast not supported yet.");
+							/* Predicate is a variable */
+							//NO broadcast
+						} else {
+							IOUtils.logLog("Predicate is not variable. Preparing subqueries.");
+							/* Predicate is not a variable 
+							 * Convert predicate to filename : 
+							 * Remove all before ":", then ":" to "-"
+							 */
+							String destPred = pat.getP().replaceAll(".*:", "").replace(":", "-");
+							QueryPatternResult thisRes = fetchFromDest(destPred, pat);
+							result.appendPatternResult(thisRes);						
+						}
 					}
 				}
 			}
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			end = System.currentTimeMillis();
+			IOUtils.logLog("EXECUTED IN " + (end - begin));
 		}
+		end = System.currentTimeMillis();
+		IOUtils.logLog("EXECUTED IN " + (end - begin));
+		IOUtils.logLog("OK.. ");
+		
 		return result;
 	}
 

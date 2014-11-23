@@ -35,7 +35,7 @@ public class CTMLauncher {
 
 		ParsedQuery planed = SimpleQueryPlanner.plan(query);
 		QueryResult res = exe.execute(planed, null);
-		res.outputToTerminal();
+//		res.outputToTerminal();
 		
 //		String query = 
 //				"SELECT ?X, ?Y, ?Z"

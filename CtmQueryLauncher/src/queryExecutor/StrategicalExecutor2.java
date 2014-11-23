@@ -12,7 +12,7 @@ import localIOUtils.IOUtils;
 
 import org.json.simple.JSONArray;
 
-import ctmSPARQLLauncher.CTMConstants;
+import ctmRdf.CTMConstants;
 import queryExecutor.ExecutorImpl.MODE;
 import queryObjects.LongPattern;
 import queryObjects.ParsedQuery;
