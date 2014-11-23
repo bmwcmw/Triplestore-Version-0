@@ -51,7 +51,7 @@ public class JavaComparator2 {
 				if ((entry1 == null) || (entry2 == null)) {
 					return common;
 				}
-				System.out.println(entry1+" "+entry2);
+				//System.out.println(entry1+" "+entry2);
 				if (entry1.getSubject().compareTo(entry2.getSubject()) < 0){
 					while ((temp1 = reader1.nextStr()) != null) {
 						if(!temp1.getSubject().equals(entry1.getSubject())) break;
@@ -81,7 +81,7 @@ public class JavaComparator2 {
 				if ((entry1 == null) || (entry2 == null)) {
 					return common;
 				}
-				System.out.println(entry1+" "+entry2);
+				//System.out.println(entry1+" "+entry2);
 				if (entry1.getObject().compareTo(entry2.getObject()) < 0){
 					while ((temp1 = reader1.nextStr()) != null) {
 						if(!temp1.getObject().equals(entry1.getObject())) break;
