@@ -1,3 +1,3 @@
-CtmRdf
+Personal Knowledge Management System
 ======
-HeyHiHo
+Using linked data technologies
