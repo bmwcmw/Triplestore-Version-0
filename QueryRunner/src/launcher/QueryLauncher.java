@@ -22,7 +22,7 @@ public class QueryLauncher {
 	public static void main(String[] args) throws Exception {
 		LocalBasicQueryExecutor exe = new LocalBasicQueryExecutor();
 		exe.setLocalPath(System.getProperty("user.dir") 
-				+ File.separator + ".." + File.separator + "CtmPreProcessingClient2"
+				+ File.separator + ".." + File.separator + "PreProcessingClient2"
 				+ File.separator + "_pos");
 		System.out.println("TO LOAD : " + exe.getLocalPath());
 		
