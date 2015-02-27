@@ -9,7 +9,7 @@ import data.compressor.utils.DBImpl2;
  * <p>Data compressor using D-gap</p>
  * <p>Calls the BitMat compressor of different DB units</p>
  * 
- * @author Cedar
+ * @author CMWT420
  *
  */
 public class DgapCompressor {

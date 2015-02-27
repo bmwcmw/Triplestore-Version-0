@@ -10,7 +10,7 @@ import constants.AppConstants;
 import localIOUtils.IOUtils;
 import data.comparator2.FilePair;
 import data.compressor.utils.DBImpl2;
-import data.distributor.CEDAR.DestInfo;
+import data.distributor.light.DestInfo;
 import data.manager.DataManager;
 
 /**
@@ -133,28 +133,28 @@ public class ProcessingThread implements Runnable {
 		System.out.println("Running " + threadId);
 		try {
 			switch (taskId) {
-				case AppConstants.CTMCONVERTER:
+				case AppConstants.APPCONVERTER:
 					dm.convert(inputFiles, outputFolder);
 					break;
-				case AppConstants.CTMREADERPS:
+				case AppConstants.APPREADERPS:
 					dm.psSplit(inputFiles, outputFolder, nsPath, invalidPath);
 					break;
-				case AppConstants.CTMREADERPOS:
+				case AppConstants.APPREADERPOS:
 					dm.posSplit(inputFiles, outputFolder);
 					break;
-				case AppConstants.CTMCOMPRESS:
+				case AppConstants.APPCOMPRESS:
 					dm.indexedCompress(inputFiles, outputFolder, indexNodes, comparePath);
 					break;
-				case AppConstants.CTMCOMPARE_JAVA:
+				case AppConstants.APPCOMPARE_JAVA:
 					dm.compareJava(comparePairs, outputFolder);
 					break;
-				case AppConstants.CTMCOMPARE_GNU:
+				case AppConstants.APPCOMPARE_GNU:
 					dm.compareGnu(comparePairs, outputFolder);
 					break;
-				case AppConstants.CTMDISTRIBUTE_CEDAR:
+				case AppConstants.APPDISTRIBUTE_LIGHT:
 					dm.distribute(toSend, taskId);
 					break;
-				case AppConstants.CTMDISTRIBUTE_HDFS:
+				case AppConstants.APPDISTRIBUTE_HDFS:
 					dm.distribute(toSend, taskId);
 					break;
 				default:

@@ -14,7 +14,7 @@ import query.objects.StringTriple;
  * <p>Why not static? - 
  * It's great that interface can support static methods since Java 7, but not for lower versions
  * ...</p>
- * @author CEDAR
+ * @author CMWT420
  *
  */
 public interface ExecutorImpl {
@@ -23,7 +23,7 @@ public interface ExecutorImpl {
 	 * Acccessing modes of the executor
 	 */
 	public static enum MODE{
-		LOCALFS, HDFS, CEDAR, STANDARD
+		LOCALFS, HDFS, LIGHT, STANDARD
 	}
 	
 	/**

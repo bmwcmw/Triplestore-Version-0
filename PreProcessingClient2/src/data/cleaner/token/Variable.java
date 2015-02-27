@@ -14,7 +14,7 @@ import data.cleaner.token.Variable;
  * A query containing variables is evaluated by a SPARQL engine, which means it tries to find values 
  * (URIs or literals) that bind to the variables.</p>
  * 
- * @author Cedar
+ * @author CMWT420
  *
  */
 public class Variable extends Token {

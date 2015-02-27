@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Data structure for a list of Meta Info triple
- * @author Cedar
+ * @author CMWT420
  *
  */
 public class MetaInfoArray {

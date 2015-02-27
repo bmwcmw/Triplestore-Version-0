@@ -5,9 +5,9 @@ package data.cleaner.token;
  * <p>Anonymous</p>
  * <p>Anonymous nodes, blank nodes, or bnodes are synonymous.
  * Anonymous nodes are written like namespaced names, but in the reserved "_" 
- * namespace with an arbitrary local name after the colon (for example, "_:cedarIntern").</p>
+ * namespace with an arbitrary local name after the colon (for example, "_:univIntern").</p>
  * 
- * @author Cedar
+ * @author CMWT420
  *
  */
 public class Anonymous extends Token {

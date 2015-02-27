@@ -2,7 +2,7 @@ package query.utils;
 
 /**
  * 
- * @author CEDAR
+ * @author CMWT420
  *
  */
 public class InvalidPatternException extends Exception {

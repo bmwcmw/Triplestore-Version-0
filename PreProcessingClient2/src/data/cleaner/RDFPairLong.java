@@ -4,7 +4,7 @@ package data.cleaner;
 /**
  * <p>A CTM Pair Long contains two long values : Subject and Object</p>
  * 
- * @author Cedar
+ * @author CMWT420
  *
  */
 public class RDFPairLong {

@@ -15,7 +15,7 @@ import query.objects.StringTriple;
  * <p>Don't forget to setLocalPath(String) if a local file system is used. In this
  * case, the execute function accepts null destination information. Otherwise, 
  * the destination information cannot be null while launching the execution.</p>
- * @author CEDAR
+ * @author CMWT420
  *
  */
 public class StrategicalExecutor1 implements ExecutorImpl {

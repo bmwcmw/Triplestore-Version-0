@@ -8,7 +8,7 @@ package data.cleaner.token;
  * which means it may contain non-Latin alphabet characters from the Universal Character Set (Unicode/ISO 10646), 
  * such as Greek letters and Chinese characters.</p>
  * 
- * @author Cedar
+ * @author CMWT420
  *
  */
 public class IRI extends Token {

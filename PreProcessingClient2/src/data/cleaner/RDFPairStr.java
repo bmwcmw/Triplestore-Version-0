@@ -4,7 +4,7 @@ package data.cleaner;
  * <p>Light version of RDF Triple</p>
  * <p>An RDF Pair String contains two strings : Subject and Object</p>
  * 
- * @author Cedar
+ * @author CMWT420
  *
  */
 public class RDFPairStr {

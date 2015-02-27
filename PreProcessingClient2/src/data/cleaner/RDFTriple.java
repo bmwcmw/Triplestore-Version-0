@@ -5,7 +5,7 @@ package data.cleaner;
  * <p>Light version of CTM Triple</p>
  * <p>A CTM String Triple contains three strings : Subject, Predicate and Object</p>
  * 
- * @author Cedar
+ * @author CMWT420
  *
  */
 public class RDFTriple {

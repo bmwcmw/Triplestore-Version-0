@@ -1,4 +1,4 @@
-package data.distributor.SSH;
+package data.distributor.ssh;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

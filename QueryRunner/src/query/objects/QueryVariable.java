@@ -4,7 +4,7 @@ import query.utils.QueryUtils.VarType;
 
 /**
  * The variable string and its type (S, P or O)
- * @author Cedar
+ * @author CMWT420
  */
 public class QueryVariable {
 	private VarType type;

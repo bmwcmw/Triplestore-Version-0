@@ -4,12 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,10 +21,9 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import localIOUtils.IOUtils;
 import constants.AppConstants;
 import data.comparator2.FilePair;
-import data.distributor.IndicatorGrouper;
-import localIOUtils.IOUtils;
 
 /**
  * Preprocessor and predicate distribution calculator
@@ -48,7 +47,7 @@ public class Server2 {
 	 */
 	public static void main(String[] args) throws IOException {
 		System.out.println("---------------------------------------");
-		System.out.println("|--------        CTM V2       --------|");
+		System.out.println("|--------        APP V2       --------|");
 		System.out.println("---------------------------------------");
 		myConfig = ServerConfig.getInstance();
 
@@ -62,28 +61,28 @@ public class Server2 {
 			System.out.println("---------------------------------------");
 			System.out.println("Type number to execute : ");
 			System.out.println("\tClean all existing processed data - "
-					+ AppConstants.CTMEMPTY);
+					+ AppConstants.APPEMPTY);
 			System.out.println("\tRDF to N3 converter - "
-					+ AppConstants.CTMCONVERTER);
+					+ AppConstants.APPCONVERTER);
 			System.out.println("\tN3 Reader/Partitionner(PS) - "
-					+ AppConstants.CTMREADERPS);
+					+ AppConstants.APPREADERPS);
 			System.out.println("\tPredicate Reader/Splitter(POS) - "
-					+ AppConstants.CTMREADERPOS);
+					+ AppConstants.APPREADERPOS);
 			System.out
 					.println("\tCompressor for PS files (external script)  - "
-							+ AppConstants.CTMCOMPRESS);
+							+ AppConstants.APPCOMPRESS);
 			// System.out.println("\tPre-Comparator for PS files - "
-			// + CTMConstants.CTMPRECOMPARE);
+			// + APPConstants.APPPRECOMPARE);
 			System.out.println("\tComparator for S/O arrays - "
-					+ AppConstants.CTMCOMPARE);
+					+ AppConstants.APPCOMPARE);
 			System.out.println("\tDistributor of compressed files - "
-					+ AppConstants.CTMDISTRIBUTE);
-			System.out.println("\tExit - " + AppConstants.CTMEXIT);
+					+ AppConstants.APPDISTRIBUTE);
+			System.out.println("\tExit - " + AppConstants.APPEXIT);
 			System.out.println("#");
 			inStr = in.readLine();
 			try {
 				userCmd = Integer.valueOf(inStr);
-				if (userCmd == AppConstants.CTMEXIT) {
+				if (userCmd == AppConstants.APPEXIT) {
 					System.out.println("Exit...");
 					break;
 				} else {
@@ -122,7 +121,7 @@ public class Server2 {
 		String indicatorPath;
 		long startTime, endTime, duration;
 		switch (programInd) {
-		case AppConstants.CTMEMPTY:
+		case AppConstants.APPEMPTY:
 			IOUtils.logLog("\nCleaning all except rdf and n3 files");
 			if (myConfig._ctlParams != null) {
 				invalidPath = myConfig._ctlParams.get("invalidPath");
@@ -149,7 +148,7 @@ public class Server2 {
 			}
 			IOUtils.logLog("\nDONE. ");
 			break;
-		case AppConstants.CTMCONVERTER:
+		case AppConstants.APPCONVERTER:
 			setNbThreads();
 			startTime = System.currentTimeMillis();
 			Server2.convert(programInd);
@@ -161,7 +160,7 @@ public class Server2 {
 			IOUtils.logLog("---------------------------------------"
 					+ "\n---------------------------------------");
 			break;
-		case AppConstants.CTMREADERPS:
+		case AppConstants.APPREADERPS:
 			setNbThreads();
 			startTime = System.currentTimeMillis();
 			Server2.ps(programInd);
@@ -233,7 +232,7 @@ public class Server2 {
 				}
 			}
 			break;
-		case AppConstants.CTMREADERPOS:
+		case AppConstants.APPREADERPOS:
 			setNbThreads();
 			startTime = System.currentTimeMillis();
 			Server2.pos(programInd);
@@ -246,7 +245,7 @@ public class Server2 {
 			IOUtils.logLog("---------------------------------------"
 					+ "\n---------------------------------------");
 			break;
-		case AppConstants.CTMCOMPRESS:
+		case AppConstants.APPCOMPRESS:
 			setNbThreads();
 			startTime = System.currentTimeMillis();
 			Server2.compress(programInd);
@@ -259,10 +258,10 @@ public class Server2 {
 			IOUtils.logLog("---------------------------------------"
 					+ "\n---------------------------------------");
 			break;
-		// case CTMConstants.CTMPRECOMPARE:
+		// case APPConstants.APPPRECOMPARE:
 		// setNbThreads();
 		// startTime = System.currentTimeMillis();
-		// CTMServer.precompare();
+		// APPServer.precompare();
 		// IOUtils.logLog(myConfig._nbThreads+" threads terminated");
 		// endTime = System.currentTimeMillis();
 		// duration = endTime - startTime;
@@ -272,7 +271,7 @@ public class Server2 {
 		// IOUtils.logLog("---------------------------------------"
 		// + "\n---------------------------------------");
 		// break;
-		case AppConstants.CTMCOMPARE:
+		case AppConstants.APPCOMPARE:
 			setNbThreads();
 			startTime = System.currentTimeMillis();
 			Server2.compare();
@@ -285,7 +284,7 @@ public class Server2 {
 			IOUtils.logLog("---------------------------------------"
 					+ "\n---------------------------------------");
 			break;
-		case AppConstants.CTMDISTRIBUTE:
+		case AppConstants.APPDISTRIBUTE:
 			setNbThreads();
 			startTime = System.currentTimeMillis();
 			Server2.distribute(programInd);
@@ -458,7 +457,7 @@ public class Server2 {
 		// ArrayList<File> listOfFiles = new
 		// ArrayList<File>(Arrays.asList(folder.listFiles()));
 		// ArrayList<ArrayList<File>> inputLists =
-		// CTMJobAssigner.assignJobs(listOfFiles, false);
+		// APPJobAssigner.assignJobs(listOfFiles, false);
 		//
 		// //Create and execute threads with assigned sub task
 		// ExecutorService executor =
@@ -466,14 +465,14 @@ public class Server2 {
 		// try{
 		// InRamDBUtils2 dbu = null;
 		// switch(myConfig._compressMode){
-		// case CTMConstants.CTMCOMPRESS_INRAM :
+		// case APPConstants.APPCOMPRESS_INRAM :
 		// dbu = new InRamDBUtils2();
 		// break;
 		// default :
 		// IOUtils.logLog("Compression mode error :" + myConfig._compressMode);
 		// }
 		// for (int i = 0; i < myConfig._nbThreads; i++) {
-		// Runnable thread = new CTMThread(String.valueOf(i), programInd,
+		// Runnable thread = new APPThread(String.valueOf(i), programInd,
 		// inputLists.get(i),
 		// compressedPath, dbu, comparePath);
 		// executor.execute(thread);
@@ -509,13 +508,13 @@ public class Server2 {
 	// ArrayList<File> listOfFiles = new
 	// ArrayList<File>(Arrays.asList(folder.listFiles()));
 	// ArrayList<ArrayList<File>> inputLists =
-	// CTMJobAssigner.assignJobs(listOfFiles, false);
+	// APPJobAssigner.assignJobs(listOfFiles, false);
 	//
 	// //Create and execute threads with assigned sub task
 	// ExecutorService executor =
 	// Executors.newFixedThreadPool(myConfig._nbThreads);
 	// for (int i = 0; i < myConfig._nbThreads; i++) {
-	// Runnable thread = new CTMThread(String.valueOf(i),
+	// Runnable thread = new APPThread(String.valueOf(i),
 	// myConfig._precompareMode, inputLists.get(i),
 	// comparePath);
 	// executor.execute(thread);
@@ -720,9 +719,9 @@ public class Server2 {
 		//
 		// //Create and execute threads with assigned sub task
 		// ExecutorService executor =
-		// Executors.newFixedThreadPool(CTMServer._nbThreads);
-		// for (int i = 0; i < CTMServer._nbThreads; i++) {
-		// Runnable thread = new CTMThread(String.valueOf(i), _distributeMode,
+		// Executors.newFixedThreadPool(APPServer._nbThreads);
+		// for (int i = 0; i < APPServer._nbThreads; i++) {
+		// Runnable thread = new APPThread(String.valueOf(i), _distributeMode,
 		// new HashMap<File,DestInfo>());
 		// executor.execute(thread);
 		// }

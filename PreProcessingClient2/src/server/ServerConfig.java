@@ -36,7 +36,7 @@ public class ServerConfig {
 		IOUtils.setLogging(true, false);
 		
 		// XXX SETUP : Compressor mode, perhaps needs external DB support
-		_compressMode = AppConstants.CTMCOMPRESS_INRAM;
+		_compressMode = AppConstants.APPCOMPRESS_INRAM;
 		// XXX SETUP : Compressor writes sorted S/O files of each predicate or 
 		// 			   not (InRam only)
 		_writeprecompare = true;
@@ -50,13 +50,13 @@ public class ServerConfig {
 //		_precompareMode = CTMConstants.CTMPRECOMPARE_JAVA;
 		
 		// XXX SETUP : Comparator mode, perhaps needs PERL/GNU executable in PATH
-		_compareMode = AppConstants.CTMCOMPARE_JAVA;
+		_compareMode = AppConstants.APPCOMPARE_JAVA;
 		
 		// XXX SETUP : Distributor mode, to various distributed environments
-		_distributeMode = AppConstants.CTMDISTRIBUTE_HDFS;
+		_distributeMode = AppConstants.APPDISTRIBUTE_HDFS;
 		
 		// XXX SETUP : Use only S/O or S and O for indicator in the distribution
-		_indicatorMode = AppConstants.CTMINDICATORSO;
+		_indicatorMode = AppConstants.APPINDICATORSO;
 		
 		// XXX SETUP : Global in/out paths
 		_ctlParams = new HashMap<String, String>();

@@ -3,7 +3,7 @@ package data.cleaner;
 /**
  * Valid S,O pair for POS
  * 
- * @author Cedar
+ * @author CMWT420
  *
  */
 public class RDFPair {

@@ -16,7 +16,7 @@ import data.cleaner.token.Variable;
  * <br>
  * - from an anonymous object
  * 
- * @author Cedar
+ * @author CMWT420
  *
  */
 public class RDFSubject {

@@ -7,7 +7,7 @@ package data.cleaner.token;
  * <p>A direct value, such as a string (e.g. a name: "Bob"), a number, a date, something like that. 
  * RDF statements typically consist of a combination of URIs and literals.</p>
  * 
- * @author Cedar
+ * @author CMWT420
  *
  */
 public class Litteral extends Token {

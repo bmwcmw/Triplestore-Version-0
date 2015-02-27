@@ -16,7 +16,7 @@ public class TesterYu {
 		// TODO Auto-generated method stub
 
 		String _testDir = System.getProperty("user.dir") + File.separator + ".." + File.separator
-				+ "CtmDataSet" + File.separator + "-headOf";
+				+ "DataSet" + File.separator + "-headOf";
 		File testDir = new File(_testDir);
 		//System.out.println(_testDir + " " + testDir.isDirectory());
 		BiList<Long, MetaInfoTriple> sList = LocalMetaLoader.loadMetadataFromFile(testDir, MODE.S);

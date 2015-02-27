@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 /**
  * This is used to store a graph of SPARQL queries with all sub-queries categorized
  * by their variable type, number of variables, or some cretaria else.  
- * @author Cedar
+ * @author CMWT420
  */
 public class SubQueryPatternSet {
 	 private HashMap<Integer, StringTriple> set;

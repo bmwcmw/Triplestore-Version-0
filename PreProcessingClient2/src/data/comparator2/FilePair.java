@@ -5,7 +5,7 @@ import java.io.File;
 
 /**
  * Pair of two files(with separated S and O) for comparison purpose
- * @author Cedar
+ * @author CMWT420
  */
 public class FilePair{
 	public File f1S;

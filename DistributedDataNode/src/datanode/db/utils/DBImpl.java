@@ -10,12 +10,9 @@ import java.util.Map.Entry;
  * This implementation allows to store and fetch triple data, not only for the BitMat compression 
  * but also to prepare the execution of SPARQL queries (loading data into databases inside different 
  * environments, etc). 
- * @author Cedar
  *
- */
-
-/**
  * For data nodes
+ * 
  * @author CMWT420
  *
  */

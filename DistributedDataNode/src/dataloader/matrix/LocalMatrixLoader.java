@@ -24,7 +24,7 @@ public class LocalMatrixLoader {
 	public static boolean checkAPoint(BiList<Long, MetaInfoTriple> bList, String predName, MODE mode, long line, long col) throws IOException{
 		
 		String _dir = System.getProperty("user.dir") + File.separator + ".." + File.separator
-				+ "CtmDataSet" + File.separator + predName;
+				+ "DataSet" + File.separator + predName;
 		File dir = new File(_dir);
 		boolean result = false;
 		
@@ -286,7 +286,7 @@ public class LocalMatrixLoader {
 	
 	public static String returnLine(BiList<Long, MetaInfoTriple> bList, String predName, MODE mode, long line) throws IOException{
 		String _dir = System.getProperty("user.dir") + File.separator + ".." + File.separator
-				+ "CtmDataSet" + File.separator + predName;
+				+ "DataSet" + File.separator + predName;
 		File dir = new File(_dir);
 		
 		File sf = null;

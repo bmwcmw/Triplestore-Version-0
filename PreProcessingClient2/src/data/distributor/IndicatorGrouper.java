@@ -129,7 +129,7 @@ public class IndicatorGrouper {
         		HashMap<String, TreeMap<String, RDFPairLong>> sortedIndicators 
         				= new HashMap<String, TreeMap<String, RDFPairLong>>();
 				switch (_indicatorMode){
-					case AppConstants.CTMINDICATORS :
+					case AppConstants.APPINDICATORS :
 						for (Entry<String, HashMap<String, RDFPairLong>> e : 
 								indicators.entrySet()) {
 							long temp = 0;
@@ -145,7 +145,7 @@ public class IndicatorGrouper {
 							predsWithInd.put(temp, e.getKey());
 						} 
 						break;
-					case AppConstants.CTMINDICATORO : 
+					case AppConstants.APPINDICATORO : 
 						for (Entry<String, HashMap<String, RDFPairLong>> e : 
 								indicators.entrySet()) {
 							long temp = 0;
@@ -161,7 +161,7 @@ public class IndicatorGrouper {
 							predsWithInd.put(temp, e.getKey());
 						}
 						break;
-					case AppConstants.CTMINDICATORSO : 
+					case AppConstants.APPINDICATORSO : 
 						for (Entry<String, HashMap<String, RDFPairLong>> e : 
 								indicators.entrySet()) {
 							long temp = 0;

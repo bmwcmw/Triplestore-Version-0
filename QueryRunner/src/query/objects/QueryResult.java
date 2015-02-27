@@ -9,7 +9,7 @@ import query.utils.QueryUtils.VarType;
  * Result set of an SPARQL query containing all selected variables and result 
  * lists in order.
  * 
- * @author Cedar
+ * @author CMWT420
  *
  */
 public class QueryResult {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Result set of a query pattern, with n lists where n is the number of 
  * variable(s) in the pattern.
- * @author Cedar
+ * @author CMWT420
  *
  */
 public class QueryPatternResult {

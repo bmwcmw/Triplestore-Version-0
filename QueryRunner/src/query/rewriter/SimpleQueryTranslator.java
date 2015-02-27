@@ -7,7 +7,7 @@ import query.objects.StringTriple;
 /**
  * This is the query rewriter which translates queries to convenient format, in order
  * to perform them on data stored in file system
- * @author CEDAR
+ * @author CMWT420
  *
  */
 public class SimpleQueryTranslator {

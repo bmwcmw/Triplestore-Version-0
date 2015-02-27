@@ -25,7 +25,7 @@ import query.objects.SubQueryPatternSet;
  * <p>Don't forget to setLocalPath(String) if a local file system is used. In this
  * case, the execute function accepts null destination information. Otherwise, 
  * the destination information cannot be null while launching the execution.</p>
- * @author CEDAR
+ * @author CMWT420
  *
  */
 public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal {
@@ -63,8 +63,8 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 				return fetchFromLocalFS(dest, pat);
 //			case HDFS:
 //				return fetchFromHDFS(dest, pat);
-//			case CEDAR:
-//				return fetchFromCEDAR(dest, pat);
+//			case LIGHT:
+//				return fetchFromLIGHT(dest, pat);
 			default:
 				return null;
 		}
@@ -453,7 +453,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 		
 //		/* If we use distributed systems, we must specify the connection
 //		 * information */
-//		if((mode == MODE.HDFS||mode==MODE.CEDAR) && dstInfo == null){
+//		if((mode == MODE.HDFS||mode==MODE.LIGHT) && dstInfo == null){
 //			throw new Exception("ERROR : Destination information null " +
 //					"while using distributed file system mode.");
 //		}

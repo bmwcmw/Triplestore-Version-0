@@ -6,7 +6,7 @@ import java.util.HashSet;
 /**
  * NOT USED
  * S-O or O-S hashing structure using converted index, not litteral data
- * @author Cedar
+ * @author CMWT420
  */
 public class UnusedSOOSStructure {
 	private HashMap<Integer, HashSet<Integer>> _entries;

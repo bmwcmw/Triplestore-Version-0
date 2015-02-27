@@ -13,7 +13,7 @@ import query.utils.QueryUtils.VarType;
 /**
  * This is used to store parsed SPARQL queries with all sub-queries categorized
  * by their variable type, as well as all relations between variables.
- * @author Cedar
+ * @author CMWT420
  */
 public class ParsedQuery {
 	/**

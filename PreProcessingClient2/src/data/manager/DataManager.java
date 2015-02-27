@@ -25,10 +25,10 @@ import data.comparator2.FilePair;
 import data.comparator2.JavaComparator2;
 import data.compressor.DgapCompressor;
 import data.compressor.utils.DBImpl2;
-import data.distributor.CEDAR.DestInfo;
-import data.distributor.CEDAR.FileSenderCN;
-import data.distributor.SSH.SSHCommandExecutor;
-import data.distributor.SSH.SSHDataDistributor;
+import data.distributor.light.DestInfo;
+import data.distributor.light.FileSenderCN;
+import data.distributor.ssh.SSHCommandExecutor;
+import data.distributor.ssh.SSHDataDistributor;
 import data.reader.PairReader;
 import data.reader.TripleReader;
 import external.FormatConverter;
@@ -372,7 +372,7 @@ public class DataManager {
 	public void distribute(HashMap<File, DestInfo> toSendSrcDst, int type) throws IOException{
 		Iterator<Entry<File, DestInfo>> it = toSendSrcDst.entrySet().iterator();
 		switch(type){
-			case AppConstants.CTMDISTRIBUTE_CEDAR:
+			case AppConstants.APPDISTRIBUTE_LIGHT:
 			    while (it.hasNext()) {
 			        Entry<File, DestInfo> pairs = it.next();
 			        IOUtils.logLog("Sending via socket " + pairs.getKey() + " to " + pairs.getValue());
@@ -384,7 +384,7 @@ public class DataManager {
 			        it.remove();
 			    }
 				break;
-			case AppConstants.CTMDISTRIBUTE_HDFS:
+			case AppConstants.APPDISTRIBUTE_HDFS:
 			    while (it.hasNext()) {
 			        Entry<File, DestInfo> pairs = it.next();
 			        IOUtils.logLog("Sending via SSH " + pairs.getKey() + " to " + pairs.getValue());

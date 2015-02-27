@@ -8,7 +8,7 @@ import static data.cleaner.token.Anonymous.BLANK_NODE_IDENTIFIER;
  * <p>A token can be (N3) : </p>
  * <p>IRI / Litteral / Variable / Anonymous</p>
  * 
- * @author Cedar
+ * @author CMWT420
  *
  */
 public abstract class Token {

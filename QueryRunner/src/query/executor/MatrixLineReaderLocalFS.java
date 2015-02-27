@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 
 /**
  * Read lines from matrix files in local file system.
- * @author CEDAR
+ * @author CMWT420
  *
  */
 public class MatrixLineReaderLocalFS {

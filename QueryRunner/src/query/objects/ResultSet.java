@@ -10,7 +10,7 @@ import query.utils.QueryUtils.VarType;
 /**
  * This is used to store a result set of SPARQL queries, categorized
  * by sub-queries and their variable type.  
- * @author Cedar
+ * @author CMWT420
  */
 public class ResultSet {
 	 private HashMap<VarType, ArrayList<StringTriple>> graph;

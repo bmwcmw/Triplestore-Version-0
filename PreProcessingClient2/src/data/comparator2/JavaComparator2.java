@@ -13,7 +13,7 @@ import localIOUtils.IOUtils;
  * <p>Compares two SORTED, UNIQUE OR NOT string files, returns the number of common entries.</p>
  * <p>Using Java method.</p>
  * 
- * @author Cedar
+ * @author CMWT420
  *
  */
 public class JavaComparator2 {

@@ -3,7 +3,7 @@ package data.compressor;
 /**
  * Data structure for a pair of Long 
  * (Not only for S and O, all Long pairs can use it).
- * @author Cedar
+ * @author CMWT420
  *
  */
 public class SOLongPair {
