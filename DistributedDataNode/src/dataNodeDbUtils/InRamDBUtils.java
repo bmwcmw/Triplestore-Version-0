@@ -18,9 +18,9 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import constants.CTMConstants;
-import dataCleaner.RDFPairStr;
-import dataCompressor.SOLongPair;
-import dataReader.PairReader;
+import data.cleaner.RDFPairStr;
+import data.compressor.SOLongPair;
+import data.reader.PairReader;
 
 /**
  * 

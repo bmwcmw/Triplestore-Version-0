@@ -8,8 +8,8 @@ import java.util.Map.Entry;
 import localIOUtils.IOUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
-import dataCleaner.RDFPairStr;
-import dataReader.PairReader;
+import data.cleaner.RDFPairStr;
+import data.reader.PairReader;
 
 /**
  * <p>Redis is an open source, BSD licensed, advanced key-value store. It is often referred 

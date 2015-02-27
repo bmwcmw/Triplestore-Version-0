@@ -3,14 +3,14 @@ package launcher;
 import java.io.File;
 import java.util.HashMap;
 
-import queryExecutor.LocalBasicQueryExecutor;
-import queryObjects.ParsedQuery;
-import queryObjects.QueryResult;
-import queryPlanner.SimpleQueryPlanner;
-import runnerDbLoader.InRamDBLoaderPOS;
-import runnerDbLoader.DBLoaderImpl.MODE;
-import runnerDbUtils.DBImpl;
-import runnerDbUtils.InRamDBUtils;
+import db.loader.InRamDBLoaderPOS;
+import db.loader.DBLoaderImpl.MODE;
+import db.utils.DBImpl;
+import db.utils.InRamDBUtils;
+import query.executor.LocalBasicQueryExecutor;
+import query.objects.ParsedQuery;
+import query.objects.QueryResult;
+import query.planner.SimpleQueryPlanner;
 
 /**
  * Query launcher entry point
