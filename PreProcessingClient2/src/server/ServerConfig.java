@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import constants.CTMConstants;
+import constants.AppConstants;
 import localIOUtils.IOUtils;
 
 /**
@@ -36,7 +36,7 @@ public class ServerConfig {
 		IOUtils.setLogging(true, false);
 		
 		// XXX SETUP : Compressor mode, perhaps needs external DB support
-		_compressMode = CTMConstants.CTMCOMPRESS_INRAM;
+		_compressMode = AppConstants.CTMCOMPRESS_INRAM;
 		// XXX SETUP : Compressor writes sorted S/O files of each predicate or 
 		// 			   not (InRam only)
 		_writeprecompare = true;
@@ -50,13 +50,13 @@ public class ServerConfig {
 //		_precompareMode = CTMConstants.CTMPRECOMPARE_JAVA;
 		
 		// XXX SETUP : Comparator mode, perhaps needs PERL/GNU executable in PATH
-		_compareMode = CTMConstants.CTMCOMPARE_JAVA;
+		_compareMode = AppConstants.CTMCOMPARE_JAVA;
 		
 		// XXX SETUP : Distributor mode, to various distributed environments
-		_distributeMode = CTMConstants.CTMDISTRIBUTE_HDFS;
+		_distributeMode = AppConstants.CTMDISTRIBUTE_HDFS;
 		
 		// XXX SETUP : Use only S/O or S and O for indicator in the distribution
-		_indicatorMode = CTMConstants.CTMINDICATORSO;
+		_indicatorMode = AppConstants.CTMINDICATORSO;
 		
 		// XXX SETUP : Global in/out paths
 		_ctlParams = new HashMap<String, String>();

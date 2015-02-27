@@ -21,7 +21,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import constants.CTMConstants;
+import constants.AppConstants;
 import data.comparator2.FilePair;
 import data.distributor.IndicatorGrouper;
 import localIOUtils.IOUtils;
@@ -62,28 +62,28 @@ public class Server2 {
 			System.out.println("---------------------------------------");
 			System.out.println("Type number to execute : ");
 			System.out.println("\tClean all existing processed data - "
-					+ CTMConstants.CTMEMPTY);
+					+ AppConstants.CTMEMPTY);
 			System.out.println("\tRDF to N3 converter - "
-					+ CTMConstants.CTMCONVERTER);
+					+ AppConstants.CTMCONVERTER);
 			System.out.println("\tN3 Reader/Partitionner(PS) - "
-					+ CTMConstants.CTMREADERPS);
+					+ AppConstants.CTMREADERPS);
 			System.out.println("\tPredicate Reader/Splitter(POS) - "
-					+ CTMConstants.CTMREADERPOS);
+					+ AppConstants.CTMREADERPOS);
 			System.out
 					.println("\tCompressor for PS files (external script)  - "
-							+ CTMConstants.CTMCOMPRESS);
+							+ AppConstants.CTMCOMPRESS);
 			// System.out.println("\tPre-Comparator for PS files - "
 			// + CTMConstants.CTMPRECOMPARE);
 			System.out.println("\tComparator for S/O arrays - "
-					+ CTMConstants.CTMCOMPARE);
+					+ AppConstants.CTMCOMPARE);
 			System.out.println("\tDistributor of compressed files - "
-					+ CTMConstants.CTMDISTRIBUTE);
-			System.out.println("\tExit - " + CTMConstants.CTMEXIT);
+					+ AppConstants.CTMDISTRIBUTE);
+			System.out.println("\tExit - " + AppConstants.CTMEXIT);
 			System.out.println("#");
 			inStr = in.readLine();
 			try {
 				userCmd = Integer.valueOf(inStr);
-				if (userCmd == CTMConstants.CTMEXIT) {
+				if (userCmd == AppConstants.CTMEXIT) {
 					System.out.println("Exit...");
 					break;
 				} else {
@@ -122,7 +122,7 @@ public class Server2 {
 		String indicatorPath;
 		long startTime, endTime, duration;
 		switch (programInd) {
-		case CTMConstants.CTMEMPTY:
+		case AppConstants.CTMEMPTY:
 			IOUtils.logLog("\nCleaning all except rdf and n3 files");
 			if (myConfig._ctlParams != null) {
 				invalidPath = myConfig._ctlParams.get("invalidPath");
@@ -149,7 +149,7 @@ public class Server2 {
 			}
 			IOUtils.logLog("\nDONE. ");
 			break;
-		case CTMConstants.CTMCONVERTER:
+		case AppConstants.CTMCONVERTER:
 			setNbThreads();
 			startTime = System.currentTimeMillis();
 			Server2.convert(programInd);
@@ -161,7 +161,7 @@ public class Server2 {
 			IOUtils.logLog("---------------------------------------"
 					+ "\n---------------------------------------");
 			break;
-		case CTMConstants.CTMREADERPS:
+		case AppConstants.CTMREADERPS:
 			setNbThreads();
 			startTime = System.currentTimeMillis();
 			Server2.ps(programInd);
@@ -233,7 +233,7 @@ public class Server2 {
 				}
 			}
 			break;
-		case CTMConstants.CTMREADERPOS:
+		case AppConstants.CTMREADERPOS:
 			setNbThreads();
 			startTime = System.currentTimeMillis();
 			Server2.pos(programInd);
@@ -246,7 +246,7 @@ public class Server2 {
 			IOUtils.logLog("---------------------------------------"
 					+ "\n---------------------------------------");
 			break;
-		case CTMConstants.CTMCOMPRESS:
+		case AppConstants.CTMCOMPRESS:
 			setNbThreads();
 			startTime = System.currentTimeMillis();
 			Server2.compress(programInd);
@@ -272,7 +272,7 @@ public class Server2 {
 		// IOUtils.logLog("---------------------------------------"
 		// + "\n---------------------------------------");
 		// break;
-		case CTMConstants.CTMCOMPARE:
+		case AppConstants.CTMCOMPARE:
 			setNbThreads();
 			startTime = System.currentTimeMillis();
 			Server2.compare();
@@ -285,7 +285,7 @@ public class Server2 {
 			IOUtils.logLog("---------------------------------------"
 					+ "\n---------------------------------------");
 			break;
-		case CTMConstants.CTMDISTRIBUTE:
+		case AppConstants.CTMDISTRIBUTE:
 			setNbThreads();
 			startTime = System.currentTimeMillis();
 			Server2.distribute(programInd);
@@ -552,12 +552,12 @@ public class Server2 {
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				temp = listOfFiles[i];
-				if (!temp.getName().contains(CTMConstants.SOSortedExt)
-						&& !temp.getName().contains(CTMConstants.OSSortedExt)) {
+				if (!temp.getName().contains(AppConstants.SOSortedExt)
+						&& !temp.getName().contains(AppConstants.OSSortedExt)) {
 					IOUtils.logLog("Input folder contains error : "
 							+ temp.getName() + " neither "
-							+ CTMConstants.SOSortedExt + " nor "
-							+ CTMConstants.OSSortedExt);
+							+ AppConstants.SOSortedExt + " nor "
+							+ AppConstants.OSSortedExt);
 					return -1;
 				}
 				tempName = IOUtils.filenameWithoutExt(temp.getName());
@@ -602,13 +602,13 @@ public class Server2 {
 				System.out.println("\t" + j + " : " + uniqueName.get(j));
 				toComparePairs.add(new FilePair(new File(comparePath
 						+ File.separator + uniqueName.get(i)
-						+ CTMConstants.SOSortedExt), new File(comparePath
+						+ AppConstants.SOSortedExt), new File(comparePath
 						+ File.separator + uniqueName.get(i)
-						+ CTMConstants.OSSortedExt), new File(comparePath
+						+ AppConstants.OSSortedExt), new File(comparePath
 						+ File.separator + uniqueName.get(j)
-						+ CTMConstants.SOSortedExt), new File(comparePath
+						+ AppConstants.SOSortedExt), new File(comparePath
 						+ File.separator + uniqueName.get(j)
-						+ CTMConstants.OSSortedExt)));
+						+ AppConstants.OSSortedExt)));
 			}
 		}
 		LinkedList<LinkedList<FilePair>> inputLists = JobAssigner

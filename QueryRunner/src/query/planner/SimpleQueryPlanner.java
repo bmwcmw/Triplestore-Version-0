@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
 import query.objects.ParsedQuery;
-import query.objects.StringPattern;
+import query.objects.StringTriple;
 import query.objects.SubQueryPatternSet;
 import query.utils.InvalidPatternException;
 
@@ -42,7 +42,7 @@ public class SimpleQueryPlanner {
 			forWhere.add(itrWhere.nextToken());
 		}
 		for(String str : forWhere){
-			parsed.putPattern(new StringPattern(str));
+			parsed.putPattern(new StringTriple(str));
 		}
 		
 		/* DEBUG */

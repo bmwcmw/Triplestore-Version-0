@@ -16,7 +16,7 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
-import constants.CTMConstants;
+import constants.AppConstants;
 import localIOUtils.IOUtils;
 import data.cleaner.RDFPair;
 import data.cleaner.RDFPairStr;
@@ -154,7 +154,7 @@ public class DataManager {
 				// POST : line = (Subject)
 				if ((inFileName.compareTo("a") == 0)
 						|| (inFileName.compareTo("rdf-type") == 0)) {
-					outFilePath = outputPath + File.separator + CTMConstants.rdfTypeHeader
+					outFilePath = outputPath + File.separator + AppConstants.rdfTypeHeader
 						+ so.getObject().toString().replace(":", "-");
 					line = so.getSubject().toString();
 				}
@@ -372,7 +372,7 @@ public class DataManager {
 	public void distribute(HashMap<File, DestInfo> toSendSrcDst, int type) throws IOException{
 		Iterator<Entry<File, DestInfo>> it = toSendSrcDst.entrySet().iterator();
 		switch(type){
-			case CTMConstants.CTMDISTRIBUTE_CEDAR:
+			case AppConstants.CTMDISTRIBUTE_CEDAR:
 			    while (it.hasNext()) {
 			        Entry<File, DestInfo> pairs = it.next();
 			        IOUtils.logLog("Sending via socket " + pairs.getKey() + " to " + pairs.getValue());
@@ -384,7 +384,7 @@ public class DataManager {
 			        it.remove();
 			    }
 				break;
-			case CTMConstants.CTMDISTRIBUTE_HDFS:
+			case AppConstants.CTMDISTRIBUTE_HDFS:
 			    while (it.hasNext()) {
 			        Entry<File, DestInfo> pairs = it.next();
 			        IOUtils.logLog("Sending via SSH " + pairs.getKey() + " to " + pairs.getValue());

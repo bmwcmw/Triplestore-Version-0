@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import constants.CTMConstants;
+import constants.AppConstants;
 import localIOUtils.IOUtils;
 import data.comparator2.FilePair;
 import data.compressor.utils.DBImpl2;
@@ -133,28 +133,28 @@ public class ProcessingThread implements Runnable {
 		System.out.println("Running " + threadId);
 		try {
 			switch (taskId) {
-				case CTMConstants.CTMCONVERTER:
+				case AppConstants.CTMCONVERTER:
 					dm.convert(inputFiles, outputFolder);
 					break;
-				case CTMConstants.CTMREADERPS:
+				case AppConstants.CTMREADERPS:
 					dm.psSplit(inputFiles, outputFolder, nsPath, invalidPath);
 					break;
-				case CTMConstants.CTMREADERPOS:
+				case AppConstants.CTMREADERPOS:
 					dm.posSplit(inputFiles, outputFolder);
 					break;
-				case CTMConstants.CTMCOMPRESS:
+				case AppConstants.CTMCOMPRESS:
 					dm.indexedCompress(inputFiles, outputFolder, indexNodes, comparePath);
 					break;
-				case CTMConstants.CTMCOMPARE_JAVA:
+				case AppConstants.CTMCOMPARE_JAVA:
 					dm.compareJava(comparePairs, outputFolder);
 					break;
-				case CTMConstants.CTMCOMPARE_GNU:
+				case AppConstants.CTMCOMPARE_GNU:
 					dm.compareGnu(comparePairs, outputFolder);
 					break;
-				case CTMConstants.CTMDISTRIBUTE_CEDAR:
+				case AppConstants.CTMDISTRIBUTE_CEDAR:
 					dm.distribute(toSend, taskId);
 					break;
-				case CTMConstants.CTMDISTRIBUTE_HDFS:
+				case AppConstants.CTMDISTRIBUTE_HDFS:
 					dm.distribute(toSend, taskId);
 					break;
 				default:

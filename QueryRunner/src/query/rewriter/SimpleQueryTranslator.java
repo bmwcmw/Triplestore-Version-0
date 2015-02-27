@@ -1,8 +1,8 @@
 package query.rewriter;
 
 import db.utils.DBImpl;
-import query.objects.LongPattern;
-import query.objects.StringPattern;
+import query.objects.LongTriple;
+import query.objects.StringTriple;
 
 /**
  * This is the query rewriter which translates queries to convenient format, in order
@@ -19,8 +19,8 @@ public class SimpleQueryTranslator {
 	 * @return pattern using numerical format
 	 * @throws Exception
 	 */
-	public static LongPattern toCompressed(DBImpl dbu, StringPattern input) throws Exception{
-		return new LongPattern(
+	public static LongTriple toCompressed(DBImpl dbu, StringTriple input) throws Exception{
+		return new LongTriple(
 				dbu.fetchIdByNode(input.getS()),
 				dbu.fetchIdByNode(input.getP()),
 				dbu.fetchIdByNode(input.getO()));

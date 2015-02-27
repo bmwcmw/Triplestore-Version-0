@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import db.utils.DBImpl;
 import query.objects.QueryPatternResult;
-import query.objects.StringPattern;
+import query.objects.StringTriple;
 
 /**
  * This is the query executor which performs processed SPARQL query by asking 
@@ -33,7 +33,7 @@ public class StrategicalExecutor1 implements ExecutorImpl {
 	}
 
 	@Override
-	public QueryPatternResult fetchFromDest(String dest, StringPattern pat)
+	public QueryPatternResult fetchFromDest(String dest, StringTriple pat)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;

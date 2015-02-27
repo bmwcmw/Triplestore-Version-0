@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 
-import constants.CTMConstants;
+import constants.AppConstants;
 import data.cleaner.RDFPairStr;
 import data.reader.PairReader;
 import localIOUtils.IOUtils;
@@ -44,7 +44,7 @@ public class JavaComparator2 {
 		RDFPairStr temp2;
 		
 		int sortedCol = 0;//default is CTMConstants.SOSortedExt
-		if(IOUtils.getExtension(f1.getName()) == CTMConstants.OSSortedExt)
+		if(IOUtils.getExtension(f1.getName()) == AppConstants.OSSortedExt)
 			sortedCol = 1;
 		if (sortedCol==0) {
 			while (true) {

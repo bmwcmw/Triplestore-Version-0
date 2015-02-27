@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import db.utils.DBImpl;
 import query.objects.QueryPatternResult;
-import query.objects.StringPattern;
+import query.objects.StringTriple;
 
 /**
  * A query executor performs processed SPARQL query by fetching data from different file systems.
@@ -45,7 +45,7 @@ public interface ExecutorImpl {
 	 * @return QueryPatternResult
 	 * @throws Exception
 	 */
-	public QueryPatternResult fetchFromDest(String dest, StringPattern pat) throws Exception;
+	public QueryPatternResult fetchFromDest(String dest, StringTriple pat) throws Exception;
 	
 	/**
 	 * Sets a list for all available predicates

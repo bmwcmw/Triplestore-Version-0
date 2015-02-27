@@ -11,11 +11,11 @@ import java.util.ArrayList;
 public class QueryPatternResult {
 	
 	/* Pattern with type */
-	private StringPattern pattern;
+	private StringTriple pattern;
 	
 	private ArrayList<ArrayList<String>> resultSet;
 	
-	public QueryPatternResult(StringPattern pat, 
+	public QueryPatternResult(StringTriple pat, 
 			ArrayList<ArrayList<String>> set){
 		pattern = pat;
 		resultSet = set;
@@ -25,7 +25,7 @@ public class QueryPatternResult {
 		return resultSet.size();
 	}
 	
-	public StringPattern getPattern(){
+	public StringTriple getPattern(){
 		return pattern;
 	}
 	

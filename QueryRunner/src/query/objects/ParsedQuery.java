@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
+import objects.BiList;
+import objects.BiPair;
 import query.utils.QueryUtils;
 import query.utils.QueryUtils.VarType;
 
@@ -50,7 +52,7 @@ public class ParsedQuery {
 		selectedvariables.add(var);
 	}
 	
-	public void putPattern(StringPattern p){
+	public void putPattern(StringTriple p){
 		/*
 		 * Size = number of variables, Content = variables in current pattern
 		 */

@@ -18,7 +18,7 @@ import localIOUtils.IOUtils;
 import org.json.simple.parser.ParseException;
 
 import server.JobAssigner;
-import constants.CTMConstants;
+import constants.AppConstants;
 import data.cleaner.RDFPairLong;
 import data.distributor.MapValuePairLongOComparator;
 import data.distributor.MapValuePairLongSComparator;
@@ -129,7 +129,7 @@ public class IndicatorGrouper {
         		HashMap<String, TreeMap<String, RDFPairLong>> sortedIndicators 
         				= new HashMap<String, TreeMap<String, RDFPairLong>>();
 				switch (_indicatorMode){
-					case CTMConstants.CTMINDICATORS :
+					case AppConstants.CTMINDICATORS :
 						for (Entry<String, HashMap<String, RDFPairLong>> e : 
 								indicators.entrySet()) {
 							long temp = 0;
@@ -145,7 +145,7 @@ public class IndicatorGrouper {
 							predsWithInd.put(temp, e.getKey());
 						} 
 						break;
-					case CTMConstants.CTMINDICATORO : 
+					case AppConstants.CTMINDICATORO : 
 						for (Entry<String, HashMap<String, RDFPairLong>> e : 
 								indicators.entrySet()) {
 							long temp = 0;
@@ -161,7 +161,7 @@ public class IndicatorGrouper {
 							predsWithInd.put(temp, e.getKey());
 						}
 						break;
-					case CTMConstants.CTMINDICATORSO : 
+					case AppConstants.CTMINDICATORSO : 
 						for (Entry<String, HashMap<String, RDFPairLong>> e : 
 								indicators.entrySet()) {
 							long temp = 0;

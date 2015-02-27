@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import constants.CTMConstants;
+import constants.AppConstants;
 import data.cleaner.RDFPairStr;
 import data.reader.PairReader;
 import db.utils.DBImpl;
@@ -30,7 +30,7 @@ public class InRamDBLoaderPOS implements DBLoaderImpl {
 			case POS : 
 				//ConcurrentHashMap Collections
 				for(File f : listOfFiles){
-					if(f.getName().startsWith(CTMConstants.rdfTypeHeader)) {
+					if(f.getName().startsWith(AppConstants.rdfTypeHeader)) {
 						try {
 							PairReader reader = new PairReader(f.getAbsolutePath());
 							String str = null;

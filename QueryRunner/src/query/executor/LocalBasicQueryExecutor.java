@@ -8,13 +8,13 @@ import localIOUtils.IOUtils;
 
 import org.json.simple.JSONArray;
 
-import constants.CTMConstants;
+import constants.AppConstants;
 import db.utils.DBImpl;
 import db.utils.InRamDBUtilsPOS;
 import query.objects.ParsedQuery;
 import query.objects.QueryPatternResult;
 import query.objects.QueryResult;
-import query.objects.StringPattern;
+import query.objects.StringTriple;
 import query.objects.SubQueryPatternSet;
 
 /**
@@ -57,7 +57,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 	}
 
 	@Override
-	public QueryPatternResult fetchFromDest(String dest, StringPattern pat) throws Exception {
+	public QueryPatternResult fetchFromDest(String dest, StringTriple pat) throws Exception {
 		switch(mode){
 			case LOCALFS:
 				return fetchFromLocalFS(dest, pat);
@@ -70,7 +70,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 		}
 	}
 	
-	private QueryPatternResult fetchFromLocalFS(String pred, StringPattern pat) throws Exception {
+	private QueryPatternResult fetchFromLocalFS(String pred, StringTriple pat) throws Exception {
 		QueryPatternResult result = null;
 		
 		IOUtils.logLog("Predicate term : "+pred);
@@ -79,8 +79,8 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 		InRamDBUtilsPOS dbu;
 		
 		boolean isType = pred.equals(
-				CTMConstants.rdfTypeHeader.substring(
-						0, CTMConstants.rdfTypeHeader.length()-1)) 
+				AppConstants.rdfTypeHeader.substring(
+						0, AppConstants.rdfTypeHeader.length()-1)) 
 				|| pred.equals("a");
 		
 		/* Here P is never variable */
@@ -100,7 +100,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 				 * id appears in the set decoded from the subject's line */
 				if(isType) {
 					for(String fName : dbuList.keySet()){
-						if(fName.contains(CTMConstants.rdfTypeHeader) 
+						if(fName.contains(AppConstants.rdfTypeHeader) 
 								&& fName.contains(pat.getO())) {
 							dbuName = fName;
 							break;
@@ -194,7 +194,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 				 * id appears in the set decoded from the subject's line */
 				if(isType) {
 					for(String fName : dbuList.keySet()){
-						if(fName.contains(CTMConstants.rdfTypeHeader) 
+						if(fName.contains(AppConstants.rdfTypeHeader) 
 								&& fName.contains(pat.getO())) {
 							dbuName = fName;
 							break;
@@ -281,7 +281,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 					ArrayList<String> toAdd = new ArrayList<String>();
 					for(Entry<String, DBImpl> ent : dbuList.entrySet()){
 						String fName = ent.getKey();
-						if(fName.contains(CTMConstants.rdfTypeHeader)) {
+						if(fName.contains(AppConstants.rdfTypeHeader)) {
 							ArrayList<String> arrSubject = 
 									((InRamDBUtilsPOS) ent.getValue()).getArr1();
 							for(String s : arrSubject){
@@ -369,7 +369,7 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 					ArrayList<String> toAddO = new ArrayList<String>();
 					for(Entry<String, DBImpl> ent : dbuList.entrySet()){
 						String fName = ent.getKey();
-						if(fName.contains(CTMConstants.rdfTypeHeader)) {
+						if(fName.contains(AppConstants.rdfTypeHeader)) {
 							toAddS.addAll(
 									((InRamDBUtilsPOS) ent.getValue()).getArr1());
 							toAddO.addAll(
@@ -477,9 +477,9 @@ public class LocalBasicQueryExecutor implements ExecutorImpl, ExecutorImplLocal 
 			/* Naive version : execute from 0 to 3 variable(s) */
 			for(int i=0; i<=3; i++){
 				if((subset = patterns.get(i)) != null){
-					HashMap<Integer, StringPattern> subpatterns = subset.getAll();
-					for(Entry<Integer, StringPattern> ent : subpatterns.entrySet()){
-						StringPattern pat = ent.getValue();
+					HashMap<Integer, StringTriple> subpatterns = subset.getAll();
+					for(Entry<Integer, StringTriple> ent : subpatterns.entrySet()){
+						StringTriple pat = ent.getValue();
 						if(pat.getType().toString().contains("P")){
 							IOUtils.logLog("Predicate is variable. "
 									+ "Broadcast not supported yet.");

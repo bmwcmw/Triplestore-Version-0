@@ -11,14 +11,14 @@ import localIOUtils.IOUtils;
 
 import org.json.simple.JSONArray;
 
-import constants.CTMConstants;
+import constants.AppConstants;
 import db.utils.DBImpl;
 import query.executor.ExecutorImpl.MODE;
-import query.objects.LongPattern;
+import query.objects.LongTriple;
 import query.objects.ParsedQuery;
 import query.objects.QueryPatternResult;
 import query.objects.QueryResult;
-import query.objects.StringPattern;
+import query.objects.StringTriple;
 import query.objects.SubQueryPatternSet;
 import query.rewriter.SimpleQueryTranslator;
 
@@ -62,7 +62,7 @@ public class StrategicalExecutor2 implements ExecutorImpl {
 	}
 
 	@Override
-	public QueryPatternResult fetchFromDest(String dest, StringPattern pat) throws Exception {
+	public QueryPatternResult fetchFromDest(String dest, StringTriple pat) throws Exception {
 		switch(mode){
 			case LOCALFS:
 				return fetchFromLocalFS(dest, pat);
@@ -75,17 +75,17 @@ public class StrategicalExecutor2 implements ExecutorImpl {
 		}
 	}
 	
-	private QueryPatternResult fetchFromLocalFS(String pred, StringPattern pat) throws Exception {
+	private QueryPatternResult fetchFromLocalFS(String pred, StringTriple pat) throws Exception {
 		QueryPatternResult result = null;
 		
 		IOUtils.logLog("Predicate term : "+pred);
 		/* Paths of specified predicate */
-		String indPath = localPath + File.separator + pred + CTMConstants.IndexExt;
-		String matSOPath = localPath + File.separator + pred + CTMConstants.SOMatrixExt;
-		String matOSPath = localPath + File.separator + pred + CTMConstants.OSMatrixExt;
+		String indPath = localPath + File.separator + pred + AppConstants.IndexExt;
+		String matSOPath = localPath + File.separator + pred + AppConstants.SOMatrixExt;
+		String matOSPath = localPath + File.separator + pred + AppConstants.OSMatrixExt;
 		
 		dbu.loadIndexFromFile(indPath);
-		LongPattern intPat = SimpleQueryTranslator.toCompressed(dbu, pat);
+		LongTriple intPat = SimpleQueryTranslator.toCompressed(dbu, pat);
 		
 		Set<String> resultLines = new HashSet<String>();
 		/* Here P is never variable */
@@ -217,12 +217,12 @@ public class StrategicalExecutor2 implements ExecutorImpl {
 		return result;
 	}
 	
-	private QueryPatternResult fetchFromHDFS(String dest, StringPattern pat){
+	private QueryPatternResult fetchFromHDFS(String dest, StringTriple pat){
 		QueryPatternResult result = new QueryPatternResult(pat, null);
 		return result;
 	}
 	
-	private QueryPatternResult fetchFromCEDAR(String dest, StringPattern pat){
+	private QueryPatternResult fetchFromCEDAR(String dest, StringTriple pat){
 		QueryPatternResult result = new QueryPatternResult(pat, null);
 		return result;
 	}
@@ -259,9 +259,9 @@ public class StrategicalExecutor2 implements ExecutorImpl {
 		/* Naive version : execute from 0 to 3 variable(s) */
 		for(int i=0; i<=3; i++){
 			if((subset = patterns.get(i)) != null){
-				HashMap<Integer, StringPattern> subpatterns = subset.getAll();
-				for(Entry<Integer, StringPattern> ent : subpatterns.entrySet()){
-					StringPattern pat = ent.getValue();
+				HashMap<Integer, StringTriple> subpatterns = subset.getAll();
+				for(Entry<Integer, StringTriple> ent : subpatterns.entrySet()){
+					StringTriple pat = ent.getValue();
 					if(pat.getType().toString().contains("P")){
 						IOUtils.logLog("Predicate is variable. Preparing broadcast.");
 						/* Predicate is a variable */

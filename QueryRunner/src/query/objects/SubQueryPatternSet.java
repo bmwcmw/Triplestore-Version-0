@@ -9,10 +9,10 @@ import java.util.Map.Entry;
  * @author Cedar
  */
 public class SubQueryPatternSet {
-	 private HashMap<Integer, StringPattern> set;
+	 private HashMap<Integer, StringTriple> set;
 	 
 	 public SubQueryPatternSet(){
-		 set = new HashMap<Integer, StringPattern>();
+		 set = new HashMap<Integer, StringTriple>();
 	 }
 	 
 	 /**
@@ -20,7 +20,7 @@ public class SubQueryPatternSet {
 	  * @param id : the unique id of pattern
 	  * @param p : the pattern to insert
 	  */
-	 public void putStringPattern(Integer id, StringPattern p){
+	 public void putStringPattern(Integer id, StringTriple p){
 		 set.put(id, p);
 	 }
 	 
@@ -29,7 +29,7 @@ public class SubQueryPatternSet {
 	  * identifiers
 	  * @return the subset 
 	  */
-	 public HashMap<Integer, StringPattern> getAll(){
+	 public HashMap<Integer, StringTriple> getAll(){
 		 return set;
 	 }
 	 
@@ -45,13 +45,13 @@ public class SubQueryPatternSet {
 	  * Returns the sub-query having the unique identifier
 	  * @return a sub-query
 	  */
-	 public StringPattern get(Integer i){
+	 public StringTriple get(Integer i){
 		 return set.get(i);
 	 }
 	 
 	 public String toString(){
 		 String temp = "";
-		 for(Entry<Integer, StringPattern> entry : set.entrySet()){
+		 for(Entry<Integer, StringTriple> entry : set.entrySet()){
 			 temp += entry.getValue().toString() + "\n";
 		 }
 		 return temp;

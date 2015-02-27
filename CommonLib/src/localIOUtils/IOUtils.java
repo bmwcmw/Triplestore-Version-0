@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Static IO tools for the pre-processing program.
+ * Static IO tools for the preprocessing program.
  * 
- * @author CEDAR
+ * @author CMWT420
  */
 public class IOUtils {
 	private static final String WORKINGDIR = System.getProperty("user.dir");

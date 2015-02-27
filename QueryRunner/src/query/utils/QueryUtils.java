@@ -2,7 +2,7 @@ package query.utils;
 
 /**
  * Basic elements for the query processing part.
- * @author CEDAR
+ * @author CMWT420
  *
  */
 public class QueryUtils {
