@@ -8,13 +8,14 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.StringTokenizer;
+
+import constants.CTMConstants;
 import queryObjects.BiList;
 import localIOUtils.IOUtils;
-import ctmRdf.CTMConstants;
 
 /**
  * In block mode, loads metadata files to a specific database(normally inRam).
- * @author CEDAR
+ * @author CMWT420
  */
 public class LocalMetaLoader {
 	public static enum MODE {S, O};

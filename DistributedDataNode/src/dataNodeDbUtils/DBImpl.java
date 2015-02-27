@@ -1,4 +1,4 @@
-package dbUtils;
+package dataNodeDbUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -14,8 +14,10 @@ import java.util.Map.Entry;
  *
  */
 
-/*
+/**
  * For data nodes
+ * @author CMWT420
+ *
  */
 public interface DBImpl {
 

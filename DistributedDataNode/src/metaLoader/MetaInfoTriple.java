@@ -8,7 +8,7 @@ package metaLoader;
  * - Offset (ID) of O/S (0 or last O/S of last file)
  * <br>
  * - Offset (line number from 1st cut)
- * @author Cedar
+ * @author CMWT420
  *
  */
 public class MetaInfoTriple {

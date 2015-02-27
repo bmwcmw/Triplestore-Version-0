@@ -10,11 +10,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+
+import constants.CTMConstants;
 import localIOUtils.IOUtils;
-
-import ctmRdf.CTMConstants;
 import ctmRdf.CTMServerConfig;
-
 import dataCompressor.MetaInfoArray;
 import dataCompressor.MetaInfoQuadruple;
 import dataReader.PairReader;

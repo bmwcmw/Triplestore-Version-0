@@ -4,14 +4,14 @@ import localIOUtils.IOUtils;
 
 /**
  * Initial configuration settings
- * @author CEDAR
+ * @author CMWT420
  *
  */
 public class NodeListenerConfig {
 	private static NodeListenerConfig config = null;
 	
 	// XXX SETUP : Base directory
-	public final static String _workingDir = System.getProperty("user.dir");
+	private final static String _workingDir = System.getProperty("user.dir");
 	
     private NodeListenerConfig() { 
 		// XXX SETUP : Logs on/off
@@ -23,5 +23,9 @@ public class NodeListenerConfig {
         	config = new NodeListenerConfig();
         }
         return config;
+    }
+    
+    public static String getWorkingDir(){
+    	return _workingDir;
     }
 }

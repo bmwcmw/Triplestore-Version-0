@@ -1,5 +1,10 @@
-package localDBUtils;
+package runnerDbUtils;
 
+/**
+ * Mongo
+ * @author CMWT420
+ *
+ */
 public class MongoDBUtils implements DBImpl{
     
 	public MongoDBUtils() {

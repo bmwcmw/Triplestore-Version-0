@@ -1,4 +1,4 @@
-package dbUtils;
+package dataNodeDbUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -14,6 +14,7 @@ import dataReader.PairReader;
 /**
  * <p>Redis is an open source, BSD licensed, advanced key-value store. It is often referred 
  * to as a data structure server since keys can contain strings, hashes, lists, sets and sorted sets.</p>
+ * @author CMWT420
 **/
 public class RedisUtils implements DBImpl{
 	private final int DBLOAD = 0;
@@ -26,7 +27,7 @@ public class RedisUtils implements DBImpl{
 	private Pipeline pipeline = null;
     
 	public RedisUtils() throws SQLException, ClassNotFoundException{
-		this(DBConstants.Redisurl);
+		this(constants.DBConstants.Redisurl);
 	}
     
 	public RedisUtils(String url) throws SQLException, ClassNotFoundException{

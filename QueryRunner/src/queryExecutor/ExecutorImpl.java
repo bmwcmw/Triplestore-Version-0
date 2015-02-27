@@ -2,9 +2,9 @@ package queryExecutor;
 
 import java.util.HashMap;
 
-import localDBUtils.DBImpl;
 import queryObjects.QueryPatternResult;
 import queryObjects.StringPattern;
+import runnerDbUtils.DBImpl;
 
 /**
  * A query executor performs processed SPARQL query by fetching data from different file systems.

@@ -1,4 +1,4 @@
-package localDBLoader;
+package runnerDbLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import ctmRdf.CTMConstants;
+import runnerDbUtils.DBImpl;
+import runnerDbUtils.InRamDBUtilsPOS;
+import constants.CTMConstants;
 import dataCleaner.RDFPairStr;
 import dataReader.PairReader;
-import localDBUtils.DBImpl;
-import localDBUtils.InRamDBUtilsPOS;
 import localIOUtils.IOUtils;
 
 /**
  * Only for the connection using POS files.
- * @author gt
+ * @author CMWT420
  *
  */
 public class InRamDBLoaderPOS implements DBLoaderImpl {

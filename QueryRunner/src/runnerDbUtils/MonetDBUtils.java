@@ -1,4 +1,4 @@
-package localDBUtils;
+package runnerDbUtils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,11 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import constants.DBConstants;
+
 /**
  * <p>MonetDB aims to use as much of the main memory available, as many cores as can be 
  * practically deployed in parallel processing of queries, and trying to avoid going to 
  * a slow disk.</p>
-**/
+ * @author CMWT420
+ */
 /*
 CREATE TABLE indexnodes (
 	    id        integer PRIMARY KEY AUTO_INCREMENT,

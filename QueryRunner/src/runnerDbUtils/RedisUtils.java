@@ -1,9 +1,10 @@
-package localDBUtils;
+package runnerDbUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 
+import constants.DBConstants;
 import localIOUtils.IOUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
@@ -13,7 +14,8 @@ import dataReader.PairReader;
 /**
  * <p>Redis is an open source, BSD licensed, advanced key-value store. It is often referred 
  * to as a data structure server since keys can contain strings, hashes, lists, sets and sorted sets.</p>
-**/
+ * @author CMWT420
+ */
 public class RedisUtils implements DBImpl{
 	private final int DBLOAD = 0;
 	private final int DBINDEX1 = 1; //Index to Node

@@ -1,4 +1,4 @@
-package localDBUtils;
+package runnerDbUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -6,7 +6,7 @@ import java.sql.SQLException;
 /**
  * This implementation allows to store and fetch triple data for the query execution. Basically 
  * the databases comport as Key-Value stores.
- * @author Cedar
+ * @author CMWT420
  *
  */
 public interface DBImpl {

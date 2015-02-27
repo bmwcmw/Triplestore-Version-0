@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * A list containing pairs of objects(key, value)
- * @author CEDAR
+ * @author CMWT420
  */
 public class BiList<K, V> {
 	

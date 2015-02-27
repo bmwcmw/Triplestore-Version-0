@@ -17,7 +17,7 @@ import localIOUtils.IOUtils;
 
 import org.json.simple.parser.ParseException;
 
-import ctmRdf.CTMConstants;
+import constants.CTMConstants;
 import ctmRdf.CTMJobAssigner;
 import dataCleaner.RDFPairLong;
 

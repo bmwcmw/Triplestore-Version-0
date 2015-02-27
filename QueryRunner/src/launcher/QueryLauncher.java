@@ -1,18 +1,23 @@
-package ctmSPARQLLauncher;
+package launcher;
 
 import java.io.File;
 import java.util.HashMap;
 
-import localDBLoader.DBLoaderImpl.MODE;
-import localDBLoader.InRamDBLoaderPOS;
-import localDBUtils.DBImpl;
-import localDBUtils.InRamDBUtils;
 import queryExecutor.LocalBasicQueryExecutor;
 import queryObjects.ParsedQuery;
 import queryObjects.QueryResult;
 import queryPlanner.SimpleQueryPlanner;
+import runnerDbLoader.InRamDBLoaderPOS;
+import runnerDbLoader.DBLoaderImpl.MODE;
+import runnerDbUtils.DBImpl;
+import runnerDbUtils.InRamDBUtils;
 
-public class CTMLauncher {
+/**
+ * Query launcher entry point
+ * @author CMWT420
+ *
+ */
+public class QueryLauncher {
 
 	public static void main(String[] args) throws Exception {
 		LocalBasicQueryExecutor exe = new LocalBasicQueryExecutor();

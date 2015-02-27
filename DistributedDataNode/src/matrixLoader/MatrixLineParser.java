@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 /**
  * Parses a line of compressed matrix to a HashSet containing numerical unique indexes.
- * @author CEDAR
+ * @author CMWT420
  */
 public class MatrixLineParser {
 	

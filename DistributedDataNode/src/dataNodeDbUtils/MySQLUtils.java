@@ -1,4 +1,4 @@
-package dbUtils;
+package dataNodeDbUtils;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -9,6 +9,11 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.util.Map.Entry;
 
+/**
+ * 
+ * @author CMWT420
+ *
+ */
 public class MySQLUtils implements DBImpl{
 
 	protected String _tablename;
@@ -18,7 +23,7 @@ public class MySQLUtils implements DBImpl{
     
 	public MySQLUtils() throws SQLException, ClassNotFoundException{
 		//TODO
-		_conn = DriverManager.getConnection(DBConstants.MySQLurl, "root", "");
+		_conn = DriverManager.getConnection(constants.DBConstants.MySQLurl, "root", "");
 		_st = _conn.createStatement();
 	}
 

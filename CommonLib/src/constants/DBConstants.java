@@ -1,5 +1,10 @@
-package dbUtils;
+package constants;
 
+/**
+ * 
+ * @author CMWT420
+ *
+ */
 public class DBConstants {
 	public static final String MonetDBurl = "jdbc:monetdb://localhost/indexnodes";
 	public static final String PostgreSQLurl = "jdbc:postgresql://localhost/indexnodes";

@@ -4,12 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 
-import dbUtils.DBImpl;
-import dbUtils.InRamDBUtils;
+import dataNodeDbUtils.DBImpl;
+import dataNodeDbUtils.InRamDBUtils;
 
+/**
+ * Listener program entry point
+ * @author CMWT420
+ *
+ */
 public class NodeListener {
-	
-	private static NodeListenerConfig myConfig;
 
 	/**
 	 * @param args
@@ -22,10 +25,9 @@ public class NodeListener {
 		 * - Detection of predicates and DBUtils to load files
 		 * - Response message
 		 */
-		myConfig = NodeListenerConfig.getInstance();
 		
 		DBImpl dbu = new InRamDBUtils();
-		String loadPath = myConfig._workingDir + File.separator + ".." + File.separator + 
+		String loadPath = NodeListenerConfig.getWorkingDir() + File.separator + ".." + File.separator + 
 				"CtmPreProcessingClient2" + File.separator + "_compressed";
 		dbu.loadMetaFromFile(loadPath);
 		System.out.println(dbu.fetchLoadedMetaSize());

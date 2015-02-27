@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 
 import commandRunner.FormatConverter;
 import commandRunner.PerlPreComparator;
-import ctmRdf.CTMConstants;
+import constants.CTMConstants;
 import localIOUtils.IOUtils;
 import dataCleaner.RDFPairStr;
 import dataCleaner.RDFTriple;

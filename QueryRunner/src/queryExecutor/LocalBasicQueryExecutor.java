@@ -3,18 +3,19 @@ package queryExecutor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import localDBUtils.DBImpl;
-import localDBUtils.InRamDBUtilsPOS;
+
 import localIOUtils.IOUtils;
 
 import org.json.simple.JSONArray;
 
-import ctmRdf.CTMConstants;
+import constants.CTMConstants;
 import queryObjects.ParsedQuery;
 import queryObjects.QueryPatternResult;
 import queryObjects.QueryResult;
 import queryObjects.StringPattern;
 import queryObjects.SubQueryPatternSet;
+import runnerDbUtils.DBImpl;
+import runnerDbUtils.InRamDBUtilsPOS;
 
 /**
  * This is the query executor which performs processed SPARQL query by asking 

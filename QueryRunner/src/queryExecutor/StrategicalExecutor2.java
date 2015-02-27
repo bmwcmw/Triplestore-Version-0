@@ -7,12 +7,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import localDBUtils.DBImpl;
 import localIOUtils.IOUtils;
 
 import org.json.simple.JSONArray;
 
-import ctmRdf.CTMConstants;
+import constants.CTMConstants;
 import queryExecutor.ExecutorImpl.MODE;
 import queryObjects.LongPattern;
 import queryObjects.ParsedQuery;
@@ -21,6 +20,7 @@ import queryObjects.QueryResult;
 import queryObjects.StringPattern;
 import queryObjects.SubQueryPatternSet;
 import queryRewriter.SimpleQueryTranslator;
+import runnerDbUtils.DBImpl;
 
 /**
  * This is the query executor which performs processed SPARQL query by asking 

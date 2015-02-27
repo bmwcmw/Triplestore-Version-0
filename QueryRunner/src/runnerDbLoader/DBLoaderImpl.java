@@ -1,9 +1,14 @@
-package localDBLoader;
+package runnerDbLoader;
 
 import java.util.HashMap;
 
-import localDBUtils.DBImpl;
+import runnerDbUtils.DBImpl;
 
+/**
+ * DB loader interface
+ * @author CMWT420
+ *
+ */
 public interface DBLoaderImpl {
 	
 	public static enum MODE {

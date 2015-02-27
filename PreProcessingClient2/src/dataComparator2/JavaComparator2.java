@@ -3,8 +3,8 @@ package dataComparator2;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import ctmRdf.CTMConstants;
 
+import constants.CTMConstants;
 import dataCleaner.RDFPairStr;
 import dataReader.PairReader;
 import localIOUtils.IOUtils;

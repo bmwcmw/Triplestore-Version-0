@@ -2,9 +2,9 @@ package queryExecutor;
 
 import java.util.HashMap;
 
-import localDBUtils.DBImpl;
 import queryObjects.QueryPatternResult;
 import queryObjects.StringPattern;
+import runnerDbUtils.DBImpl;
 
 /**
  * This is the query executor which performs processed SPARQL query by asking 

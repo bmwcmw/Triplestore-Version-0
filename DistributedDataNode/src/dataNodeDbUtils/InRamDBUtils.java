@@ -1,4 +1,4 @@
-package dbUtils;
+package dataNodeDbUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,11 +17,16 @@ import metaLoader.MetaInfoTriple;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
-import ctmRdf.CTMConstants;
+import constants.CTMConstants;
 import dataCleaner.RDFPairStr;
 import dataCompressor.SOLongPair;
 import dataReader.PairReader;
 
+/**
+ * 
+ * @author CMWT420
+ *
+ */
 public class InRamDBUtils implements DBImpl{
 	private HashMap<String, BiList<Integer, MetaInfoTriple>> metaList;
 	private BiMap<Long, String> nodes;

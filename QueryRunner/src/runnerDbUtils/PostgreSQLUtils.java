@@ -1,4 +1,4 @@
-package localDBUtils;
+package runnerDbUtils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,29 +6,49 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class MySQLUtils implements DBImpl{
+import constants.DBConstants;
+
+/**
+ * Postgres
+ * @author CMWT420
+ */
+/*
+CREATE TABLE indexnodes (
+	    id        serial PRIMARY KEY,
+	    data       varchar(128) NOT NULL UNIQUE
+);
+TRUNCATE TABLE indexnodes;
+*/
+public class PostgreSQLUtils implements DBImpl{
 
 	protected String _tablename;
 	protected Statement _st;
 	protected ResultSet _rs;
 	protected Connection _conn = null;
     
-	public MySQLUtils() throws SQLException, ClassNotFoundException{
-		//TODO
-		_conn = DriverManager.getConnection(DBConstants.MySQLurl, "root", "");
+	public PostgreSQLUtils() throws SQLException, ClassNotFoundException{
+		this(DBConstants.PostgreSQLurl, "postgres", "postgres");
+	}
+    
+	public PostgreSQLUtils(String url, String user, String pwd) throws SQLException, ClassNotFoundException{
+		_conn = DriverManager.getConnection(url, user, pwd);
 		_st = _conn.createStatement();
 	}
 
 	@Override
 	public Long fetchIdByNode(String node) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		_rs = _st.executeQuery("SELECT id FROM indexnodes "
+    			+ "WHERE data = '" + node + "'");
+		if ( _rs.next() ) return _rs.getLong("id");
+    	else return null;
 	}
 
 	@Override
 	public String fetchNodeById(Long index) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		_rs = _st.executeQuery("SELECT data FROM indexnodes "
+    			+ "WHERE id = " + index);
+		if ( _rs.next() ) return _rs.getString("data");
+    	else return null;
 	}
 
 	@Override
@@ -39,9 +59,8 @@ public class MySQLUtils implements DBImpl{
 
 	@Override
 	public void closeAll() throws SQLException {
-		if(_rs!=null) _rs.close();
-		if(_st!=null) _st.close();
-		if(_conn!=null) _conn.close();
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

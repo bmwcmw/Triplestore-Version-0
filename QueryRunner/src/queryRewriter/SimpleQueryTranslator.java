@@ -1,8 +1,8 @@
 package queryRewriter;
 
-import localDBUtils.DBImpl;
 import queryObjects.LongPattern;
 import queryObjects.StringPattern;
+import runnerDbUtils.DBImpl;
 
 /**
  * This is the query rewriter which translates queries to convenient format, in order

@@ -8,15 +8,15 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import constants.CTMConstants;
 import queryObjects.BiList;
-import ctmRdf.CTMConstants;
 import localIOUtils.IOUtils;
 import metaLoader.MetaInfoTriple;
 import metaLoader.LocalMetaLoader.MODE;
 
 /**
  * Loads numerical data from matrix files.
- * @author CEDAR
+ * @author CMWT420
  */
 public class LocalMatrixLoader {
 	

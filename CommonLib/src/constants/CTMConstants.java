@@ -1,4 +1,4 @@
-package ctmRdf;
+package constants;
 
 /**
  * Constants for all optional modules.
