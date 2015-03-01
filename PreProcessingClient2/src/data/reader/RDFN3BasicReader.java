@@ -12,7 +12,7 @@ import java.text.ParseException;
  */
 public interface RDFN3BasicReader {
 	/**
-	 * Reads triples from a file, line by line, then parse the current line into a <i>CTMTriple</i> object(S,P,O)
+	 * Reads triples from a file, line by line, then parse the current line into a <i>Triple</i> object(S,P,O)
 	 * @throws IOException
 	 * @throws ParseException
 	 */

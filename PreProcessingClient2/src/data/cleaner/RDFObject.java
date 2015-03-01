@@ -8,7 +8,7 @@ import data.cleaner.token.Variable;
 
 
 /**
- * <p>An object of CTM Triple can be created : </p>
+ * <p>An object of  Triple can be created : </p>
  * - by parsing a string
  * <br>
  * - from an IRI object
@@ -27,35 +27,35 @@ public class RDFObject {
 	private Token _object;
 	
 	/**
-	 * Create a CTMObject by parsing a string
+	 * Create a Object by parsing a string
 	 */
 	public RDFObject(String object){
 		_object = Token.parse(object);// new IRI(object);
 	}
 	
 	/**
-	 * Create an CTMObject using an IRI
+	 * Create an Object using an IRI
 	 */
 	public RDFObject(IRI iri){
 		_object = iri;
 	}
 
 	/**
-	 * Create an CTMObject using an anonymous
+	 * Create an Object using an anonymous
 	 */
 	public RDFObject(Anonymous anonymous){
 		_object = anonymous;
 	}
 	
 	/**
-	 * Create an CTMObject using a litteral
+	 * Create an Object using a litteral
 	 */
 	public RDFObject(Litteral litteral){
 		_object = litteral;
 	}
 	
 	/**
-	 * Create an CTMObject using a variable
+	 * Create an Object using a variable
 	 */
 	public RDFObject(Variable variable){
 		_object = variable;

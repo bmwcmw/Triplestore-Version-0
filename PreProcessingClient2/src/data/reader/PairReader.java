@@ -57,7 +57,7 @@ public class PairReader implements RDFN3BasicReader {
 	/**
 	 * <p>
 	 * Reads line by line from predicate files , then parse the current line
-	 * into a <i>CTMDouble</i> object(S,O)
+	 * into a <i>Long pair</i> object(S,O)
 	 * </p>
 	 * 
 	 * <b>Since S, P, O are validated during PS, we don't need to re-validate them again.</b>
@@ -91,7 +91,7 @@ public class PairReader implements RDFN3BasicReader {
 	/**
 	 * <p>
 	 * Reads line by line from predicate files , then parse the current line
-	 * into a <i>CTMDoubleStr</i> object(S,O)
+	 * into a <i>String pair</i> object(S,O)
 	 * </p>
 	 * 
 	 * <b>Since S, P, O are validated during PS, we don't need to re-validate them again.</b>

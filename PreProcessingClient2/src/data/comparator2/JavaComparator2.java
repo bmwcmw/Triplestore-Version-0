@@ -43,7 +43,7 @@ public class JavaComparator2 {
 		RDFPairStr entry2 = reader2.nextStr();
 		RDFPairStr temp2;
 		
-		int sortedCol = 0;//default is CTMConstants.SOSortedExt
+		int sortedCol = 0;//default is AppConstants.SOSortedExt
 		if(IOUtils.getExtension(f1.getName()) == AppConstants.OSSortedExt)
 			sortedCol = 1;
 		if (sortedCol==0) {

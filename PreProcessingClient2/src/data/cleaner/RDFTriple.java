@@ -2,8 +2,8 @@ package data.cleaner;
 
 
 /**
- * <p>Light version of CTM Triple</p>
- * <p>A CTM String Triple contains three strings : Subject, Predicate and Object</p>
+ * <p>Light version of  Triple</p>
+ * <p>A  String Triple contains three strings : Subject, Predicate and Object</p>
  * 
  * @author CMWT420
  *
@@ -15,7 +15,7 @@ public class RDFTriple {
 	private String _object;
 	
 	/**
-	 * <p>Create a CTMTriple directly using three strings.</p>
+	 * <p>Create a Triple directly using three strings.</p>
 	 */
 	public RDFTriple(String subject, String predicate, String object){
 		_subject = subject;

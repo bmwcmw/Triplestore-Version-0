@@ -20,38 +20,38 @@ public class InRamDBUtils2Runner {
 		dbu.loadAuxIndexFromFile();
 		dbu.compress(auxIndex);
 		
-////		CTMServerConfig myconfig = CTMServerConfig.getInstance();
+////		ServerConfig myconfig = ServerConfig.getInstance();
 ////		myconfig._nbThreads = 16;
-//		String psPath = _workingDir + File.separator + ".." + File.separator + "CtmDataSet" 
+//		String psPath = _workingDir + File.separator + ".." + File.separator + "DataSet" 
 //				+ File.separator + "_psFake_sorted" + File.separator;
 //		File folder = new File(psPath);
 //		ArrayList<File> listOfFiles = new ArrayList<File>(Arrays.asList(folder.listFiles()));
-////		ArrayList<ArrayList<File>> inputLists = CTMJobAssigner.assignJobs(listOfFiles, false);
+////		ArrayList<ArrayList<File>> inputLists = JobAssigner.assignJobs(listOfFiles, false);
 //		
 		
 		/* TESTING SINGLE */
 //		String outputPath = _workingDir + File.separator + "_compressed";
 //		
-//		String inputFilePath = _workingDir + File.separator + ".." + File.separator + "CtmDataSet" 
-//				+ File.separator + "_ps26M_sorted" + File.separator + "hasAuthor" + CTMConstants.SOSortedExt;
+//		String inputFilePath = _workingDir + File.separator + ".." + File.separator + "DataSet" 
+//				+ File.separator + "_ps26M_sorted" + File.separator + "hasAuthor" + AppConstants.SOSortedExt;
 //		InRamDBUtils2 dbu = new InRamDBUtils2(inputFilePath, outputPath);
 //		dbu.loadAuxIndexFromFile();
 //		dbu.compress(true);
 //		
-//		String inputFilePath2 = _workingDir + File.separator + ".." + File.separator + "CtmDataSet" 
-//				+ File.separator + "_ps26M_sorted" + File.separator + "hasAuthor" + CTMConstants.OSSortedExt;
+//		String inputFilePath2 = _workingDir + File.separator + ".." + File.separator + "DataSet" 
+//				+ File.separator + "_ps26M_sorted" + File.separator + "hasAuthor" + AppConstants.OSSortedExt;
 //		InRamDBUtils2 dbu2 = new InRamDBUtils2(inputFilePath2, outputPath);
 //		dbu2.loadAuxIndexFromFile();
 //		dbu2.compress(false);
 		
-//		String inputFilePath = _workingDir + File.separator + ".." + File.separator + "CtmDataSet" 
-//				+ File.separator + "_ps20G_sorted" + File.separator + "-telephone" + CTMConstants.SOSortedExt;
+//		String inputFilePath = _workingDir + File.separator + ".." + File.separator + "DataSet" 
+//				+ File.separator + "_ps20G_sorted" + File.separator + "-telephone" + AppConstants.SOSortedExt;
 //		InRamDBUtils2 dbu = new InRamDBUtils2(inputFilePath, outputPath);
 //		dbu.loadAuxIndexFromFile();
 //		dbu.compress(true);
 //
-//		String inputFilePath2 = _workingDir + File.separator + ".." + File.separator + "CtmDataSet" 
-//				+ File.separator + "_ps20G_sorted" + File.separator + "-telephone" + CTMConstants.OSSortedExt;
+//		String inputFilePath2 = _workingDir + File.separator + ".." + File.separator + "DataSet" 
+//				+ File.separator + "_ps20G_sorted" + File.separator + "-telephone" + AppConstants.OSSortedExt;
 //		InRamDBUtils2 dbu2 = new InRamDBUtils2(inputFilePath2, outputPath);
 //		dbu2.loadAuxIndexFromFile();
 //		dbu2.compress(false);
@@ -59,7 +59,7 @@ public class InRamDBUtils2Runner {
 
 		/* TESTING MULTIPLE */
 //		String outputPath = _workingDir + File.separator + "_compressed";
-//		String psPath = _workingDir + File.separator + ".." + File.separator + "CtmDataSet" 
+//		String psPath = _workingDir + File.separator + ".." + File.separator + "DataSet" 
 //				+ File.separator + "_ps26M_sorted" + File.separator;
 //		File folder = new File(psPath);
 //		ArrayList<File> listOfFiles = new ArrayList<File>(Arrays.asList(folder.listFiles()));
@@ -71,14 +71,14 @@ public class InRamDBUtils2Runner {
 //			if(!doneList.contains(tempFName)) {
 //				doneList.add(tempFName);
 //				String inFName1 = IOUtils.filenameWithoutExt(f.getAbsolutePath()) 
-//						+ CTMConstants.SOSortedExt;
+//						+ AppConstants.SOSortedExt;
 //				System.out.println(inFName1);
 //				InRamDBUtils2 dbu1 = new InRamDBUtils2(inFName1, outputPath);
 //				dbu1.loadAuxIndexFromFile();
 //				dbu1.compress(true);
 //				
 //				String inFName2 = IOUtils.filenameWithoutExt(f.getAbsolutePath()) 
-//						+ CTMConstants.OSSortedExt;
+//						+ AppConstants.OSSortedExt;
 //				System.out.println(inFName2);
 //				InRamDBUtils2 dbu2 = new InRamDBUtils2(inFName2, outputPath);
 //				dbu2.loadAuxIndexFromFile();

@@ -2,7 +2,7 @@ package data.cleaner;
 
 
 /**
- * <p>A CTM Pair Long contains two long values : Subject and Object</p>
+ * <p>A Long pair contains two long values : Subject and Object</p>
  * 
  * @author CMWT420
  *
@@ -13,7 +13,7 @@ public class RDFPairLong {
 	private Long _object;
 	
 	/**
-	 * <p>Create a CTMPairLong directly using two longs.</p>
+	 * <p>Create a Long pair directly using two longs.</p>
 	 */
 	public RDFPairLong(Long subject, Long object){
 		_subject = subject;

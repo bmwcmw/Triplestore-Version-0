@@ -47,7 +47,7 @@ public class ServerConfig {
 		_blockTotalTerms = 1024768;
 		
 //		// XXX SETUP : Pre-Comparator mode, perhaps needs PERL executable in PATH
-//		_precompareMode = CTMConstants.CTMPRECOMPARE_JAVA;
+//		_precompareMode = AppConstants.PRECOMPARE_JAVA;
 		
 		// XXX SETUP : Comparator mode, perhaps needs PERL/GNU executable in PATH
 		_compareMode = AppConstants.APPCOMPARE_JAVA;
@@ -61,9 +61,9 @@ public class ServerConfig {
 		// XXX SETUP : Global in/out paths
 		_ctlParams = new HashMap<String, String>();
 		_ctlParams.put("rdfPath", _workingDir + File.separator + ".." 
-				+ File.separator + "CtmDataSet" + File.separator + "__rdf");
+				+ File.separator + "DataSet" + File.separator + "__rdf");
 		_ctlParams.put("n3Path", _workingDir + File.separator + ".." 
-				+ File.separator + "CtmDataSet" + File.separator + "__n3(26M)");
+				+ File.separator + "DataSet" + File.separator + "__n3(26M)");
 		_ctlParams.put("invalidPath", _workingDir + File.separator + "_invalidTriple");
 		_ctlParams.put("psPath", _workingDir + File.separator + "_ps");
 		_ctlParams.put("posPath", _workingDir + File.separator + "_pos");

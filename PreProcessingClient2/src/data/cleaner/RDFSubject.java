@@ -7,7 +7,7 @@ import data.cleaner.token.Variable;
 
 
 /**
- * <p>A subject of CTM Triple can be created : </p>
+ * <p>A subject of  Triple can be created : </p>
  * - by parsing a string
  * <br>
  * - from an IRI object
@@ -24,28 +24,28 @@ public class RDFSubject {
 	private Token _subject = null;
 	
 	/**
-	 * Create a CTMSubject by parsing a string
+	 * Create a Subject by parsing a string
 	 */
 	public RDFSubject(String subject){
 		_subject = Token.parse(subject); //new IRI(subject);
 	}
 	
 	/**
-	 * Create an CTMSubject using an IRI
+	 * Create an Subject using an IRI
 	 */
 	public RDFSubject(IRI iri){
 		_subject = iri;
 	}
 	
 	/**
-	 * Create an CTMSubject using a variable
+	 * Create an Subject using a variable
 	 */
 	public RDFSubject(Variable variable){
 		_subject = variable;
 	}
 	
 	/**
-	 * Create an CTMSubject using an anonymous
+	 * Create an Subject using an anonymous
 	 */
 	public RDFSubject(Anonymous anonymous){
 		_subject = anonymous;

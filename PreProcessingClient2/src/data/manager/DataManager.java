@@ -424,7 +424,7 @@ public class DataManager {
 	 * order to get a distinct list of nodes that the predicate has.
 	 * </p>
 	 * 
-	 * @param _node : CTMSubject or CTMObject
+	 * @param _node : Subject or Object
 	 * @return index of the given node
 	 * @throws Exception 
 	 */

@@ -2,7 +2,7 @@ package data.cleaner;
 
 /**
  * <p>Light version of RDF Triple</p>
- * <p>An RDF Pair String contains two strings : Subject and Object</p>
+ * <p>An RDF String pair contains two strings : Subject and Object</p>
  * 
  * @author CMWT420
  *
@@ -13,7 +13,7 @@ public class RDFPairStr {
 	private String _object;
 	
 	/**
-	 * <p>Create a CTMPairStr directly using three strings.</p>
+	 * <p>Create a String pair directly using three strings.</p>
 	 */
 	public RDFPairStr(String subject, String object){
 		_subject = subject;

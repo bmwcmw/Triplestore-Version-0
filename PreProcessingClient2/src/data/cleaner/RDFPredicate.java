@@ -6,7 +6,7 @@ import data.cleaner.token.Variable;
 
 
 /**
- * <p>A predicate of CTM Triple can be created : </p>
+ * <p>A predicate of  Triple can be created : </p>
  * - by parsing a string
  * <br>
  * - from an IRI object
@@ -21,21 +21,21 @@ public class RDFPredicate {
 	private Token _predicate;
 	
 	/**
-	 * Create a CTMPredicate by parsing a string
+	 * Create a Predicate by parsing a string
 	 */
 	public RDFPredicate(String predicate){
 		_predicate = Token.parse(predicate); //new IRI(predicate);
 	}
 	
 	/**
-	 * Create an CTMPredicate using an IRI
+	 * Create an Predicate using an IRI
 	 */
 	public RDFPredicate(IRI iri){
 		_predicate = iri;
 	}
 	
 	/**
-	 * Create an CTMPredicate using a variable
+	 * Create an Predicate using a variable
 	 */
 	public RDFPredicate(Variable variable){
 		_predicate = variable;

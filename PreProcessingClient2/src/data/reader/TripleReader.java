@@ -53,7 +53,7 @@ public class TripleReader implements RDFN3BasicReader {
 	/**
 	 * <p>
 	 * Reads N3 triples from a file, line by line, then parse the current line
-	 * into a <i>CTMStringTriple</i> object(S,P,O) or a <i>@prefix</i> definition
+	 * into a <i>RDFTriple</i> object(S,P,O) or a <i>@prefix</i> definition
 	 * </p>
 	 * 
 	 * <b>It's just here we convert valid lines into triples, and reject

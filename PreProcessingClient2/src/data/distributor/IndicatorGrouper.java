@@ -229,7 +229,7 @@ public class IndicatorGrouper {
 	        	
 //		        int currentGroup=0;
 //		        HashSet<String> predsToFill = new HashSet<String>();
-//		        while(sortedPreds.size()>predsToFill.size() && currentGroup<CTMServer._nbThreads){
+//		        while(sortedPreds.size()>predsToFill.size() && currentGroup<Server._nbThreads){
 //		        	groups.add(currentGroup, new ArrayList<File>());
 //		        	//Check if Comparator descending or not
 //		        	//Get first(best) element of sortedPreds to begin the group N
@@ -243,7 +243,7 @@ public class IndicatorGrouper {
 //		        		}
 //		        	}
 //		        	IOUtils.logLog("Group " + currentGroup + " : beginning from " + pred0);
-//		        	HashMap<String, CTMPairLong> relatedPreds = indicators.get(pred0);
+//		        	HashMap<String, PairLong> relatedPreds = indicators.get(pred0);
 //	        		/* Add it(index, matrix S, matrix O) to group N and remove it from temporary set */
 //	        		groups.get(currentGroup).add(new File(compressedPath + File.pathSeparator 
 //	        				+ pred0 + ".index"));
@@ -261,9 +261,9 @@ public class IndicatorGrouper {
 //		        	String maxPred="";
 //		        	while(i < sizeOfGroup){
 //		        		/* Find nearest predicate */
-//		        		switch (CTMServer._indicatorMode){
-//							case CTMConstants.CTMINDICATORS :
-//				        		for(Entry<String, CTMPairLong> e : relatedPreds.entrySet()){
+//		        		switch (Server._indicatorMode){
+//							case AppConstants.INDICATORS :
+//				        		for(Entry<String, PairLong> e : relatedPreds.entrySet()){
 //				        			if(e.getValue().getSubject() >= maxValue 
 //				        					&& !predsToFill.contains(e.getKey())){
 //				        				maxValue = e.getValue().getSubject();
@@ -271,8 +271,8 @@ public class IndicatorGrouper {
 //				        			}
 //				        		}
 //				        		break;
-//							case CTMConstants.CTMINDICATORO : 
-//								for(Entry<String, CTMPairLong> e : relatedPreds.entrySet()){
+//							case AppConstants.INDICATORO : 
+//								for(Entry<String, PairLong> e : relatedPreds.entrySet()){
 //				        			if(e.getValue().getObject() >= maxValue 
 //				        					&& !predsToFill.contains(e.getKey())){
 //				        				maxValue = e.getValue().getObject();
@@ -280,8 +280,8 @@ public class IndicatorGrouper {
 //				        			}
 //				        		}
 //				        		break;
-//							case CTMConstants.CTMINDICATORSO : 
-//								for(Entry<String, CTMPairLong> e : relatedPreds.entrySet()){
+//							case AppConstants.INDICATORSO : 
+//								for(Entry<String, PairLong> e : relatedPreds.entrySet()){
 //				        			if((e.getValue().getSubject()+e.getValue().getObject()) >= maxValue 
 //				        					&& !predsToFill.contains(e.getKey())){
 //				        				maxValue = e.getValue().getSubject() + e.getValue().getObject();
@@ -321,11 +321,11 @@ public class IndicatorGrouper {
 //	 * @param source : source map
 //	 * @return A sorted map
 //	 */
-//	private static TreeMap<String, CTMPairLong> getFirstEntries(int max, 
-//			TreeMap<String, CTMPairLong> source) {
+//	private static TreeMap<String, PairLong> getFirstEntries(int max, 
+//			TreeMap<String, PairLong> source) {
 //		int count = 0;
-//		TreeMap<String, CTMPairLong> target = new TreeMap<String, CTMPairLong>();
-//		for (Entry<String, CTMPairLong> entry : source.entrySet()) {
+//		TreeMap<String, PairLong> target = new TreeMap<String, PairLong>();
+//		for (Entry<String, PairLong> entry : source.entrySet()) {
 //			if (count >= max)
 //				break;
 //
