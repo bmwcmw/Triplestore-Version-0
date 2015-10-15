@@ -9,7 +9,7 @@
 bin/
 tmp/
 temp/
-DataSet/
+CtmDataSet/*
 PreProcessingClient2/_compare/
 PreProcessingClient2/_compressed/
 PreProcessingClient2/_compressed2/
