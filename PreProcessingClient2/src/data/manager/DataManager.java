@@ -16,8 +16,8 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
-import constants.AppConstants;
 import localIOUtils.IOUtils;
+import constants.AppConstants;
 import data.cleaner.RDFPair;
 import data.cleaner.RDFPairStr;
 import data.cleaner.RDFTriple;
