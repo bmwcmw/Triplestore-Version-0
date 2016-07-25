@@ -1,0 +1,117 @@
+sort uniq : 
+9 minutes and 44 seconds elapsed.
+10 minutes and 37 seconds elapsed.
+14 minutes and 50 seconds elapsed.
+15879568 ./a1.in
+15887844 ./a2.in
+26443927 ./ot.out
+26431927 ./dif.out
+total 6940880
+drwxrwxr-x  2 a a       4096 May 25 17:15 .
+drwxrwxr-x 10 a a       4096 May 25 16:48 ..
+-rw-rw-rw-  1 a a 1264506097 May 11 01:00 a1.in
+-rw-rw-rw-  1 a a 1264775142 May 11 00:59 a2.in
+-rw-rw-r--  1 a a 2288792892 May 25 17:30 dif.out
+-rwxrwxr-x  1 a a        166 May 22 01:42 launch.sh
+-rw-rw-r--  1 a a 2289333782 May 25 17:15 ot.out
+-rwxrwxr-x  1 a a        552 May 25 16:49 sort_n_uniq.sh
+-rwxrwxr-x  1 a a        648 May 25 16:49 sort_uniq.sh
+-rwxrwxr-x  1 a a        570 May 25 16:49 sort_u.sh
+
+sort -n uniq : 
+10 minutes and 0 seconds elapsed.
+12 minutes and 13 seconds elapsed.
+15 minutes and 8 seconds elapsed.
+15879568 ./a1.in
+15887844 ./a2.in
+26443927 ./ot.out
+26431927 ./dif.out
+total 6940880
+drwxrwxr-x  2 a a       4096 May 25 17:54 .
+drwxrwxr-x 10 a a       4096 May 25 16:48 ..
+-rw-rw-rw-  1 a a 1264506097 May 11 01:00 a1.in
+-rw-rw-rw-  1 a a 1264775142 May 11 00:59 a2.in
+-rw-rw-r--  1 a a 2288792892 May 25 18:09 dif.out
+-rwxrwxr-x  1 a a        166 May 22 01:42 launch.sh
+-rw-rw-r--  1 a a 2289333782 May 25 17:54 ot.out
+-rwxrwxr-x  1 a a        552 May 25 16:49 sort_n_uniq.sh
+-rwxrwxr-x  1 a a        648 May 25 16:49 sort_uniq.sh
+-rwxrwxr-x  1 a a        570 May 25 16:49 sort_u.sh
+
+sort -u : 
+9 minutes and 38 seconds elapsed.
+9 minutes and 35 seconds elapsed.
+17 minutes and 3 seconds elapsed.
+15879568 ./a1.in
+15887844 ./a2.in
+26443927 ./ot.out
+26431927 ./dif.out
+total 9176572
+drwxrwxr-x  2 a a       4096 May 25 18:32 .
+drwxrwxr-x 10 a a       4096 May 25 16:48 ..
+-rw-rw-rw-  1 a a 1264506097 May 11 01:00 a1.in
+-rw-rw-rw-  1 a a 1264775142 May 11 00:59 a2.in
+-rw-rw-r--  1 a a 2288792892 May 25 18:47 dif.out
+-rwxrwxr-x  1 a a        166 May 22 01:42 launch.sh
+-rw-rw-r--  1 a a 1144599415 May 25 18:21 ot1.out
+-rw-rw-r--  1 a a 1144734367 May 25 18:30 ot2.out
+-rw-rw-r--  1 a a 2289333782 May 25 18:32 ot.out
+-rwxrwxr-x  1 a a        552 May 25 16:49 sort_n_uniq.sh
+-rwxrwxr-x  1 a a        648 May 25 16:49 sort_uniq.sh
+-rwxrwxr-x  1 a a        570 May 25 16:49 sort_u.sh
+
+
+
+
+sort : 
+15879568 ./a1.in
+15887844 ./a2.in
+8 minutes and 48 seconds elapsed.
+8 minutes and 57 seconds elapsed.
+total 4946168
+drwxrwxr-x  2 a a       4096 May 25 19:28 .
+drwxrwxr-x 11 a a       4096 May 25 19:12 ..
+-rw-rw-rw-  1 a a 1264506097 May 11 01:00 a1.in
+-rw-rw-rw-  1 a a    3331186 May  9 10:39 a1s.in
+-rw-rw-rw-  1 a a 1264775142 May 11 00:59 a2.in
+-rw-rw-rw-  1 a a    2918628 May  9 10:39 a2s.in
+-rwxrwxr-x  1 a a        287 May 25 19:19 launch.sh
+-rw-rw-r--  1 a a 1264506097 May 25 19:28 ot1.out
+-rw-rw-r--  1 a a 1264775142 May 25 19:37 ot2.out
+-rwxrwxr-x  1 a a        318 May 25 19:19 sort_n.sh
+-rwxrwxr-x  1 a a        312 May 25 19:18 sort.sh
+15879568 ./ot1.out
+15887844 ./ot2.out
+
+sort -n : 
+15879568 ./a1.in
+15887844 ./a2.in
+8 minutes and 53 seconds elapsed.
+9 minutes and 11 seconds elapsed.
+total 4946168
+drwxrwxr-x  2 a a       4096 May 25 19:47 .
+drwxrwxr-x 11 a a       4096 May 25 19:12 ..
+-rw-rw-rw-  1 a a 1264506097 May 11 01:00 a1.in
+-rw-rw-rw-  1 a a    3331186 May  9 10:39 a1s.in
+-rw-rw-rw-  1 a a 1264775142 May 11 00:59 a2.in
+-rw-rw-rw-  1 a a    2918628 May  9 10:39 a2s.in
+-rwxrwxr-x  1 a a        287 May 25 19:19 launch.sh
+-rw-rw-r--  1 a a 1264506097 May 25 19:47 ot1.out
+-rw-rw-r--  1 a a 1264775142 May 25 19:56 ot2.out
+-rwxrwxr-x  1 a a        318 May 25 19:19 sort_n.sh
+-rwxrwxr-x  1 a a        312 May 25 19:18 sort.sh
+15879568 ./ot1.out
+15887844 ./ot2.out
+
+
+
+
+JavaComparison : 
+20s
+
+GnuComparison : 
+2566534
+2 minutes and 26 seconds elapsed.
+
+PerlComparison : 
+Long long time

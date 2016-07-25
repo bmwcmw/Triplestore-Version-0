@@ -1,0 +1,148 @@
+jps -v see each jvm's configuration
+
+Test environment : 
+	Machine 1
+		I7 960 4 cores 8 threads 16Gb RAM 1Tb Seagate 7200.12 HDD
+	Machine 2
+		I5 3320M 2 cores 4 threads 16Gb RAM 180Gb Intel 530 SSD
+
+########## 20G dataset 23000 files ##########
+ 
+PS : ==> 17 files, 15.6G
+	1 Thread in HDD without merge : 1500s
+	2 Threads in HDD without merge : 1900s
+	4 Threads in HDD without merge : 1900s
+	Merge in HHD : 320s
+	1 Thread in SSD without merge : 720s / 390s
+	2 Threads in SSD without merge : 560s / 240s
+	4 Threads in SSD without merge : 330s / 192s(8G RAM)-188s(16G RAM)
+	Merge in SSD : 140s
+
+	Comments : 
+		- In this I/O intense phase, the size of RAM doesn't help too much
+		- Limited by bottleneck of local IO, SSD helps a lot(1/10 of elapsed time)
+		- 
+		- 
+		- 
+
+----------------------------------
+
+POS : ==> 30 files, 15.1G
+	1 Thread in HDD : 1050s
+	2 Threads in HDD : 980s
+	4 Threads in HDD : 1100s
+	1 Thread in SSD : 420s
+	2 Threads in SSD : 320s
+	4 Threads in SSD : 260s
+
+	Comments: 
+		- Fragments are too bad for the benchmark!(5%-30%), for example, 4 threads can take over than 1350s.
+
+----------------------------------
+
+Compression : ==> 17x3 files
+	1	InRamDBUtils
+		memory usage :
+		(takescourse 
+			3,79G==>1.57G that we can directly use for quries, SSD 135s, 6G memory
+		)
+		(a 24954369 nodes, 31767412 SO pairs : 
+			2,35G==>2,36G that we can directly use for quries, 9G memory 
+				==> Very long String, TO AVOID!!!!!!
+					32768 bytes split : SSD 290s
+					65536 bytes split : SSD 380s
+					163840 bytes split : SSD more than 600s
+		) 
+		1 Thread in HDD : 
+		2 Threads in HDD : Cannot try, but according to the elapsed time of each file
+		4 Threads in HDD : Cannot try, but according to the elapsed time of each file
+		1 Thread in SSD : 
+		2 Threads in SSD : Cannot try, but according to the elapsed time of each file
+		4 Threads in SSD : Cannot try, but according to the elapsed time of each file
+
+	Comments: 
+		- Huge memory consumption : -Xms12288m -Xmx12288m -XX:+UseConcMarkSweepGc
+			Free heap size < 40% : increase until Xmx, and free heap size > 70% : decrease until Xms. (Write web pages discussion)
+		- 
+		- 
+
+	2)	MySQL@MyISAM
+			memory usage : Depends on DB configuration
+		MonetDB
+			memory usage : Depends on DB configuration
+		Oracle@Parallel
+			memory usage : Depends on DB configuration
+		Redis
+			memory usage : 6Gb for ~32000000 K(int)/V(String 32 bytes). But in our case we need bidirectional Maps, so we must do in double.
+			Normal mode using Jedis library: 
+				250s for 1000000 inserts
+				>1000s for 1000000 gets of value
+			Pipeline mode using Jedis library:
+				96s for 32000000 inserts
+				>2000s for 32000000 gets of value
+	
+	Comments:
+		- Redis loads everything into RAM, all the data is written to disk but will only be read for things like restarting the server or making a backup.
+
+----------------------------------
+
+Comparison : ==> 17x2 files, S and O
+	Preparation phase
+		1) JAVA function(Better)
+			memory usage : 200-400Mb per thread
+			1 Thread in HDD : 1000s
+			2 Threads in HDD : 1000s
+			4 Threads in HDD : 970s
+			1 Thread in SSD : 200s
+			2 Threads in SSD : 150s
+			4 Threads in SSD : 120s
+		2) Perl script
+			memory usage : 5Mb per thread running script
+			1 Thread in HDD : 1000s
+			2 Threads in HDD : 1050s
+			4 Threads in HDD : 1250s
+			1 Thread in SSD : 350s
+			2 Threads in SSD : 250s
+			4 Threads in SSD : 210s
+	Comparison phase
+		External sort
+		1)	sort ./$1 | uniq > ot.out
+			sort ./$2 | uniq >> ot.out
+			sort ot | uniq > diff.out
+ 
+			1 thread two original predicate files : 2529281239 bytes(2.35Gb)/31767412 lines AND 4078583812 bytes(3.79Gb)/33097101 lines
+			memory usage : Depends on system available. Eg, 978Mb in 4Gb's Linux
+			#14 minutes and 43 seconds elapsed.
+			#18 minutes and 40 seconds elapsed.
+			#28 minutes and 1 seconds elapsed.
+			
+			1 thread two prepared predicates = 4 files : 
+
+		2)	sort -n ./$1 | uniq > ot.out
+			sort -n ./$2 | uniq >> ot.out
+			sort -n ot | uniq > diff.out
+
+		3)	sort -u -o ./ot1.out ./$1
+			sort -u -o ./ot2.out ./$2
+			cat ot1.out ot2.out >> ot.out
+			sort -u -o dif.out ot.out
+
+		4)	perl
+			memory usage : 
+
+		5)	SGBD
+			memory usage : 
+
+		In memory alternatives
+		4)	HashSet
+			memory usage : 
+
+		5)	ArrayList
+			memory usage : 
+
+		6)	Guava's Sets intersection
+			memory usage : 
+
+----------------------------------
+
+Distribution : 

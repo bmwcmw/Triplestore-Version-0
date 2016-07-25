@@ -1,0 +1,11 @@
+date1=$(date +"%s")
+./GnuComparison.sh ./a1.in ./a2.in
+date2=$(date +"%s")
+diff=$(($date2-$date1))
+echo "$(($diff / 60)) minutes and $(($diff % 60)) seconds elapsed."
+date1=$(date +"%s")
+./PerlComparison.sh ./a1.in ./a2.in
+date2=$(date +"%s")
+diff=$(($date2-$date1))
+echo "$(($diff / 60)) minutes and $(($diff % 60)) seconds elapsed."
+date1=$(date +"%s")
