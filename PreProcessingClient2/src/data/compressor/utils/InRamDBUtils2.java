@@ -11,12 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import server.ServerConfig;
 import constants.AppConstants;
-import localIOUtils.IOUtils;
 import data.compressor.MetaInfoArray;
 import data.compressor.MetaInfoQuadruple;
 import data.reader.PairReader;
+import localio.IOUtils;
+import server2.ServerConfig;
 
 public class InRamDBUtils2 extends DBImpl2 {
 	private final int ModeSO = 0;

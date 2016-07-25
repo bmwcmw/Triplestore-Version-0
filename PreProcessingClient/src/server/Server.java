@@ -22,7 +22,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import localIOUtils.IOUtils;
 import dataComparator.FilePair;
 import dataCompressorUtils.DBImpl;
 import dataCompressorUtils.InRamDBUtils;
@@ -33,6 +32,7 @@ import dataCompressorUtils.OracleUtils;
 import dataCompressorUtils.PostgreSQLUtils;
 import dataCompressorUtils.RedisUtils;
 import dataDistributor.IndicatorGrouper;
+import localio.IOUtils;
 
 /**
  * Preprocessor and predicate distribution calculator

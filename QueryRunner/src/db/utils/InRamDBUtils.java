@@ -3,13 +3,12 @@ package db.utils;
 import java.io.IOException;
 import java.text.ParseException;
 
-import localIOUtils.IOUtils;
-
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import data.cleaner.RDFPairStr;
 import data.reader.PairReader;
+import localio.IOUtils;
 
 public class InRamDBUtils implements DBImpl{
 	private BiMap<Long, String> nodes;

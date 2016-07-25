@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
 import objects.BiList;
-import localIOUtils.IOUtils;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -21,6 +20,7 @@ import data.cleaner.RDFPairStr;
 import data.compressor.SOLongPair;
 import data.reader.PairReader;
 import dataloader.meta.MetaInfoTriple;
+import localio.IOUtils;
 
 /**
  * 

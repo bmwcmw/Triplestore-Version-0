@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import server.AppConstants;
-import server.ServerConfig;
-import localIOUtils.IOUtils;
+import server2.ServerConfig;
 import dataCompressor.MetaInfoArray;
 import dataCompressor.MetaInfoQuadruple;
 import dataReader.PairReader;
+import localio.IOUtils;
 
 public class InRamDBUtils2 {
 	private final int ModeSO = 0;

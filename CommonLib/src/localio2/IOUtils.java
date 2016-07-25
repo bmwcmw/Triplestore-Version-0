@@ -1,4 +1,4 @@
-package localIOUtils;
+package localio2;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Static IO tools for the pre-processing program.
+ * Static IO tools for the preprocessing program.
  * 
  * @author CMWT420
  */

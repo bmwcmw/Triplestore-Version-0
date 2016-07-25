@@ -3,8 +3,8 @@ package dataComparator;
 import java.util.HashSet;
 import java.util.concurrent.Callable;
 
-import localIOUtils.IOUtils;
 import dataReader.PairReader;
+import localio.IOUtils;
 
 /**
  * This callable loader loads a text file line by line into a HashSet<String>.

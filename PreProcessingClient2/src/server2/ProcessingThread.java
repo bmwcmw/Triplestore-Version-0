@@ -1,4 +1,4 @@
-package server;
+package server2;
 
 
 import java.io.File;
@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import constants.AppConstants;
-import localIOUtils.IOUtils;
 import data.comparator2.FilePair;
 import data.compressor.utils.DBImpl2;
 import data.distributor.light.DestInfo;
 import data.manager.DataManager;
+import localio2.IOUtils;
 
 /**
  * Thread for different tasks.

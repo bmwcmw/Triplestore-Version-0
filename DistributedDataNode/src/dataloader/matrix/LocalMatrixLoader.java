@@ -12,7 +12,7 @@ import objects.BiList;
 import constants.AppConstants;
 import dataloader.meta.MetaInfoTriple;
 import dataloader.meta.LocalMetaLoader.MODE;
-import localIOUtils.IOUtils;
+import localio.IOUtils;
 
 /**
  * Loads numerical data from matrix files.

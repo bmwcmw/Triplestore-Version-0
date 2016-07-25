@@ -1,6 +1,6 @@
 package server;
 
-import localIOUtils.IOUtils;
+import localio.IOUtils;
 
 /**
  * Initial configuration settings

@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import localIOUtils.IOUtils;
-
 import org.json.simple.JSONArray;
 
 import constants.AppConstants;
 import db.utils.DBImpl;
 import db.utils.InRamDBUtilsPOS;
+import localio.IOUtils;
 import query.objects.ParsedQuery;
 import query.objects.QueryPatternResult;
 import query.objects.QueryResult;

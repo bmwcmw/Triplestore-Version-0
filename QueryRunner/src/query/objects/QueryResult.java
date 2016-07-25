@@ -2,7 +2,7 @@ package query.objects;
 
 import java.util.ArrayList;
 
-import localIOUtils.IOUtils;
+import localio.IOUtils;
 import query.utils.QueryUtils.VarType;
 
 /**

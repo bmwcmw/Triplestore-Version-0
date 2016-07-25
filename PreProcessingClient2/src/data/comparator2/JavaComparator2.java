@@ -7,7 +7,7 @@ import java.text.ParseException;
 import constants.AppConstants;
 import data.cleaner.RDFPairStr;
 import data.reader.PairReader;
-import localIOUtils.IOUtils;
+import localio.IOUtils;
 
 /**
  * <p>Compares two SORTED, UNIQUE OR NOT string files, returns the number of common entries.</p>

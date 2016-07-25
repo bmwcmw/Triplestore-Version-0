@@ -1,4 +1,4 @@
-package server;
+package server2;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,8 +6,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
-import localIOUtils.IOUtils;
 import data.comparator2.FilePair;
+import localio2.IOUtils;
+import server.ServerConfig;
 
 /**
  * Parallel job assigner

@@ -8,9 +8,9 @@ import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.StringTokenizer;
 
-import localIOUtils.IOUtils;
 import data.cleaner.RDFTriple;
 import data.manager.DataManager;
+import localio.IOUtils;
 
 /**
  * <p>

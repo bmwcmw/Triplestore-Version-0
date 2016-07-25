@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import server.AppConstants;
-import server.ServerConfig;
-import localIOUtils.IOUtils;
+import server2.ServerConfig;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -24,6 +23,7 @@ import dataCompressor.MetaInfoArray;
 import dataCompressor.MetaInfoQuadruple;
 import dataCompressor.SOLongPair;
 import dataReader.PairReader;
+import localio.IOUtils;
 
 public class InRamDBUtils implements DBImpl{
 	private BiMap<Long, String> nodes;

@@ -7,11 +7,10 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import localIOUtils.IOUtils;
-
 import org.json.simple.JSONArray;
 
 import dataCompressorUtils.DBImpl;
+import localio.IOUtils;
 import queryObjects.LongPattern;
 import queryObjects.ParsedQuery;
 import queryObjects.QueryPatternResult;

@@ -5,11 +5,11 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Map.Entry;
 
-import localIOUtils.IOUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 import data.cleaner.RDFPairStr;
 import data.reader.PairReader;
+import localio.IOUtils;
 
 /**
  * <p>Redis is an open source, BSD licensed, advanced key-value store. It is often referred 

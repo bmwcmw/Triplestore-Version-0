@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import localIOUtils.IOUtils;
+import localio.IOUtils;
 
 /**
  * Initial configuration settings

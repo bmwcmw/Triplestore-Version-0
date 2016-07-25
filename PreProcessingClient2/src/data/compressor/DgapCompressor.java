@@ -1,8 +1,8 @@
 package data.compressor;
 
 
-import localIOUtils.IOUtils;
 import data.compressor.utils.DBImpl2;
+import localio.IOUtils;
 
 
 /**

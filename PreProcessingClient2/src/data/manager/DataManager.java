@@ -16,7 +16,6 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
-import localIOUtils.IOUtils;
 import constants.AppConstants;
 import data.cleaner.RDFPair;
 import data.cleaner.RDFPairStr;
@@ -33,6 +32,7 @@ import data.reader.PairReader;
 import data.reader.TripleReader;
 import external.FormatConverter;
 import external.PerlPreComparator;
+import localio.IOUtils;
 
 /**
  * <p>

@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
 
 import objects.BiList;
 import constants.AppConstants;
-import localIOUtils.IOUtils;
+import localio.IOUtils;
 
 /**
  * In block mode, loads metadata files to a specific database(normally inRam).

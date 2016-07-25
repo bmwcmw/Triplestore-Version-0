@@ -11,7 +11,7 @@ import data.cleaner.RDFPairStr;
 import data.reader.PairReader;
 import db.utils.DBImpl;
 import db.utils.InRamDBUtilsPOS;
-import localIOUtils.IOUtils;
+import localio.IOUtils;
 
 /**
  * Only for the connection using POS files.

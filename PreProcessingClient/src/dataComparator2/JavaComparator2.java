@@ -6,7 +6,7 @@ import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
 
 import dataReader.PairReader;
-import localIOUtils.IOUtils;
+import localio.IOUtils;
 
 /**
  * <p>Compares two SORTED, UNIQUE OR NOT string files, returns the number of common entries.</p>
